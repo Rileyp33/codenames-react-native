@@ -18,3 +18,6 @@ export default class App extends React.Component {
     )
   }
 }
+
+// Disables yellow box debug tools
+console.disableYellowBox = true
