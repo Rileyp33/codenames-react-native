@@ -1,6 +1,33 @@
 import React from 'react'
-import { View, StyleSheet, ImageBackground, Image } from 'react-native'
-import { Button, Icon } from 'react-native-elements'
+import { View, StyleSheet, ImageBackground, Image, Dimensions } from 'react-native'
+import { Button } from 'react-native-elements'
+import { apiCall } from '../../utils/requests'
+
+const buttons = [
+  {
+    title: 'New Game',
+    onPress: function () {
+      createGame()
+    },
+    iconType: 'material-community',
+    iconName: 'cards-playing-outline'
+  },
+  {
+    title: 'Join Game',
+    onPress: function () {
+      console.log('TBD')
+    },
+    iconType: 'antdesign',
+    iconName: 'addusergroup'
+  }, {
+    title: 'Rules',
+    onPress: function () {
+      console.log('TBD')
+    },
+    iconType: 'material-community',
+    iconName: 'sign-text'
+  }
+]
 
 export default class HomeScreen extends React.Component{
   constructor(props) {
@@ -23,67 +50,82 @@ export default class HomeScreen extends React.Component{
     return ( 
       <View style={style.buttonsWrapper}>
         <Button
-          title='New Game'
-          onPress={() => this.props.navigation.navigate('Game')}
-          type='solid'
+          title={'New Game'}
+          onPress={() => this.createGame()}
+          type={'solid'}
           containerStyle={style.buttonContainer}
           buttonStyle={style.button}
           titleStyle={style.buttonTitle}
           raised={true}
-          iconLeft
           icon={{
             type: 'material-community',
             name: 'cards-playing-outline',
             size: 30,
             color: 'gray',
-            paddingRight: 15
+            paddingRight: 20
           }}
         />
         <Button
-          title='Join Game'
-          type='solid'
+          title={'Join Game'}
+          onPress={() => console.log('tbd')}
+          type={'solid'}
           containerStyle={style.buttonContainer}
           buttonStyle={style.button}
           titleStyle={style.buttonTitle}
           raised={true}
-          iconLeft
           icon={{
             type: 'antdesign',
             name: 'addusergroup',
             size: 30,
             color: 'gray',
-            paddingRight: 15
+            paddingRight: 20
           }}
         />
         <Button
-          title='Rules'
-          type='solid'
+          title={'Rules'}
+          onPress={() => console.log('tbd')}
+          type={'solid'}
           containerStyle={style.buttonContainer}
           buttonStyle={style.button}
           titleStyle={style.buttonTitle}
           raised={true}
-          iconLeft
           icon={{
             type: 'material-community',
             name: 'sign-text',
             size: 30,
             color: 'gray',
-            paddingRight: 15
+            paddingRight: 20
           }}
         />
       </View>
     )
   }
 
+  renderAssassin = () => {
+    return (
+      <Image
+        source={require('codenamesReactNative/src/assets/images/Assassin.png')}
+        style={style.assassin}>
+      </Image>
+    )
+  }
+
+  createGame = async () => {
+    let body = JSON.stringify({ role: 'operative' })
+    let creationResponse = await apiCall(body, 'post', 'local_games')
+    let navigate = await this.props.navigation.navigate('Game', { gameId: creationResponse.data.game_id })
+  }
+
   render() {
     return(
       <ImageBackground
         source={require('codenamesReactNative/src/assets/images/OrangeBackground.jpg')}
-        style={style.imageBackground}
-        imageStyle={style.imageStyle}>
+        style={style.imageBackgroundFull}
+        imageStyle={style.imageStyleFull}>
           <View style={style.screenContainer}>
             {this.renderLogo()}
             {this.renderButtons()}
+            {this.renderAssassin()}
           </View>
       </ImageBackground>
     )
@@ -93,14 +135,23 @@ export default class HomeScreen extends React.Component{
 const style = StyleSheet.create({
   screenContainer: {
     flex: 1,
-    alignItems: 'center'
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: 25
   },  
-  imageBackground: {
+  imageBackgroundFull: {
     width: '100%',
     height: '100%'
   },
-  imageStyle: {
+  imageStyleFull: {
     resizeMode: 'cover'
+  },
+  assassin: {
+    resizeMode: 'contain',
+    position: 'absolute',
+    zIndex: -1,
+    bottom: -20,
+    left: -320
   },
   buttonsWrapper: {
     flex: 1,
@@ -122,7 +173,7 @@ const style = StyleSheet.create({
   logoWrapper: {
     flex: 1,
     flexDirection: 'row',
-    paddingHorizontal: 20
+    maxWidth: 350
   },
   logo: {
     flex: 1,
