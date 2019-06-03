@@ -1,6 +1,6 @@
 import React from 'react'
 import { Text } from 'react-native'
-import { apiCall, endpoints } from '../../utils/requests'
+import { apiCall } from '../../utils/requests'
 
 export default class GameScreen extends React.Component {
   constructor(props) {
@@ -8,17 +8,9 @@ export default class GameScreen extends React.Component {
     this.state = {}
   }
 
-  getGameState = (response) => {
-    console.log(response)
-  }
-
-  componentDidMount() {
-    apiCall(this.getGameState, endpoints.local_games, 3)
-  }
-
   render() {
     return (
-      <Text>GameScreen</Text>
+      <Text style={{alignSelf: 'center', marginTop: 200}}>{this.props.navigation.getParam('gameId')}</Text>
     )
   }
 }

@@ -1,18 +1,19 @@
 import axios from 'axios'
 
-const BASE_URL = 'http://10.0.0.164:3000/api/v1/'
+export const BASE_URL = 'http://10.0.0.164:3000/api/v1/'
 
-export const endpoints = {
-  local_games: 'local_games/'
+export async function apiCall(body, method, urlSuffix) {
+  console.log(`Hitting endpoint: ${BASE_URL + urlSuffix}`)
+  return axios({
+    method: method,
+    url: BASE_URL + urlSuffix,
+    data: body
+  })
+  .then((response) => {
+    console.log('Response: ', response)
+    return response
+  })
+  .catch((error) => {
+    console.log('Request error: ', error)
+  })
 }
-
-export function apiCall(responseFxn, urlSuffix, id = null) {
-    console.log(`Hitting endpoint: ${BASE_URL + urlSuffix + id}`)
-    return axios.get(BASE_URL + urlSuffix + id)
-      .then((response) => {
-        responseFxn(response);
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  }
