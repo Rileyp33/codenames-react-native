@@ -14,7 +14,7 @@ export default createNavigator = () => {
       }
     },
     {
-      initialRouteName: 'Home',
+      initialRouteName: 'Game',
       headerMode: 'none'
     }
   ))
