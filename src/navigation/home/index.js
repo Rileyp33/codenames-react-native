@@ -41,7 +41,7 @@ export default class HomeScreen extends React.Component{
         />
         <Button
           title={'Join Game'}
-          onPress={() => console.log('tbd')}
+          onPress={() => this.tempJoinGame()}
           type={'solid'}
           containerStyle={style.buttonContainer}
           buttonStyle={style.button}
@@ -88,6 +88,10 @@ export default class HomeScreen extends React.Component{
     let body = JSON.stringify({ role: 'operative' })
     let creationResponse = await apiCall(body, 'post', 'local_games')
     let navigate = await this.props.navigation.navigate('Game', { gameId: creationResponse.data.game_id })
+  }
+
+  tempJoinGame = () => {
+    this.props.navigation.navigate('Game', { gameId: 1 })
   }
 
   render() {

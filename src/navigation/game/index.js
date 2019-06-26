@@ -1,5 +1,7 @@
 import React from 'react'
-import { Text, View, TouchableOpacity, Image } from 'react-native'
+import { Text, View, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native'
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize"
+import { GlobalText } from '../../components/globalText'
 import { BASE_URL } from '../../utils/requests'
 import axios from 'axios'
 
@@ -17,7 +19,8 @@ export default class GameScreen extends React.Component {
       assassin: 0,
       result: null,
       timer: false,
-      gameId: 0
+      gameId: 0,
+      orientation: 'portrait'
     }
 
     // this.tempGame = this.props.navigation.getParam('gameId')
@@ -31,6 +34,30 @@ export default class GameScreen extends React.Component {
       [20, 21, 22, 23, 24]
     ]
   }
+
+  componentDidUpdate() {
+    console.log(this.state.cells)
+  }
+
+  componentDidMount() {
+    this.getGame()
+
+    const dim = Dimensions.get('screen');
+    this.setState({ 
+      orientation: (dim.height >= dim.width) ? 'portrait' : 'landscape' 
+    })
+
+    Dimensions.addEventListener('change', () => {
+      this.setState({
+        orientation: this.isPortrait() ? 'portrait' : 'landscape'
+      })
+    })
+  }
+
+  isPortrait = () => {
+    const dim = Dimensions.get('screen');
+    return dim.height >= dim.width;
+  };
 
   getGame = async () => {
     let gameId = this.tempGame
@@ -48,14 +75,6 @@ export default class GameScreen extends React.Component {
       })
   }
 
-  componentDidUpdate() {
-    console.log(this.state.cells)
-  }
-
-  componentDidMount() {
-    this.getGame()
-  }
-
   renderRow = (rowIndexes) => {
     let orderedDeck = this.state.cells.sort((a, b) => a.position - b.position)
     let row = rowIndexes.map((i) => {
@@ -63,8 +82,11 @@ export default class GameScreen extends React.Component {
     })
     return row.map((card) => {
       return (
-        <TouchableOpacity onPress={() => { console.log(card) }} style={{ flex: 1, alignItems: 'center', backgroundColor: 'orange', borderWidth: 2 }}>
-          <Text>{card.word}</Text>
+        <TouchableOpacity onPress={() => { console.log(card) }} style={{ flex: 1, alignItems: 'center', backgroundColor: 'orange', borderWidth: 2, fontSize: style.portrait }}>
+          <GlobalText
+            value={card.word}
+            style={style(this.state.orientation).cardText}>
+          </GlobalText>
         </TouchableOpacity>
       )
     })
@@ -80,8 +102,6 @@ export default class GameScreen extends React.Component {
     })
   }
 
-
-
   render() {
     return (
       <View style={{flex: 1, justifyContent: 'space-evenly'}}>
@@ -89,4 +109,13 @@ export default class GameScreen extends React.Component {
       </View>
     )
   }
+}
+
+const style = (orientation) => {
+  return StyleSheet.create({
+    cardText: {
+      fontSize: (orientation === 'portrait') ? RFValue(8) : RFValue(14),
+      textTransform: 'uppercase'
+    }
+  })
 }
