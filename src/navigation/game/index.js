@@ -1,8 +1,9 @@
 import React from 'react'
-import { Text, View, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native'
-import { RFPercentage, RFValue } from "react-native-responsive-fontsize"
+import { View, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native'
+import { RFValue } from "react-native-responsive-fontsize"
 import { GlobalText } from '../../components/globalText'
 import { BASE_URL } from '../../utils/requests'
+import { colors, fonts } from '../../utils/styles'
 import axios from 'axios'
 
 
@@ -24,7 +25,7 @@ export default class GameScreen extends React.Component {
     }
 
     // this.tempGame = this.props.navigation.getParam('gameId')
-    this.tempGame = 11
+    this.tempGame = 3
 
     this.positions = [
       [0, 1, 2, 3, 4],
@@ -82,7 +83,7 @@ export default class GameScreen extends React.Component {
     })
     return row.map((card) => {
       return (
-        <TouchableOpacity onPress={() => { console.log(card) }} style={{ flex: 1, alignItems: 'center', backgroundColor: 'orange', borderWidth: 2, fontSize: style.portrait }}>
+        <TouchableOpacity key={card.word} onPress={() => { console.log(card) }} style={style(this.state.orientation).card}>
           <GlobalText
             value={card.word}
             style={style(this.state.orientation).cardText}>
@@ -93,29 +94,84 @@ export default class GameScreen extends React.Component {
   }
 
   renderDeck = (positions) => {
-    return positions.map((row) => {
+    return positions.map((row, i) => {
       return (
-        <View style={{ flexDirection: 'row' }}>
+        <View key={i} style={style().row}>
           {this.renderRow(row)}
         </View>
       )
     })
   }
 
+  renderLogo = () => {
+    return (
+      <View style={style(this.state.orientation).logoWrapper}>
+        <Image
+          source={require('../../assets/images/CodenamesLogoBlack.png')}
+          style={style(this.state.orientation).logo}
+        />
+      </View>
+    )
+  }
+
   render() {
     return (
-      <View style={{flex: 1, justifyContent: 'space-evenly'}}>
-        {(this.state.cells) ? this.renderDeck(this.positions) : null}
+      <View style={style(this.state.orientation).screen}>
+        {this.renderLogo()}
+        <View style={style().board}>
+          {(this.state.cells) ? this.renderDeck(this.positions) : null}
+        </View>
       </View>
     )
   }
 }
 
-const style = (orientation) => {
+const style = (orientation = null) => {
   return StyleSheet.create({
+    screen: {
+      marginHorizontal: 4,
+      marginVertical: (orientation === 'portrait') ? 20 : 0,
+      flex: 1
+    },
     cardText: {
-      fontSize: (orientation === 'portrait') ? RFValue(8) : RFValue(14),
+      fontSize: (orientation === 'portrait') ? RFValue(10) : RFValue(14),
+      fontFamily: fonts.homeButtons,
+      fontWeight: 'bold', 
       textTransform: 'uppercase'
+    },
+    card: {
+      flex: 1,
+      alignItems: 'center',
+      backgroundColor: colors.lightGray,
+      fontSize: style.portrait,
+      paddingVertical: 5,
+      marginHorizontal: 1,
+      paddingHorizontal: 5,
+      justifyContent: 'center',
+      borderRadius: 5,
+    },
+    row: {
+      flexDirection: 'row'
+    },
+    board: {
+      flex: 1, 
+      justifyContent: 'space-evenly',
+      maxHeight: 300
+    },
+    logoWrapper: { 
+      marginHorizontal: 14, 
+      height: (orientation === 'portrait') ? 50 : 30, 
+      justifyContent: 'center',
+      alignItems: 'center', 
+      borderBottomWidth: 1, 
+      borderBottomColor: colors.lightGray 
+    },
+    logo: { 
+      width: '50%', 
+      height: (orientation === 'portrait') ? 40 : 20, 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      resizeMode: 'contain' 
     }
   })
 }

@@ -2,6 +2,7 @@ import React from 'react'
 import { View, StyleSheet, ImageBackground, Image } from 'react-native'
 import { Button } from 'react-native-elements'
 import { apiCall } from '../../utils/requests'
+import { fonts } from '../../utils/styles'
 
 export default class HomeScreen extends React.Component{
   constructor(props) {
@@ -145,7 +146,7 @@ const style = StyleSheet.create({
   },  
   buttonTitle: {
     color: 'black',
-    fontFamily: 'AvenirNextCondensed-Medium',
+    fontFamily: fonts.homeButtons,
     fontSize: 16,
   },
   logoWrapper: {
