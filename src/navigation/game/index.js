@@ -1,4 +1,5 @@
 import React from 'react'
+import ActionCable from 'react-native-actioncable'
 import { View, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native'
 import { RFValue } from "react-native-responsive-fontsize"
 import { GlobalText } from '../../components/globalText'
@@ -34,13 +35,12 @@ export default class GameScreen extends React.Component {
       [15, 16, 17, 18, 19],
       [20, 21, 22, 23, 24]
     ]
-  }
 
-  componentDidUpdate() {
-    console.log(this.state.cells)
+    this.cable = ActionCable.createConsumer('ws://10.0.0.35:3000/cable')
   }
 
   componentDidMount() {
+    console.log(this.cable)
     this.getGame()
 
     const dim = Dimensions.get('screen');
@@ -53,6 +53,26 @@ export default class GameScreen extends React.Component {
         orientation: this.isPortrait() ? 'portrait' : 'landscape'
       })
     })
+
+    this.gameChannel = this.cable.subscriptions.create(
+      {
+        channel: 'GameChannel', 
+        game_id: this.tempGame
+      },
+      {
+        connected: () => console.log("GameChannel connected"),
+        disconnected: () => console.log("GameChannel disconnected"),
+        received: data => {
+          console.log('Received data:', data)
+        }
+      }
+    )
+
+    console.log(this.gameChannel)
+  }
+
+  componentDidUpdate() {
+    console.log(this.state.cells)
   }
 
   isPortrait = () => {
