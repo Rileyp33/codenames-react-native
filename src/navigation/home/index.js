@@ -1,33 +1,8 @@
 import React from 'react'
-import { View, StyleSheet, ImageBackground, Image, Dimensions } from 'react-native'
+import { View, StyleSheet, ImageBackground, Image } from 'react-native'
 import { Button } from 'react-native-elements'
 import { apiCall } from '../../utils/requests'
-
-const buttons = [
-  {
-    title: 'New Game',
-    onPress: function () {
-      createGame()
-    },
-    iconType: 'material-community',
-    iconName: 'cards-playing-outline'
-  },
-  {
-    title: 'Join Game',
-    onPress: function () {
-      console.log('TBD')
-    },
-    iconType: 'antdesign',
-    iconName: 'addusergroup'
-  }, {
-    title: 'Rules',
-    onPress: function () {
-      console.log('TBD')
-    },
-    iconType: 'material-community',
-    iconName: 'sign-text'
-  }
-]
+import { fonts } from '../../utils/styles'
 
 export default class HomeScreen extends React.Component{
   constructor(props) {
@@ -67,7 +42,7 @@ export default class HomeScreen extends React.Component{
         />
         <Button
           title={'Join Game'}
-          onPress={() => console.log('tbd')}
+          onPress={() => this.tempJoinGame()}
           type={'solid'}
           containerStyle={style.buttonContainer}
           buttonStyle={style.button}
@@ -114,6 +89,10 @@ export default class HomeScreen extends React.Component{
     let body = JSON.stringify({ role: 'operative' })
     let creationResponse = await apiCall(body, 'post', 'local_games')
     let navigate = await this.props.navigation.navigate('Game', { gameId: creationResponse.data.game_id })
+  }
+
+  tempJoinGame = () => {
+    this.props.navigation.navigate('Game', { gameId: 1 })
   }
 
   render() {
@@ -167,7 +146,7 @@ const style = StyleSheet.create({
   },  
   buttonTitle: {
     color: 'black',
-    fontFamily: 'AvenirNextCondensed-Medium',
+    fontFamily: fonts.homeButtons,
     fontSize: 16,
   },
   logoWrapper: {
