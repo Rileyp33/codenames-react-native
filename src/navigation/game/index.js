@@ -1,8 +1,8 @@
 import React from 'react'
 import ActionCable from 'react-native-actioncable'
-import { View, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native'
+import { View, Image, StyleSheet, Dimensions } from 'react-native'
 import { RFValue } from "react-native-responsive-fontsize"
-import { GlobalText } from '../../components/globalText'
+import { Card } from '../../components/game/card'
 import { BASE_URL } from '../../utils/requests'
 import { colors, fonts } from '../../utils/styles'
 import axios from 'axios'
@@ -26,7 +26,7 @@ export default class GameScreen extends React.Component {
     }
 
     // this.tempGame = this.props.navigation.getParam('gameId')
-    this.tempGame = 3
+    this.tempGame = 4
 
     this.positions = [
       [0, 1, 2, 3, 4],
@@ -40,7 +40,6 @@ export default class GameScreen extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.cable)
     this.getGame()
 
     const dim = Dimensions.get('screen');
@@ -63,16 +62,14 @@ export default class GameScreen extends React.Component {
         connected: () => console.log("GameChannel connected"),
         disconnected: () => console.log("GameChannel disconnected"),
         received: data => {
-          console.log('Received data:', data)
+          this.handleDataReceipt(data)
         }
       }
     )
-
-    console.log(this.gameChannel)
   }
 
   componentDidUpdate() {
-    console.log(this.state.cells)
+    console.log("State updated to: ", this.state)
   }
 
   isPortrait = () => {
@@ -85,15 +82,24 @@ export default class GameScreen extends React.Component {
     axios.get(BASE_URL + `local_games/${gameId}`)
       .then(response => {
         this.setState({
-          cells: response.data.cells,
-          redScore: response.data.redScore,
-          redTotal: response.data.redTotal,
-          blueScore: response.data.blueScore,
-          blueTotal: response.data.blueTotal,
-          assassin: response.data.assassin,
-          result: response.data.result
+          ...response.data
         })
       })
+  }
+
+  handleDataReceipt = (data) => {
+    console.log("Data received: ", data)
+    this.setState({
+      ...data
+    })
+  }
+
+  handleFlip = (id) => {
+    if (this.state.role === 'operative') {
+      this.gameChannel.send({
+        cell_id: id
+      })
+    }
   }
 
   renderRow = (rowIndexes) => {
@@ -103,12 +109,20 @@ export default class GameScreen extends React.Component {
     })
     return row.map((card) => {
       return (
-        <TouchableOpacity key={card.word} onPress={() => { console.log(card) }} style={style(this.state.orientation).card}>
-          <GlobalText
-            value={card.word}
-            style={style(this.state.orientation).cardText}>
-          </GlobalText>
-        </TouchableOpacity>
+        <Card
+          key={card.word}
+          onPress={() => { this.handleFlip(card.cell_id) }}
+          cardStyle={style(this.state.orientation).card}
+          imageStyle={style(this.state.orientation).cardImage}
+          textStyle={
+            (card.flipped_status === "up") ?
+              style(this.state.orientation).flippedText 
+              : style(this.state.orientation).cardText
+          }
+          value={card.word}
+          color={card.color}
+          flippedStatus={card.flipped_status}
+        />
       )
     })
   }
@@ -159,16 +173,23 @@ const style = (orientation = null) => {
       fontWeight: 'bold', 
       textTransform: 'uppercase'
     },
+    flippedText: {
+      fontSize: (orientation === 'portrait') ? RFValue(10) : RFValue(14),
+      fontFamily: fonts.homeButtons,
+      fontWeight: 'bold',
+      textTransform: 'uppercase',
+      color: 'white'
+    },
     card: {
       flex: 1,
       alignItems: 'center',
+      justifyContent: 'center',
       backgroundColor: colors.lightGray,
-      fontSize: style.portrait,
       paddingVertical: 5,
       marginHorizontal: 1,
       paddingHorizontal: 5,
-      justifyContent: 'center',
       borderRadius: 5,
+      overflow: 'hidden'
     },
     row: {
       flexDirection: 'row'
@@ -192,6 +213,13 @@ const style = (orientation = null) => {
       justifyContent: 'center', 
       alignItems: 'center', 
       resizeMode: 'contain' 
+    },
+    cardImage: {
+      width: '125%',
+      resizeMode: 'contain',
+      position: 'absolute',
+      justifyContent: 'center',
+      alignItems: 'center' 
     }
   })
 }
