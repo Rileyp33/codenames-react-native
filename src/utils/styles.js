@@ -1,8 +1,11 @@
 
 export const colors = {
   "lightGray": '#d9d9d9',
+  "darkGray": '#595959',
   "red-agent": '#b30',
-  "blue-agent": '#0e2899'
+  "red-agent-light": '#bd3200',
+  "blue-agent": '#0e2899',
+  "blue-agent-light": '#0e289a',
 }
 
 export const fonts = {
