@@ -1,12 +1,14 @@
 import React from 'react'
 import ActionCable from 'react-native-actioncable'
-import { View, Image, StyleSheet, Dimensions } from 'react-native'
+import { View, Image, StyleSheet, Dimensions, ImageBackground } from 'react-native'
 import { RFValue } from "react-native-responsive-fontsize"
 import { Card } from '../../components/game/card'
+import { GameData } from '../../components/game/gameData'
+import { GameboardButtons } from '../../components/game/gameboardButtons'
+import { Scoreboard } from '../../components/game/scoreboard'
 import { BASE_URL } from '../../utils/requests'
 import { colors, fonts } from '../../utils/styles'
 import axios from 'axios'
-
 
 export default class GameScreen extends React.Component {
   constructor(props) {
@@ -14,10 +16,10 @@ export default class GameScreen extends React.Component {
     this.state = {
       role: 'operative',
       cells: null,
-      redScore: 0,
-      redTotal: 0,
-      blueScore: 0,
-      blueTotal: 0,
+      red_score: 0,
+      red_total: 0,
+      blue_score: 0,
+      blue_total: 0,
       assassin: 0,
       result: null,
       timer: false,
@@ -26,7 +28,8 @@ export default class GameScreen extends React.Component {
     }
 
     // this.tempGame = this.props.navigation.getParam('gameId')
-    this.tempGame = 4
+    this.tempGame = 3
+    this.gameCode = 'ABC'
 
     this.positions = [
       [0, 1, 2, 3, 4],
@@ -141,21 +144,87 @@ export default class GameScreen extends React.Component {
     return (
       <View style={style(this.state.orientation).logoWrapper}>
         <Image
-          source={require('../../assets/images/CodenamesLogoBlack.png')}
+          source={require('../../assets/images/CodenamesLogoWhite.png')}
           style={style(this.state.orientation).logo}
         />
       </View>
     )
   }
 
+  renderScoreboard = () => {
+    if (typeof this.state.blue_score !== 'undefined') {
+      return (
+        <Scoreboard
+          scoreboardStyle={style(this.state.orientation).scoreboard}
+          redStyle={style(this.state.orientation).redBoard} 
+          blueStyle={style(this.state.orientation).blueBoard}
+          textStyle={style(this.state.orientation).scoreboardText} 
+          redScore={this.state.red_score}
+          redTotal={this.state.red_total}
+          blueScore={this.state.blue_score}
+          blueTotal={this.state.blue_total}
+          timerWrapper={style(this.state.orientation).timerWrapper}
+          iconSize={(this.state.orientation === 'portrait') ? RFValue(30) : RFValue(40)}
+        />
+      )
+    }
+  }
+
+  renderButtons = () => {
+    return (
+      <GameboardButtons 
+        buttonsWrapper={style(this.state.orientation).buttonsWrapper}
+        buttonContainer={style(this.state.orientation).buttonContainer}
+        buttonStyle={style(this.state.orientation).button}
+        buttonTitle={style(this.state.orientation).buttonTitle}
+        orientation={this.state.orientation}
+      />
+    )
+  }
+
+  renderGameData = () => {
+    return (
+      <GameData 
+        dataWrapper={style(this.state.orientation).dataWrapper}
+        idWrapper={style(this.state.orientation).idWrapper}
+        codeWrapper={style(this.state.orientation).codeWrapper}
+        textStyle={style(this.state.orientation).gameDataText}
+        gameId={this.tempGame}
+        gameCode={this.gameCode}
+      />
+    )
+  }
+
+  renderAssassin = () => {
+    return (
+      <Image
+        source={require('codenamesReactNative/src/assets/images/Assassin.png')}
+        style={style(this.state.orientation).assassin}>
+      </Image>
+    )
+  }
+
   render() {
     return (
-      <View style={style(this.state.orientation).screen}>
-        {this.renderLogo()}
-        <View style={style().board}>
-          {(this.state.cells) ? this.renderDeck(this.positions) : null}
+      <ImageBackground
+        source={require('codenamesReactNative/src/assets/images/BlackTexturedBackground.jpg')}
+        style={style().imageBackgroundFull}
+        imageStyle={style().imageStyleFull}>
+        <View style={style(this.state.orientation).screen}>
+          {this.renderLogo()}
+          <View style={style(this.state.orientation).gameWrapper}>
+            <View style={style(this.state.orientation).board}>
+              {(this.state.cells) ? this.renderDeck(this.positions) : null}
+            </View>
+            <View style={style(this.state.orientation).infoWrapper}>
+              {this.renderScoreboard()}
+              {this.renderButtons()}
+              {this.renderGameData()}
+              {this.renderAssassin()}
+            </View>
+          </View>
         </View>
-      </View>
+      </ImageBackground>
     )
   }
 }
@@ -163,18 +232,26 @@ export default class GameScreen extends React.Component {
 const style = (orientation = null) => {
   return StyleSheet.create({
     screen: {
-      marginHorizontal: 4,
-      marginVertical: (orientation === 'portrait') ? 20 : 0,
+      paddingHorizontal: 5,
+      paddingTop: (orientation === 'portrait') ? 20 : 0,
+      flex: 1
+    },
+    gameWrapper: {
+      flexDirection: (orientation === 'portrait') ? 'column' : 'row',
+      paddingVertical: (orientation === 'portrait') ? 0 : 12,
+      flex: 1
+    },
+    infoWrapper: {
       flex: 1
     },
     cardText: {
-      fontSize: (orientation === 'portrait') ? RFValue(10) : RFValue(14),
+      fontSize: (orientation === 'portrait') ? RFValue(10) : RFValue(10),
       fontFamily: fonts.homeButtons,
       fontWeight: 'bold', 
       textTransform: 'uppercase'
     },
     flippedText: {
-      fontSize: (orientation === 'portrait') ? RFValue(10) : RFValue(14),
+      fontSize: (orientation === 'portrait') ? RFValue(10) : RFValue(10),
       fontFamily: fonts.homeButtons,
       fontWeight: 'bold',
       textTransform: 'uppercase',
@@ -186,40 +263,158 @@ const style = (orientation = null) => {
       justifyContent: 'center',
       backgroundColor: colors.lightGray,
       paddingVertical: 5,
-      marginHorizontal: 1,
+      marginHorizontal: 2,
+      marginVertical: 3,
       paddingHorizontal: 5,
       borderRadius: 5,
       overflow: 'hidden'
     },
     row: {
-      flexDirection: 'row'
+      flexDirection: 'row',
+      flex: 1
     },
     board: {
-      flex: 1, 
+      zIndex: 1,
+      flex: (orientation === 'portrait') ? 1.5 : 2, 
       justifyContent: 'space-evenly',
-      maxHeight: 300
+      paddingVertical: (orientation === 'portrait') ? 10 : 0,
+      paddingRight: (orientation === 'portrait') ? 0 : 10,
+      borderRightWidth: (orientation === 'portrait') ? 0 : 1,
+      borderRightColor: (orientation === 'portrait') ? null : 'white',
     },
     logoWrapper: { 
-      marginHorizontal: 14, 
-      height: (orientation === 'portrait') ? 50 : 30, 
+      height: (orientation === 'portrait') ? 50 : 40, 
       justifyContent: 'center',
       alignItems: 'center', 
       borderBottomWidth: 1, 
-      borderBottomColor: colors.lightGray 
+      borderBottomColor: 'white',
+      zIndex: 1
     },
     logo: { 
       width: '50%', 
-      height: (orientation === 'portrait') ? 40 : 20, 
+      height: (orientation === 'portrait') ? 48 : 28, 
       justifyContent: 'center', 
       alignItems: 'center', 
       resizeMode: 'contain' 
     },
     cardImage: {
-      width: '125%',
+      width: '175%',
       resizeMode: 'contain',
       position: 'absolute',
       justifyContent: 'center',
       alignItems: 'center' 
-    }
+    },
+    scoreboard: {
+      marginHorizontal: 2,
+      flexDirection: 'row',
+      flex: 1,
+      maxHeight: 60,
+      borderTopColor: 'white',
+      borderTopWidth: (orientation === 'portrait') ? 1 : null,
+      paddingTop: (orientation === 'portrait') ? 12 : 2,
+      marginLeft: (orientation === 'portrait') ? 0 : 12,
+    },
+    redBoard: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginRight: 5,
+      borderRadius: 5,
+      backgroundColor: colors["red-agent-light"]
+    },
+    blueBoard: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginRight: 5,
+      borderRadius: 5,
+      backgroundColor: colors["blue-agent-light"]
+    },
+    scoreboardText: {
+      color: 'white',
+      fontWeight: 'bold',
+      fontFamily: fonts.homeButtons,
+      fontSize: (orientation === 'portrait') ? RFValue(14) : RFValue(14)
+    },
+    timerWrapper: {
+      flex: 0.5,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: colors.lightGray,
+      borderRadius: 5
+    },
+    buttonsWrapper: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderTopColor: 'white',
+      borderTopWidth: 1,
+      marginTop: 12,
+      marginLeft: (orientation === 'portrait') ? 0 : 9.5,
+    },
+    buttonContainer: {
+      flex: 1,
+      marginTop: 12,
+      marginHorizontal: 2.5
+    },
+    button: {
+      borderRadius: 6,
+      backgroundColor: colors.lightGray
+    },
+    buttonTitle: {
+      color: colors.darkGray,
+      fontFamily: fonts.homeButtons,
+      fontSize: (orientation === 'portrait') ? RFValue(10) : RFValue(10),
+      fontFamily: fonts.homeButtons,
+      fontWeight: 'bold',
+      marginLeft: -6
+    },
+    dataWrapper: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      height: 40,
+      flexDirection: 'row',
+      width: (orientation === 'portrait') ? '62%' : '94%',
+      borderTopColor: 'white',
+      borderTopWidth: 1,
+      marginTop: 12,
+      marginLeft: (orientation === 'portrait') ? 0 : 12,
+      marginRight: (orientation === 'portrait') ? 0 : 5,
+      alignItems: 'center',
+      paddingVertical: 5
+    },
+    idWrapper: {
+      flex: 1,
+      borderRightWidth: 1,
+      borderRightColor: 'white',
+      paddingLeft: 2.5
+    },
+    gameDataText: {
+      fontFamily: fonts.homeButtons,
+      fontSize: RFValue(12),
+      fontWeight: 'bold',
+      color: 'white'
+    },
+    codeWrapper: {
+      flex: 1,
+      paddingLeft: 10
+    },
+    assassin: {
+      height: (orientation === 'portrait') ? '160%' : '110%',
+      opacity: 0.35,
+      resizeMode: 'contain',
+      position: 'absolute',
+      zIndex: -1,
+      bottom: -40,
+      left: (orientation === 'portrait') ? 0 : -85
+    },
+    imageBackgroundFull: {
+      width: '100%',
+      height: '100%',
+    },
+    imageStyleFull: {
+      resizeMode: 'cover',
+    },
   })
 }
