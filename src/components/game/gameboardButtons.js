@@ -8,7 +8,7 @@ export const GameboardButtons = (props) => {
     <View style={props.buttonsWrapper}>
       <Button
         title={'Home'}
-        // onPress={() => this.createGame()}
+        onPress={props.goHome}
         type={'solid'}
         containerStyle={props.buttonContainer}
         buttonStyle={props.buttonStyle}
@@ -42,7 +42,7 @@ export const GameboardButtons = (props) => {
       />
       <Button
         title={(props.orientation === 'portrait') ? 'Toggle Role' : 'Role'}
-        // onPress={() => this.tempJoinGame()}
+        // onPress={() => console.log('tbd')}
         type={'solid'}
         containerStyle={props.buttonContainer}
         buttonStyle={props.buttonStyle}

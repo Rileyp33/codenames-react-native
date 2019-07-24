@@ -42,7 +42,7 @@ export default class HomeScreen extends React.Component{
         />
         <Button
           title={'Join Game'}
-          onPress={() => this.tempJoinGame()}
+          onPress={() => this.joinGame()}
           type={'solid'}
           containerStyle={style.buttonContainer}
           buttonStyle={style.button}
@@ -91,8 +91,8 @@ export default class HomeScreen extends React.Component{
     let navigate = await this.props.navigation.navigate('Game', { gameId: creationResponse.data.game_id })
   }
 
-  tempJoinGame = () => {
-    this.props.navigation.navigate('Game', { gameId: 1 })
+  joinGame = () => {
+    this.props.navigation.navigate('Lobby')
   }
 
   render() {
@@ -130,7 +130,8 @@ const style = StyleSheet.create({
     position: 'absolute',
     zIndex: -1,
     bottom: -20,
-    left: -320
+    left: -320,
+    opacity: 0.78
   },
   buttonsWrapper: {
     flex: 1,
