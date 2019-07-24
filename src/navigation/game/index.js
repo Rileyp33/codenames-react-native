@@ -23,12 +23,10 @@ export default class GameScreen extends React.Component {
       assassin: 0,
       result: null,
       timer: false,
-      gameId: 0,
       orientation: 'portrait'
     }
 
-    // this.tempGame = this.props.navigation.getParam('gameId')
-    this.tempGame = 3
+    this.gameId = this.props.navigation.getParam('gameId')
     this.gameCode = 'ABC'
 
     this.positions = [
@@ -59,7 +57,7 @@ export default class GameScreen extends React.Component {
     this.gameChannel = this.cable.subscriptions.create(
       {
         channel: 'GameChannel', 
-        game_id: this.tempGame
+        game_id: this.gameId
       },
       {
         connected: () => console.log("GameChannel connected"),
@@ -81,8 +79,7 @@ export default class GameScreen extends React.Component {
   };
 
   getGame = async () => {
-    let gameId = this.tempGame
-    axios.get(BASE_URL + `local_games/${gameId}`)
+    axios.get(BASE_URL + `local_games/${this.gameId}`)
       .then(response => {
         this.setState({
           ...response.data
@@ -164,7 +161,7 @@ export default class GameScreen extends React.Component {
           blueScore={this.state.blue_score}
           blueTotal={this.state.blue_total}
           timerWrapper={style(this.state.orientation).timerWrapper}
-          iconSize={(this.state.orientation === 'portrait') ? RFValue(30) : RFValue(40)}
+          iconSize={RFValue(30)}
         />
       )
     }
@@ -178,6 +175,7 @@ export default class GameScreen extends React.Component {
         buttonStyle={style(this.state.orientation).button}
         buttonTitle={style(this.state.orientation).buttonTitle}
         orientation={this.state.orientation}
+        goHome={() => this.props.navigation.navigate('Home')}
       />
     )
   }
@@ -189,7 +187,7 @@ export default class GameScreen extends React.Component {
         idWrapper={style(this.state.orientation).idWrapper}
         codeWrapper={style(this.state.orientation).codeWrapper}
         textStyle={style(this.state.orientation).gameDataText}
-        gameId={this.tempGame}
+        gameId={this.gameId}
         gameCode={this.gameCode}
       />
     )
@@ -245,13 +243,13 @@ const style = (orientation = null) => {
       flex: 1
     },
     cardText: {
-      fontSize: (orientation === 'portrait') ? RFValue(10) : RFValue(10),
+      fontSize: (orientation === 'portrait') ? RFValue(10) : RFValue(12),
       fontFamily: fonts.homeButtons,
       fontWeight: 'bold', 
       textTransform: 'uppercase'
     },
     flippedText: {
-      fontSize: (orientation === 'portrait') ? RFValue(10) : RFValue(10),
+      fontSize: (orientation === 'portrait') ? RFValue(10) : RFValue(12),
       fontFamily: fonts.homeButtons,
       fontWeight: 'bold',
       textTransform: 'uppercase',
