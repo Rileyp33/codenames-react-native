@@ -86,9 +86,7 @@ export default class HomeScreen extends React.Component{
   }
 
   createGame = async () => {
-    let body = JSON.stringify({ role: 'operative' })
-    let creationResponse = await apiCall(body, 'post', 'local_games')
-    let navigate = await this.props.navigation.navigate('Game', { gameId: creationResponse.data.game_id })
+    this.props.navigation.navigate('NewGame')
   }
 
   joinGame = () => {

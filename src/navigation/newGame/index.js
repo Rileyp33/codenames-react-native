@@ -4,14 +4,15 @@ import { Button } from 'react-native-elements'
 import { fonts } from '../../utils/styles'
 import { Input } from 'react-native-elements'
 import { apiCall } from '../../utils/requests'
+import { colors } from '../../utils/styles'
+import { GlobalText } from '../../components/globalText'
 
 
-export default class LobbyScreen extends React.Component {
+export default class NewGameScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      gameId: '',
-      gameCode: '', 
+      codename: '', 
       orientation: 'portrait'
     }
   }
@@ -52,18 +53,20 @@ export default class LobbyScreen extends React.Component {
     )
   }
 
-  tempJoinGame = () => {
-    this.props.navigation.navigate('Game', { gameId: this.state.gameId })
-    this.gameInput.clear();
-    this.codeInput.clear();
+  tempCreateGame = async () => {
+    console.log(this.state.codename)
+    let body = JSON.stringify({ role: 'operative' })
+    let creationResponse = await apiCall(body, 'post', 'local_games')
+    let navigate = await this.props.navigation.navigate('Game', { gameId: creationResponse.data.game_id })
+    this.codename.clear()
   }
 
   renderButtons = () => {
     return (
       <View style={style(this.state.orientation).buttonsWrapper}>
         <Button
-          title={'Join Game'}
-          onPress={() => this.tempJoinGame()}
+          title={'Create Game'}
+          onPress={() => this.tempCreateGame()}
           type={'clear'}
           containerStyle={style(this.state.orientation).buttonContainer}
           buttonStyle={style(this.state.orientation).button}
@@ -81,34 +84,27 @@ export default class LobbyScreen extends React.Component {
     )
   }
 
-  setGameId = (input) => {
-    this.setState({ gameId: input })
-  }
-
-  setGameCode = (input) => {
-    this.setState({ gameCode: input })
+  setCodename = (input) => {
+    this.setState({ codename: input })
   }
 
   renderForm = () => {
     return (
       <View>
         <Input
-          ref={input => (this.gameInput = input)}
-          placeholder='Game ID'
-          leftIcon={{ type: 'material-community', name: 'sort-numeric' }}
-          inputContainerStyle={style(this.state.orientation).inputContainer}
-          inputStyle={style(this.state.orientation).input}
-          leftIconContainerStyle={style(this.state.orientation).formIconContainer}
-          onChangeText={(i) => {this.setGameId(i)}}
-      />
-        <Input
-          ref={input => (this.codeInput = input)}
-          placeholder='Game Code'
+          ref={input => (this.codename = input)}
+          placeholder='Codename'
           leftIcon={{ type: 'ionicon', name: 'md-key' }}
           inputContainerStyle={style(this.state.orientation).inputContainer}
           inputStyle={style(this.state.orientation).input}
-          onChangeText={(i) => { this.setGameCode(i) }}
+          onChangeText={(i) => { this.setCodename(i) }}
         />
+        <View style={style(this.state.orientation).instructions}>
+          <GlobalText
+            value={'Create a unique codename for your game. Your party will enter this to join.'}
+            style={style(this.state.orientation).instructionsText}
+          />
+        </View>
       </View>
     )
   }
@@ -148,7 +144,23 @@ const style = (orientation = null) => {
         justifyContent: 'flex-start'
       },
       elementsWrapper: {
-        marginTop: (orientation === 'portrait') ? 140 : 20
+        marginTop: (orientation === 'portrait') ? 140 : 15,
+        alignItems: 'center'
+      },
+      instructions: {
+        paddingHorizontal: 12,
+        marginBottom: (orientation === 'portrait') ? 12 : 6,
+        padding: 12,
+        backgroundColor: colors.darkGray,
+        width: 300,
+        alignSelf: 'center',
+        borderBottomLeftRadius: 8,
+        borderBottomRightRadius: 8,
+        opacity: 0.93,
+      },
+      instructionsText: {
+        color: 'white',
+        fontSize: 10
       },
       buttonsWrapper: {
         alignItems: 'center'
@@ -158,7 +170,7 @@ const style = (orientation = null) => {
       },
       button: {
         borderRadius: 8,
-        backgroundColor: 'black',
+        backgroundColor: colors["red-agent-light"],
         opacity: 0.9
       },
       buttonTitle: {
@@ -191,8 +203,8 @@ const style = (orientation = null) => {
         width: 300,
         alignSelf: 'center',
         borderColor: 'transparent',
-        borderRadius: 8,
-        marginBottom: (orientation === 'portrait') ? 12 : 6
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8
       },
       input: {
         marginLeft: 20
