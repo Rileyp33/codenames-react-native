@@ -120,7 +120,6 @@ export default class LobbyScreen extends React.Component {
           inputStyle={style(this.state.orientation).input}
           leftIconContainerStyle={style(this.state.orientation).formIconContainer}
           onChangeText={(i) => {this.setGameId(i)}}
-          maxLength={8}
       />
         <Input
           ref={input => (this.codeInput = input)}
@@ -129,6 +128,7 @@ export default class LobbyScreen extends React.Component {
           inputContainerStyle={style(this.state.orientation).inputContainer}
           inputStyle={style(this.state.orientation).input}
           onChangeText={(i) => { this.setCodename(i) }}
+          maxLength={8}
         />
       </View>
     )
