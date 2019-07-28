@@ -8,6 +8,7 @@ import { GameboardButtons } from '../../components/game/gameboardButtons'
 import { Scoreboard } from '../../components/game/scoreboard'
 import { BASE_URL } from '../../utils/requests'
 import { colors, fonts } from '../../utils/styles'
+import { apiCall } from '../../utils/requests'
 import axios from 'axios'
 
 export default class GameScreen extends React.Component {
@@ -27,7 +28,7 @@ export default class GameScreen extends React.Component {
     }
 
     this.gameId = this.props.navigation.getParam('gameId')
-    this.gameCode = 'ABC'
+    this.codename = this.props.navigation.getParam('codename')
 
     this.positions = [
       [0, 1, 2, 3, 4],
@@ -79,12 +80,19 @@ export default class GameScreen extends React.Component {
   };
 
   getGame = async () => {
-    axios.get(BASE_URL + `local_games/${this.gameId}`)
-      .then(response => {
-        this.setState({
-          ...response.data
-        })
+    await axios.get(BASE_URL + `local_games/${this.gameId}`, { 
+      params: { 
+        codename: this.codename 
+      }, 
+      headers: { 
+        'content-type': 'application/JSON'
+      } 
+    })
+    .then((response) => {
+      this.setState({
+        ...response.data
       })
+    })
   }
 
   handleDataReceipt = (data) => {
@@ -188,7 +196,7 @@ export default class GameScreen extends React.Component {
         codeWrapper={style(this.state.orientation).codeWrapper}
         textStyle={style(this.state.orientation).gameDataText}
         gameId={this.gameId}
-        gameCode={this.gameCode}
+        codename={this.codename}
       />
     )
   }
@@ -371,32 +379,32 @@ const style = (orientation = null) => {
       position: 'absolute',
       bottom: 0,
       left: 0,
-      height: 40,
-      flexDirection: 'row',
-      width: (orientation === 'portrait') ? '62%' : '94%',
+      flexDirection: (orientation === 'portrait') ? 'row' : 'column',
+      width: (orientation === 'portrait') ? '75%' : '94%',
       borderTopColor: 'white',
       borderTopWidth: 1,
       marginTop: 12,
       marginLeft: (orientation === 'portrait') ? 0 : 12,
       marginRight: (orientation === 'portrait') ? 0 : 5,
-      alignItems: 'center',
-      paddingVertical: 5
+      paddingVertical: 8,
+      overflow: 'visible'
     },
     idWrapper: {
       flex: 1,
-      borderRightWidth: 1,
+      borderRightWidth: (orientation === "portrait") ? 1 : 0,
       borderRightColor: 'white',
-      paddingLeft: 2.5
+      paddingLeft: (orientation === "portrait") ? 2.5 : 8
     },
     gameDataText: {
       fontFamily: fonts.homeButtons,
-      fontSize: RFValue(12),
+      fontSize: RFValue(10),
       fontWeight: 'bold',
       color: 'white'
     },
     codeWrapper: {
-      flex: 1,
-      paddingLeft: 10
+      flex: 2,
+      paddingLeft: (orientation === "portrait") ? 10 : 8,
+      overflow: 'visible'
     },
     assassin: {
       height: (orientation === 'portrait') ? '160%' : '110%',

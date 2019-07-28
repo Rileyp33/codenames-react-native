@@ -4,6 +4,8 @@ import { Button } from 'react-native-elements'
 import { fonts } from '../../utils/styles'
 import { Input } from 'react-native-elements'
 import { apiCall } from '../../utils/requests'
+import axios from 'axios'
+import { BASE_URL } from '../../utils/requests'
 
 
 export default class LobbyScreen extends React.Component {
@@ -11,7 +13,8 @@ export default class LobbyScreen extends React.Component {
     super(props)
     this.state = {
       gameId: '',
-      gameCode: '', 
+      codename: '', 
+      errors: null,
       orientation: 'portrait'
     }
   }
@@ -52,10 +55,27 @@ export default class LobbyScreen extends React.Component {
     )
   }
 
-  tempJoinGame = () => {
-    this.props.navigation.navigate('Game', { gameId: this.state.gameId })
-    this.gameInput.clear();
-    this.codeInput.clear();
+  joinGame = async () => {
+    await axios.get(BASE_URL + `local_games/${this.state.gameId}`, {
+      params: {
+        codename: this.state.codename
+      },
+      headers: {
+        'content-type': 'application/JSON'
+      }
+    })
+    .then((response) => {
+      if(response.data && response.data.error) {
+        this.setState({ errors: response.data.error })
+      } else if (response.data && !response.data.error) {
+          this.props.navigation.navigate('Game', {
+            gameId: response.data.game_id,
+            codename: response.data.codename
+          })
+      } else {
+        this.setState({ errors: 'Error: please check your network connection and try again.' })
+      }
+    })
   }
 
   renderButtons = () => {
@@ -63,7 +83,7 @@ export default class LobbyScreen extends React.Component {
       <View style={style(this.state.orientation).buttonsWrapper}>
         <Button
           title={'Join Game'}
-          onPress={() => this.tempJoinGame()}
+          onPress={() => this.joinGame()}
           type={'clear'}
           containerStyle={style(this.state.orientation).buttonContainer}
           buttonStyle={style(this.state.orientation).button}
@@ -85,8 +105,8 @@ export default class LobbyScreen extends React.Component {
     this.setState({ gameId: input })
   }
 
-  setGameCode = (input) => {
-    this.setState({ gameCode: input })
+  setCodename = (input) => {
+    this.setState({ codename: input })
   }
 
   renderForm = () => {
@@ -100,6 +120,7 @@ export default class LobbyScreen extends React.Component {
           inputStyle={style(this.state.orientation).input}
           leftIconContainerStyle={style(this.state.orientation).formIconContainer}
           onChangeText={(i) => {this.setGameId(i)}}
+          maxLength={8}
       />
         <Input
           ref={input => (this.codeInput = input)}
@@ -107,7 +128,7 @@ export default class LobbyScreen extends React.Component {
           leftIcon={{ type: 'ionicon', name: 'md-key' }}
           inputContainerStyle={style(this.state.orientation).inputContainer}
           inputStyle={style(this.state.orientation).input}
-          onChangeText={(i) => { this.setGameCode(i) }}
+          onChangeText={(i) => { this.setCodename(i) }}
         />
       </View>
     )
