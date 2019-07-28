@@ -26,7 +26,7 @@ export default class HomeScreen extends React.Component{
       <View style={style.buttonsWrapper}>
         <Button
           title={'New Game'}
-          onPress={() => this.createGame()}
+          onPress={() => this.newGame()}
           type={'solid'}
           containerStyle={style.buttonContainer}
           buttonStyle={style.button}
@@ -85,7 +85,7 @@ export default class HomeScreen extends React.Component{
     )
   }
 
-  createGame = async () => {
+  newGame = async () => {
     this.props.navigation.navigate('NewGame')
   }
 

@@ -7,13 +7,13 @@ export const GameData = (props) => {
     <View style={props.dataWrapper}>
       <View style={props.idWrapper}>
         <GlobalText
-          value={`Game ID:  ${props.gameId}`}
+          value={`ID:  ${props.gameId}`}
           style={props.textStyle}
         />
       </View>
       <View style={props.codeWrapper}>
         <GlobalText
-          value={`Code:  ${props.gameCode}`}
+          value={`Codename:  ${props.codename}`}
           style={props.textStyle}
         />
       </View>

@@ -53,11 +53,13 @@ export default class NewGameScreen extends React.Component {
     )
   }
 
-  tempCreateGame = async () => {
-    console.log(this.state.codename)
-    let body = JSON.stringify({ role: 'operative' })
+  createGame = async () => {
+    let body = JSON.stringify({
+      role: 'operative',
+      codename: this.state.codename
+    })
     let creationResponse = await apiCall(body, 'post', 'local_games')
-    let navigate = await this.props.navigation.navigate('Game', { gameId: creationResponse.data.game_id })
+    let navigate = await this.props.navigation.navigate('Game', { gameId: creationResponse.data.game_id, codename: creationResponse.data.codename })
     this.codename.clear()
   }
 
@@ -66,7 +68,7 @@ export default class NewGameScreen extends React.Component {
       <View style={style(this.state.orientation).buttonsWrapper}>
         <Button
           title={'Create Game'}
-          onPress={() => this.tempCreateGame()}
+          onPress={() => this.createGame()}
           type={'clear'}
           containerStyle={style(this.state.orientation).buttonContainer}
           buttonStyle={style(this.state.orientation).button}

@@ -17,7 +17,7 @@ const style = (props) => {
       color: (styleProps.color) ? styleProps.color : 'black',
       fontWeight: (styleProps.fontWeight) ? styleProps.fontWeight : null,
       fontFamily: (styleProps.fontFamily) ? styleProps.fontFamily : 'System',
-      fontSize: (styleProps.fontSize) ? styleProps.fontSize : RFValue(12),
+      fontSize: (styleProps.fontSize) ? styleProps.fontSize : 12,
       fontWeight: (styleProps.fontWeight) ? styleProps.fontWeight : null,
       textTransform: (styleProps.textTransform) ? styleProps.textTransform : null,
     } : null
