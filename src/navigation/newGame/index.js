@@ -100,6 +100,7 @@ export default class NewGameScreen extends React.Component {
           inputContainerStyle={style(this.state.orientation).inputContainer}
           inputStyle={style(this.state.orientation).input}
           onChangeText={(i) => { this.setCodename(i) }}
+          maxLength={8}
         />
         <View style={style(this.state.orientation).instructions}>
           <GlobalText

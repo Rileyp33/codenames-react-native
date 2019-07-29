@@ -1,14 +1,12 @@
 import React from 'react'
 import ActionCable from 'react-native-actioncable'
 import { View, Image, StyleSheet, Dimensions, ImageBackground } from 'react-native'
-import { RFValue } from "react-native-responsive-fontsize"
 import { Card } from '../../components/game/card'
 import { GameData } from '../../components/game/gameData'
 import { GameboardButtons } from '../../components/game/gameboardButtons'
 import { Scoreboard } from '../../components/game/scoreboard'
 import { BASE_URL } from '../../utils/requests'
 import { colors, fonts } from '../../utils/styles'
-import { apiCall } from '../../utils/requests'
 import axios from 'axios'
 
 export default class GameScreen extends React.Component {
@@ -110,6 +108,14 @@ export default class GameScreen extends React.Component {
     }
   }
 
+  setRole = () => {
+    if (this.state.role === "spymaster") {
+      this.setState({ role: "operative" })
+    } else {
+      this.setState({ role: "spymaster" })
+    }
+  }
+
   renderRow = (rowIndexes) => {
     let orderedDeck = this.state.cells.sort((a, b) => a.position - b.position)
     let row = rowIndexes.map((i) => {
@@ -118,18 +124,20 @@ export default class GameScreen extends React.Component {
     return row.map((card) => {
       return (
         <Card
+          role={this.state.role}
           key={card.word}
           onPress={() => { this.handleFlip(card.cell_id) }}
           cardStyle={style(this.state.orientation).card}
           imageStyle={style(this.state.orientation).cardImage}
           textStyle={
             (card.flipped_status === "up") ?
-              style(this.state.orientation).flippedText 
-              : style(this.state.orientation).cardText
+              style(this.state.orientation, this.state.role).flippedText 
+              : style(this.state.orientation, this.state.role).cardText
           }
           value={card.word}
           color={card.color}
           flippedStatus={card.flipped_status}
+          orientation={this.state.orientation}
         />
       )
     })
@@ -169,7 +177,7 @@ export default class GameScreen extends React.Component {
           blueScore={this.state.blue_score}
           blueTotal={this.state.blue_total}
           timerWrapper={style(this.state.orientation).timerWrapper}
-          iconSize={RFValue(30)}
+          iconSize={26}
         />
       )
     }
@@ -184,6 +192,7 @@ export default class GameScreen extends React.Component {
         buttonTitle={style(this.state.orientation).buttonTitle}
         orientation={this.state.orientation}
         goHome={() => this.props.navigation.navigate('Home')}
+        setRole={this.setRole}
       />
     )
   }
@@ -235,7 +244,7 @@ export default class GameScreen extends React.Component {
   }
 }
 
-const style = (orientation = null) => {
+const style = (orientation = null, role = null) => {
   return StyleSheet.create({
     screen: {
       paddingHorizontal: 5,
@@ -251,17 +260,20 @@ const style = (orientation = null) => {
       flex: 1
     },
     cardText: {
-      fontSize: (orientation === 'portrait') ? RFValue(10) : RFValue(12),
+      fontSize: (orientation === 'portrait') ? 10 : 12,
       fontFamily: fonts.homeButtons,
       fontWeight: 'bold', 
-      textTransform: 'uppercase'
+      textTransform: 'uppercase',
+      color: (role === 'spymaster') ? 'white' : 'black'
     },
     flippedText: {
-      fontSize: (orientation === 'portrait') ? RFValue(10) : RFValue(12),
+      fontSize: (orientation === 'portrait') ? 10 : 12,
       fontFamily: fonts.homeButtons,
-      fontWeight: 'bold',
+      fontWeight: (role === 'operative') ? 'bold' : null,
       textTransform: 'uppercase',
-      color: 'white'
+      color: 'white',
+      textDecorationLine: (role === 'spymaster') ? 'line-through' : null,
+      textDecorationStyle: 'double'
     },
     card: {
       flex: 1,
@@ -281,7 +293,7 @@ const style = (orientation = null) => {
     },
     board: {
       zIndex: 1,
-      flex: (orientation === 'portrait') ? 1.5 : 2, 
+      flex: (orientation === 'portrait') ? 1.5 : 2.4, 
       justifyContent: 'space-evenly',
       paddingVertical: (orientation === 'portrait') ? 10 : 0,
       paddingRight: (orientation === 'portrait') ? 0 : 10,
@@ -340,7 +352,7 @@ const style = (orientation = null) => {
       color: 'white',
       fontWeight: 'bold',
       fontFamily: fonts.homeButtons,
-      fontSize: (orientation === 'portrait') ? RFValue(14) : RFValue(14)
+      fontSize: 14
     },
     timerWrapper: {
       flex: 0.5,
@@ -370,17 +382,17 @@ const style = (orientation = null) => {
     buttonTitle: {
       color: colors.darkGray,
       fontFamily: fonts.homeButtons,
-      fontSize: (orientation === 'portrait') ? RFValue(10) : RFValue(10),
+      fontSize: 10,
       fontFamily: fonts.homeButtons,
       fontWeight: 'bold',
-      marginLeft: -6
+      marginLeft: (orientation === 'portrait') ? -6 : 0
     },
     dataWrapper: {
       position: 'absolute',
       bottom: 0,
       left: 0,
       flexDirection: (orientation === 'portrait') ? 'row' : 'column',
-      width: (orientation === 'portrait') ? '75%' : '94%',
+      width: (orientation === 'portrait') ? '75%' : '92%',
       borderTopColor: 'white',
       borderTopWidth: 1,
       marginTop: 12,
@@ -397,7 +409,7 @@ const style = (orientation = null) => {
     },
     gameDataText: {
       fontFamily: fonts.homeButtons,
-      fontSize: RFValue(10),
+      fontSize: 10,
       fontWeight: 'bold',
       color: 'white'
     },
