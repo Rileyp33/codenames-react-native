@@ -1,13 +1,12 @@
 import React from 'react'
 import { View } from 'react-native'
 import { Button } from 'react-native-elements'
-import { colors } from '../../utils/styles'
 
 export const GameboardButtons = (props) => {
   return (
     <View style={props.buttonsWrapper}>
       <Button
-        title={'Home'}
+        title={(props.orientation === 'portrait') ? 'Home' : null}
         onPress={props.goHome}
         type={'solid'}
         containerStyle={props.buttonContainer}
@@ -17,14 +16,14 @@ export const GameboardButtons = (props) => {
         icon={{
           type: 'entypo',
           name: 'home',
-          size: 20,
+          size: (props.orientation === 'portrait') ? 20 : 24,
           color: 'black',
-          paddingRight: 8,
-          marginLeft: -6
+          paddingRight: (props.orientation === 'portrait') ? 8 : 0,
+          marginLeft: (props.orientation === 'portrait') ? -6 : 0
         }}
       />
       <Button
-        title={'Rules'}
+        title={(props.orientation === 'portrait') ? 'Rules' : null}
         // onPress={() => console.log('tbd')}
         type={'solid'}
         containerStyle={props.buttonContainer}
@@ -34,27 +33,28 @@ export const GameboardButtons = (props) => {
         icon={{
           type: 'material-community',
           name: 'sign-text',
-          size: 20,
+          size: (props.orientation === 'portrait') ? 20 : 24,
           color: 'black',
-          paddingRight: 8,
-          marginLeft: -6
+          paddingRight: (props.orientation === 'portrait') ? 8 : 0,
+          marginLeft: (props.orientation === 'portrait') ? -6 : 0
         }}
       />
       <Button
-        title={(props.orientation === 'portrait') ? 'Toggle Role' : 'Role'}
-        // onPress={() => console.log('tbd')}
+        title={(props.orientation === 'portrait') ? 'Toggle Role' : null}
+        onPress={() => props.setRole()}
         type={'solid'}
         containerStyle={props.buttonContainer}
         buttonStyle={props.buttonStyle}
         titleStyle={props.buttonTitle}
         raised={true}
+        iconContainerStyle={{alignItems: 'center'}}
         icon={{
           type: 'material-community',
-          name: 'account-key',
-          size: 20,
+          name: 'account-switch',
+          size: (props.orientation === 'portrait') ? 20 : 24,
           color: 'black',
-          paddingRight: 8,
-          marginLeft: -6
+          paddingRight: (props.orientation === 'portrait') ? 8 : 0,
+          marginLeft: (props.orientation === 'portrait') ? -6 : 0
         }}
       />
     </View>

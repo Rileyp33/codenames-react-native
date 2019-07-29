@@ -20,6 +20,8 @@ const style = (props) => {
       fontSize: (styleProps.fontSize) ? styleProps.fontSize : 12,
       fontWeight: (styleProps.fontWeight) ? styleProps.fontWeight : null,
       textTransform: (styleProps.textTransform) ? styleProps.textTransform : null,
+      textDecorationLine: (styleProps.textDecorationLine) ? styleProps.textDecorationLine : null,
+      textDecorationStyle: (styleProps.textDecorationStyle) ? styleProps.textDecorationStyle : null,
     } : null
   })
 }
