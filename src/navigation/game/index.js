@@ -193,6 +193,7 @@ export default class GameScreen extends React.Component {
         orientation={this.state.orientation}
         goHome={() => this.props.navigation.navigate('Home')}
         setRole={this.setRole}
+        navigation={this.props.navigation}
       />
     )
   }
