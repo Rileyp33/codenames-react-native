@@ -24,7 +24,7 @@ export const GameboardButtons = (props) => {
       />
       <Button
         title={(props.orientation === 'portrait') ? 'Rules' : null}
-        // onPress={() => console.log('tbd')}
+        onPress={() => props.navigation.navigate('Rules')}
         type={'solid'}
         containerStyle={props.buttonContainer}
         buttonStyle={props.buttonStyle}

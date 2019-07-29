@@ -58,7 +58,7 @@ export default class HomeScreen extends React.Component{
         />
         <Button
           title={'Rules'}
-          onPress={() => console.log('tbd')}
+          onPress={() => this.showRules()}
           type={'solid'}
           containerStyle={style.buttonContainer}
           buttonStyle={style.button}
@@ -91,6 +91,10 @@ export default class HomeScreen extends React.Component{
 
   joinGame = () => {
     this.props.navigation.navigate('Lobby')
+  }
+
+  showRules = () => {
+    this.props.navigation.navigate('Rules')
   }
 
   render() {
