@@ -1,6 +1,7 @@
 import React from 'react'
 import { TouchableOpacity, Image } from 'react-native'
 import { GlobalText } from '../globalText'
+import FlipCard from 'react-native-flip-card'
 
 export const Card = (props) => {
 
@@ -89,17 +90,17 @@ export const Card = (props) => {
 
   formatText = (value) => {
     if(props.orientation === 'portrait') {
-      if (value && value.length > 6) {
+      if (value && value.length > 8) {
         return (
-          value.slice(0, 6) + '-\n' + value.slice(6)
+          value.slice(0, 8) + '-\n' + value.slice(8)
         )
       } else {
         return value
       }
     } else { 
-        if (value && value.length > 8) {
+        if (value && value.length > 10) {
           return (
-            value.slice(0, 8) + '-\n' + value.slice(8)
+            value.slice(0, 10) + '-\n' + value.slice(10)
           )
         } else {
           return value
@@ -108,15 +109,36 @@ export const Card = (props) => {
   }
 
   return (
-    <TouchableOpacity
-      key={props.key}
-      onPress={props.onPress}
-      style={props.cardStyle}>
-      {renderRoleBasedImage()}
-      <GlobalText
-        value={formatText(props.value)}
-        style={props.textStyle}>
-      </GlobalText>
-    </TouchableOpacity>
+    <FlipCard
+      friction={3}
+      perspective={120}
+      flipHorizontal={false}
+      useNativeDriver={true}
+      flipVertical={true}
+      flip={props.flippedStatus === "up"}
+      clickable={true}
+      clickable={true}
+    >
+      <TouchableOpacity
+        key={props.key}
+        onPress={props.onPress}
+        style={props.cardStyle}>
+        {renderRoleBasedImage()}
+        <GlobalText
+          value={formatText(props.value)}
+          style={props.textStyle}>
+        </GlobalText>
+      </TouchableOpacity>
+      <TouchableOpacity
+        key={props.key}
+        onPress={props.onPress}
+        style={props.cardStyle}>
+        {renderRoleBasedImage()}
+        <GlobalText
+          value={formatText(props.value)}
+          style={props.textStyle}>
+        </GlobalText>
+      </TouchableOpacity>
+    </FlipCard>
   )
 }

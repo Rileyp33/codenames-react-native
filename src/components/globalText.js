@@ -1,6 +1,5 @@
 import React from 'react'
 import { Text, StyleSheet } from 'react-native'
-import { RFValue } from "react-native-responsive-fontsize"
 
 export const GlobalText = (props) => {
   return (

@@ -25,8 +25,10 @@ export default class GameScreen extends React.Component {
       orientation: 'portrait'
     }
 
-    this.gameId = this.props.navigation.getParam('gameId')
-    this.codename = this.props.navigation.getParam('codename')
+    // this.gameId = this.props.navigation.getParam('gameId')
+    this.gameId = 22
+    // this.codename = this.props.navigation.getParam('codename')
+    this.codename = 'Dsfasdfa'
 
     this.positions = [
       [0, 1, 2, 3, 4],
@@ -66,10 +68,6 @@ export default class GameScreen extends React.Component {
         }
       }
     )
-  }
-
-  componentDidUpdate() {
-    console.log("State updated to: ", this.state)
   }
 
   isPortrait = () => {
@@ -121,6 +119,7 @@ export default class GameScreen extends React.Component {
     let row = rowIndexes.map((i) => {
       return orderedDeck[i]
     })
+
     return row.map((card) => {
       return (
         <Card
@@ -261,14 +260,14 @@ const style = (orientation = null, role = null) => {
       flex: 1
     },
     cardText: {
-      fontSize: (orientation === 'portrait') ? 10 : 12,
+      fontSize: (orientation === 'portrait') ? 12 : 14,
       fontFamily: fonts.homeButtons,
       fontWeight: 'bold', 
       textTransform: 'uppercase',
       color: (role === 'spymaster') ? 'white' : 'black'
     },
     flippedText: {
-      fontSize: (orientation === 'portrait') ? 10 : 12,
+      fontSize: (orientation === 'portrait') ? 12 : 14,
       fontFamily: fonts.homeButtons,
       fontWeight: (role === 'operative') ? 'bold' : null,
       textTransform: 'uppercase',
@@ -281,10 +280,10 @@ const style = (orientation = null, role = null) => {
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: colors.lightGray,
-      paddingVertical: 5,
+      paddingVertical: 3,
+      paddingHorizontal: 3,
       marginHorizontal: 2,
       marginVertical: 3,
-      paddingHorizontal: 5,
       borderRadius: 5,
       overflow: 'hidden'
     },
@@ -327,7 +326,7 @@ const style = (orientation = null, role = null) => {
       marginHorizontal: 2,
       flexDirection: 'row',
       flex: 1,
-      maxHeight: 60,
+      maxHeight: 50,
       borderTopColor: 'white',
       borderTopWidth: (orientation === 'portrait') ? 1 : null,
       paddingTop: (orientation === 'portrait') ? 12 : 2,
@@ -353,7 +352,7 @@ const style = (orientation = null, role = null) => {
       color: 'white',
       fontWeight: 'bold',
       fontFamily: fonts.homeButtons,
-      fontSize: 14
+      fontSize: 18
     },
     timerWrapper: {
       flex: 0.5,
@@ -383,7 +382,7 @@ const style = (orientation = null, role = null) => {
     buttonTitle: {
       color: colors.darkGray,
       fontFamily: fonts.homeButtons,
-      fontSize: 10,
+      fontSize: 12,
       fontFamily: fonts.homeButtons,
       fontWeight: 'bold',
       marginLeft: (orientation === 'portrait') ? -6 : 0
@@ -410,7 +409,7 @@ const style = (orientation = null, role = null) => {
     },
     gameDataText: {
       fontFamily: fonts.homeButtons,
-      fontSize: 10,
+      fontSize: 14,
       fontWeight: 'bold',
       color: 'white'
     },
