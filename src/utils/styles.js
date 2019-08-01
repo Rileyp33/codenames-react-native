@@ -4,7 +4,7 @@ export const colors = {
   "darkGray": '#595959',
   "red-agent": '#b30',
   "red-agent-light": '#bd3200',
-  "blue-agent": '#0e2899',
+  "blue-agent": '#0c2283',
   "blue-agent-light": '#0e289a',
 }
 

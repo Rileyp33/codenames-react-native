@@ -120,6 +120,7 @@ export default class LobbyScreen extends React.Component {
           inputStyle={style(this.state.orientation).input}
           leftIconContainerStyle={style(this.state.orientation).formIconContainer}
           onChangeText={(i) => {this.setGameId(i)}}
+          keyboardType={'numeric'}
       />
         <Input
           ref={input => (this.codeInput = input)}
