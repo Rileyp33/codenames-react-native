@@ -112,33 +112,29 @@ export const Card = (props) => {
     <FlipCard
       friction={3}
       perspective={120}
-      flipHorizontal={false}
-      useNativeDriver={true}
       flipVertical={true}
-      flip={props.flippedStatus === "up"}
-      clickable={true}
-      clickable={true}
-    >
-      <TouchableOpacity
-        key={props.key}
-        onPress={props.onPress}
-        style={props.cardStyle}>
-        {renderRoleBasedImage()}
-        <GlobalText
-          value={formatText(props.value)}
-          style={props.textStyle}>
-        </GlobalText>
-      </TouchableOpacity>
-      <TouchableOpacity
-        key={props.key}
-        onPress={props.onPress}
-        style={props.cardStyle}>
-        {renderRoleBasedImage()}
-        <GlobalText
-          value={formatText(props.value)}
-          style={props.textStyle}>
-        </GlobalText>
-      </TouchableOpacity>
+      useNativeDriver={true}
+      flip={props.flippedStatus === "up"}>
+        <TouchableOpacity
+          key={props.key}
+          onPress={props.onPress}
+          style={props.cardStyle}>
+          {renderRoleBasedImage()}
+          <GlobalText
+            value={formatText(props.value)}
+            style={props.textStyle}>
+          </GlobalText>
+        </TouchableOpacity>
+        <TouchableOpacity
+          key={props.key}
+          onPress={props.onPress}
+          style={props.cardStyle}>
+          {renderRoleBasedImage()}
+          <GlobalText
+            value={formatText(props.value)}
+            style={props.textStyle}>
+          </GlobalText>
+        </TouchableOpacity>
     </FlipCard>
   )
 }

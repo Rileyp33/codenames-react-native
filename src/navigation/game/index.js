@@ -2,6 +2,7 @@ import React from 'react'
 import ActionCable from 'react-native-actioncable'
 import { View, Image, StyleSheet, Dimensions, ImageBackground } from 'react-native'
 import { Card } from '../../components/game/card'
+import { Result } from '../../components/game/result'
 import { GameData } from '../../components/game/gameData'
 import { GameboardButtons } from '../../components/game/gameboardButtons'
 import { Scoreboard } from '../../components/game/scoreboard'
@@ -25,10 +26,8 @@ export default class GameScreen extends React.Component {
       orientation: 'portrait'
     }
 
-    // this.gameId = this.props.navigation.getParam('gameId')
-    this.gameId = 22
-    // this.codename = this.props.navigation.getParam('codename')
-    this.codename = 'Dsfasdfa'
+    this.gameId = this.props.navigation.getParam('gameId')
+    this.codename = this.props.navigation.getParam('codename')
 
     this.positions = [
       [0, 1, 2, 3, 4],
@@ -68,6 +67,10 @@ export default class GameScreen extends React.Component {
         }
       }
     )
+  }
+
+  componentDidUpdate() {
+    console.log('State updated to: ', this.state)
   }
 
   isPortrait = () => {
@@ -210,6 +213,16 @@ export default class GameScreen extends React.Component {
     )
   }
 
+  renderResult = () => {
+    return (
+      <Result 
+        orientation={this.state.orientation}
+        result={this.state.result}
+        role={this.state.role}
+      />
+    )
+  }
+
   renderAssassin = () => {
     return (
       <Image
@@ -234,6 +247,7 @@ export default class GameScreen extends React.Component {
             <View style={style(this.state.orientation).infoWrapper}>
               {this.renderScoreboard()}
               {this.renderButtons()}
+              {(this.state.cells) ? this.renderResult() : null}
               {this.renderGameData()}
               {this.renderAssassin()}
             </View>
