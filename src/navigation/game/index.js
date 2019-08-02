@@ -14,7 +14,7 @@ export default class GameScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      role: 'operative',
+      role: this.props.navigation.getParam('role'),
       cells: null,
       red_score: 0,
       red_total: 0,

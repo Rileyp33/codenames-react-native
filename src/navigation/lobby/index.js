@@ -1,9 +1,8 @@
 import React from 'react'
-import { View, StyleSheet, ImageBackground, Image, Dimensions } from 'react-native'
+import { View, StyleSheet, ImageBackground, Image, Dimensions, Alert } from 'react-native'
 import { Button } from 'react-native-elements'
 import { fonts } from '../../utils/styles'
 import { Input } from 'react-native-elements'
-import { apiCall } from '../../utils/requests'
 import axios from 'axios'
 import { BASE_URL } from '../../utils/requests'
 
@@ -55,7 +54,7 @@ export default class LobbyScreen extends React.Component {
     )
   }
 
-  joinGame = async () => {
+  selectRole = async () => {
     await axios.get(BASE_URL + `local_games/${this.state.gameId}`, {
       params: {
         codename: this.state.codename
@@ -66,9 +65,14 @@ export default class LobbyScreen extends React.Component {
     })
     .then((response) => {
       if(response.data && response.data.error) {
-        this.setState({ errors: response.data.error })
+        console.log({ errors: response.data.error })
+        Alert.alert(
+          'Codename denied',
+          'You killed a civilian',
+          [ { text: 'Try again', onPress: () => console.log('OK Pressed') }]
+        )
       } else if (response.data && !response.data.error) {
-          this.props.navigation.navigate('Game', {
+          this.props.navigation.navigate('RoleSelect', {
             gameId: response.data.game_id,
             codename: response.data.codename
           })
@@ -82,8 +86,8 @@ export default class LobbyScreen extends React.Component {
     return (
       <View style={style(this.state.orientation).buttonsWrapper}>
         <Button
-          title={'Join Game'}
-          onPress={() => this.joinGame()}
+          title={'Select Role'}
+          onPress={() => this.selectRole()}
           type={'clear'}
           containerStyle={style(this.state.orientation).buttonContainer}
           buttonStyle={style(this.state.orientation).button}
