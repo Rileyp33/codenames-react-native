@@ -4,6 +4,7 @@ import GameScreen from './game'
 import LobbyScreen from './lobby'
 import NewGameScreen from './newGame'
 import RulesScreen from './rules'
+import RoleSelectScreen from './roleSelect'
 
 export default createNavigator = () => { 
   return createAppContainer(createStackNavigator(
@@ -11,6 +12,7 @@ export default createNavigator = () => {
       Home: HomeScreen,
       NewGame: NewGameScreen,
       Lobby: LobbyScreen,
+      RoleSelect: RoleSelectScreen,
       Rules: RulesScreen,
       Game: {
         screen: GameScreen,

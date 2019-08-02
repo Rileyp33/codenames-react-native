@@ -59,7 +59,7 @@ export default class NewGameScreen extends React.Component {
       codename: this.state.codename
     })
     let creationResponse = await apiCall(body, 'post', 'local_games')
-    let navigate = await this.props.navigation.navigate('Game', { gameId: creationResponse.data.game_id, codename: creationResponse.data.codename })
+    let navigate = await this.props.navigation.navigate('RoleSelect', { gameId: creationResponse.data.game_id, codename: creationResponse.data.codename })
     this.codename.clear()
   }
 
