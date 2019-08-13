@@ -1,0 +1,15 @@
+platform :ios, '9.0'
+
+target 'codenamesReactNative' do
+
+  pod 'google-cast-sdk', '~> 3'
+
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    if target.name == "React"
+      target.remove_from_project
+    end
+  end
+end
