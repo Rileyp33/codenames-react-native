@@ -11,7 +11,10 @@ export default class RoleSelect extends React.Component {
     this.state = {
       spymasterOpacity: new Animated.Value(0),
       operativeOpacity: new Animated.Value(0),
-      operative: true,
+      spymasterPosition: new Animated.Value(-300),
+      maleAgentPosition: new Animated.Value(200),
+      femaleAgentPosition: new Animated.Value(200),
+      operative: false,
       spymaster: false,
       orientation: 'portrait',
     }
@@ -25,7 +28,9 @@ export default class RoleSelect extends React.Component {
 
     Dimensions.addEventListener('change', () => {
       this.setState({
-        orientation: this.isPortrait() ? 'portrait' : 'landscape'
+        orientation: this.isPortrait() ? 'portrait' : 'landscape',
+        maleAgentPosition: new Animated.Value(this.isPortrait() ? -90 : 50),
+        femaleAgentPosition: new Animated.Value(this.isPortrait() ? -90 : 50),
       })
     })
   }
@@ -33,7 +38,103 @@ export default class RoleSelect extends React.Component {
   isPortrait = () => {
     const dim = Dimensions.get('screen');
     return dim.height >= dim.width;
-  };
+  }
+
+  fadeOperatives = () => {
+    this.setState({
+      spymasterOpacity: new Animated.Value(0),
+      spymasterPosition: new Animated.Value(-300)
+    })
+    Animated.timing(this.state.operativeOpacity, {
+      toValue: 0.3,
+      duration: 600
+    }).start()
+  }
+
+  slideMaleAgent = () => {
+    Animated.timing(this.state.maleAgentPosition, {
+      toValue: (this.state.orientation === 'portrait') ? -90 : 50,
+      duration: 250,
+    }).start()
+  }
+
+  slideFemaleAgent = () => {
+    Animated.timing(this.state.femaleAgentPosition, {
+      toValue: (this.state.orientation === 'portrait') ? -90 : 50,
+      duration: 250
+    }).start()
+  }
+
+  animateAgents = () => {
+    this.fadeOperatives()
+    this.slideFemaleAgent()
+    this.slideMaleAgent()
+  }
+
+  fadeSpymaster = () => {
+    this.setState({ 
+      operativeOpacity: new Animated.Value(0),
+      maleAgentPosition: new Animated.Value(200),
+      femaleAgentPosition: new Animated.Value(200)
+    })
+    Animated.parallel([
+      Animated.timing(this.state.spymasterOpacity, {
+        toValue: 0.3,
+        duration: 600
+      }),
+      Animated.timing(this.state.spymasterPosition, {
+        toValue: -20,
+        duration: 200
+      })
+    ]).start()
+  }
+
+  renderAgents = () => {
+    return (
+      <View style={style().characters}>
+        <Animated.Image
+          source={require('codenamesReactNative/src/assets/images/FemaleAgentSilhouetteWhite.png')}
+          style={{
+            height: Dimensions.get("window").height * .95,
+            resizeMode: 'contain',
+            position: 'absolute',
+            zIndex: -1,
+            top: 10,
+            left: this.state.femaleAgentPosition,
+            opacity: this.state.operativeOpacity
+          }}>
+        </Animated.Image>
+        <Animated.Image
+          source={require('codenamesReactNative/src/assets/images/MaleAgentSilhouetteWhite.png')}
+          style={{
+            height: Dimensions.get("window").height * .95,
+            resizeMode: 'contain',
+            position: 'absolute',
+            zIndex: -1,
+            top: 10,
+            right: this.state.maleAgentPosition,
+            opacity: this.state.operativeOpacity
+          }}>
+        </Animated.Image>
+      </View>
+    )
+  }
+
+  renderAssassin = () => {
+    return (
+      <Animated.Image
+        source={require('codenamesReactNative/src/assets/images/AssassinWhite.png')}
+        style={{
+          resizeMode: 'contain',
+          position: 'absolute',
+          zIndex: -1,
+          bottom: this.state.spymasterPosition,
+          opacity: this.state.spymasterOpacity,
+          maxHeight: '75%'
+        }}>
+      </Animated.Image>
+    )
+  }
 
   joinGame = async () => {
     await axios.get(BASE_URL + `local_games/${this.props.navigation.getParam('gameId')}`, {
@@ -59,31 +160,8 @@ export default class RoleSelect extends React.Component {
       })
   }
 
-  renderAgents = () => {
-    return (
-      <Animated.View style={style().characters}>
-        <Image
-          source={require('codenamesReactNative/src/assets/images/FemaleAgentSilhouetteWhite.png')}
-          style={style(this.state.orientation).femaleAgent}>
-        </Image>
-        <Image
-          source={require('codenamesReactNative/src/assets/images/MaleAgentSilhouetteWhite.png')}
-          style={style(this.state.orientation).maleAgent}>
-        </Image>
-      </Animated.View>
-    )
-  }
-
-  renderAssassin = () => {
-    return (
-      <Image
-        source={require('codenamesReactNative/src/assets/images/AssassinWhite.png')}
-        style={style().assassin}>
-      </Image>
-    )
-  }
-
   setOperative = () => {
+    this.animateAgents()
     this.setState({ 
       operative: true,
       spymaster: false
@@ -91,10 +169,19 @@ export default class RoleSelect extends React.Component {
   }
 
   setSpymaster = () => {
+    this.fadeSpymaster()
     this.setState({
       operative: false,
       spymaster: true
     })
+  }
+
+  roleSelected = () => {
+    if (this.state.operative || this.state.spymaster) {
+      return true
+    } else { 
+      return false 
+    }
   }
 
   renderCheckboxes = () => {
@@ -130,6 +217,9 @@ export default class RoleSelect extends React.Component {
     return (
       <View style={style(this.state.orientation).buttonsWrapper}>
         <Button
+          disabled={!this.roleSelected()}
+          disabledTitleStyle={{color: 'white', opacity: 0.6}}
+          disabledStyle={{opacity: 0.6}}
           title={'Join Game'}
           onPress={() => this.joinGame()}
           type={'clear'}
@@ -156,7 +246,11 @@ export default class RoleSelect extends React.Component {
         style={style(this.state.orientation).imageBackgroundFull}
         imageStyle={style().imageStyleFull}>
         <View style={style(this.state.orientation).screenContainer}>
-          {(this.state.operative) ? this.renderAgents() : this.renderAssassin()}
+          {
+            (this.state.operative) ? this.renderAgents() 
+            : (this.state.spymaster) ? this.renderAssassin()
+            : null
+          }
           <View style={style(this.state.orientation).elementsWrapper}>
             {this.renderCheckboxes()}
             {this.renderButton()}
@@ -167,7 +261,7 @@ export default class RoleSelect extends React.Component {
   }
 }
 
-const style = (orientation, selection) => {
+const style = (orientation) => {
   return StyleSheet.create({
     imageBackgroundFull: {
       width: '100%',
@@ -224,7 +318,7 @@ const style = (orientation, selection) => {
     button: {
       borderRadius: 8,
       backgroundColor: colors["red-agent-light"],
-      opacity: 0.8
+      opacity: 0.9
     },
     buttonTitle: {
       color: 'white',
@@ -236,7 +330,7 @@ const style = (orientation, selection) => {
       width: 300,
       marginBottom: 12,
       marginTop: 0,
-      opacity: 0.85,
+      opacity: 0.88,
       borderRadius: 6
     },
     checkboxText: {
