@@ -1,41 +1,21 @@
 import React from 'react'
 import { View, Image, StyleSheet, Text } from 'react-native'
-import { fonts } from '../../utils/styles'
+import { fonts, colors } from '../../utils/styles'
 import FlipCard from 'react-native-flip-card'
 
-const redAgents = require('../../assets/images/fieldagentIconRed.png')
-const blueAgents = require('../../assets/images/fieldagentIconBlue.png')
-const spymaster = require('../../assets/images/spymasterIcon.png')
-const spymasterRed = require('../../assets/images/spymasterIconRed.png')
-const spymasterBlue = require('../../assets/images/spymasterIconBlue.png')
+const agents = require('../../assets/images/fieldagentIconWhite.png')
+const spymaster = require('../../assets/images/spymasterIconWhite.png')
 const resultBackground = require('../../assets/images/whiteFog.png')
 
 export const Result = (props) => {
 
   renderSpymasterIcon = (props) => {
-    switch (props.result) {
-      case 'Red team wins!':
-        return (
-          <Image
-            source={spymasterRed}
-            style={style(props.orientation).icon}
-          />
-        )
-      case 'Blue team wins!':
-        return (
-          <Image
-            source={spymasterBlue}
-            style={style(props.orientation).icon}
-          />
-        )
-      case 'Assassin contacted. Game over.':
-        return (
-          <Image
-            source={spymaster}
-            style={style(props.orientation).icon}
-          />
-        )
-    }
+      return (
+        <Image
+          source={spymaster}
+          style={style(props.orientation).icon}
+        />
+      )
   }
 
   renderFieldAgents = () => {
@@ -43,14 +23,14 @@ export const Result = (props) => {
       case 'Red team wins!':
         return (
           <Image
-            source={redAgents}
+            source={agents}
             style={style(props.orientation).icon}
           />
         )
       case 'Blue team wins!':
         return (
           <Image
-            source={blueAgents}
+            source={agents}
             style={style(props.orientation).icon}
           />
         )
@@ -92,7 +72,7 @@ export const Result = (props) => {
         useNativeDriver={true}
         flip={typeof props.result === 'string'}>
           <View></View>
-          <View style={style(props.orientation).card}>
+          <View style={style(props.orientation, props.result).card}>
             {renderResultBackground(props)}
             {renderRoleBasedIcon(props)}
             <Text style={style(props.orientation).resultText}>
@@ -104,7 +84,12 @@ export const Result = (props) => {
   )
 }
 
-const style = (orientation) => {
+const style = (orientation, result = null) => {
+  let winnerBackground
+  (result === 'Red team wins!') ? winnerBackground = colors["red-agent"]
+    : (result === 'Blue team wins!') ? winnerBackground = colors["blue-agent"]
+    : (result === 'Assassin contacted. Game over.') ? winnerBackground = 'black'
+    : null
   return StyleSheet.create({
     resultWrapper: {
       flex: 1,
@@ -116,30 +101,35 @@ const style = (orientation) => {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: 'white',
+      backgroundColor: winnerBackground,
       borderRadius: 8,
-      overflow: 'hidden'
+      overflow: 'hidden',
+      borderWidth: 1,
+      borderColor: 'white'
     },
     icon: {
       alignSelf: (orientation === 'portrait') ? 'flex-start' : 'flex-end',
-      height: (orientation === 'portrait') ? '85%' : '55%',
+      marginRight: (orientation === 'portrait') ? 0 : 30,
+      height: (orientation === 'portrait') ? '85%' : '60%',
       width: 50,
       resizeMode: 'contain',
-      position: 'absolute'     
+      position: 'absolute',
+      opacity: 0.7
     },
     resultText: {
       alignSelf: (orientation === 'portrait') ? null : 'flex-start',
-      paddingLeft: (orientation === 'portrait') ? null : 28,
+      paddingLeft: (orientation === 'portrait') ? null : 20,
       fontSize: 20,
       fontFamily: fonts.homeButtons,
       fontWeight: 'bold', 
-      maxWidth: (orientation === 'portrait') ? null : 140
+      maxWidth: (orientation === 'portrait') ? null : 140,
+      color: 'white'
     },
     resultBackground: {
-      width: '100%',
+      width: (orientation === 'portrait') ? '100%' : '135%',
       resizeMode: 'contain',
       position: 'absolute',
-      opacity: 0.9
+      opacity: 0.3
     }
   })
 }
