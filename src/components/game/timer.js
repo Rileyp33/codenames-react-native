@@ -12,7 +12,7 @@ export default class Timer extends React.Component {
       timer: 90
     }
 
-    this.cable = ActionCable.createConsumer('ws://10.0.0.35:3001/cable')
+    this.cable = ActionCable.createConsumer('ws://codenames-api-rp.herokuapp.com//cable')
   }
 
   componentDidMount() {
