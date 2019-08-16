@@ -128,12 +128,12 @@ export default class LobbyScreen extends React.Component {
       />
         <Input
           ref={input => (this.codeInput = input)}
-          placeholder='Game Code'
+          placeholder='Codename'
           leftIcon={{ type: 'ionicon', name: 'md-key' }}
           inputContainerStyle={style(this.state.orientation).inputContainer}
           inputStyle={style(this.state.orientation).input}
           onChangeText={(i) => { this.setCodename(i) }}
-          maxLength={8}
+          maxLength={10}
         />
       </View>
     )
