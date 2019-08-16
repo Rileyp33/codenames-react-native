@@ -37,7 +37,7 @@ export default class GameScreen extends React.Component {
       [20, 21, 22, 23, 24]
     ]
 
-    this.cable = ActionCable.createConsumer('ws://10.0.0.35:3001/cable')
+    this.cable = ActionCable.createConsumer('ws://codenames-api-rp.herokuapp.com//cable')
   }
 
   componentDidMount() {
