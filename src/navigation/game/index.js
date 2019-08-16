@@ -1,6 +1,6 @@
 import React from 'react'
 import ActionCable from 'react-native-actioncable'
-import { View, Image, StyleSheet, Dimensions, ImageBackground } from 'react-native'
+import { View, SafeAreaView, Image, StyleSheet, Dimensions, ImageBackground } from 'react-native'
 import { Card } from '../../components/game/card'
 import { Result } from '../../components/game/result'
 import { GameData } from '../../components/game/gameData'
@@ -67,10 +67,20 @@ export default class GameScreen extends React.Component {
         }
       }
     )
-  }
 
-  componentDidUpdate() {
-    console.log('State updated to: ', this.state)
+    this.timerChannel = this.cable.subscriptions.create(
+      {
+        channel: 'TimerChannel',
+        timer_id: this.gameId
+      },
+      {
+        connected: () => console.log("GameChannel connected"),
+        disconnected: () => console.log("GameChannel disconnected"),
+        received: data => {
+          console.log('Timer Response: ', data)
+        }
+      }
+    )
   }
 
   isPortrait = () => {
@@ -105,6 +115,9 @@ export default class GameScreen extends React.Component {
     if (this.state.role === 'operative') {
       this.gameChannel.send({
         cell_id: id
+      })
+      this.timerChannel.send({
+        resetId: `${id}` 
       })
     }
   }
@@ -180,6 +193,7 @@ export default class GameScreen extends React.Component {
           blueTotal={this.state.blue_total}
           timerWrapper={style(this.state.orientation).timerWrapper}
           iconSize={26}
+          gameId={this.gameId}
         />
       )
     }
@@ -234,26 +248,28 @@ export default class GameScreen extends React.Component {
 
   render() {
     return (
-      <ImageBackground
-        source={require('codenamesReactNative/src/assets/images/BlackTexturedBackground.jpg')}
-        style={style().imageBackgroundFull}
-        imageStyle={style().imageStyleFull}>
-        <View style={style(this.state.orientation).screen}>
-          {this.renderLogo()}
-          <View style={style(this.state.orientation).gameWrapper}>
-            <View style={style(this.state.orientation).board}>
-              {(this.state.cells) ? this.renderDeck(this.positions) : null}
-            </View>
-            <View style={style(this.state.orientation).infoWrapper}>
-              {this.renderScoreboard()}
-              {this.renderButtons()}
-              {(this.state.cells) ? this.renderResult() : null}
-              {this.renderGameData()}
-              {this.renderAssassin()}
+      <SafeAreaView style={{flex: 1, backgroundColor: 'black'}}>
+        <ImageBackground
+          source={require('codenamesReactNative/src/assets/images/BlackTexturedBackground.jpg')}
+          style={style().imageBackgroundFull}
+          imageStyle={style().imageStyleFull}>
+          <View style={style(this.state.orientation).screen}>
+            {this.renderLogo()}
+            <View style={style(this.state.orientation).gameWrapper}>
+              <View style={style(this.state.orientation).board}>
+                {(this.state.cells) ? this.renderDeck(this.positions) : null}
+              </View>
+              <View style={style(this.state.orientation).infoWrapper}>
+                {this.renderScoreboard()}
+                {this.renderButtons()}
+                {(this.state.cells) ? this.renderResult() : null}
+                {this.renderGameData()}
+                {this.renderAssassin()}
+              </View>
             </View>
           </View>
-        </View>
-      </ImageBackground>
+        </ImageBackground>
+      </SafeAreaView>
     )
   }
 }
@@ -262,7 +278,7 @@ const style = (orientation = null, role = null) => {
   return StyleSheet.create({
     screen: {
       paddingHorizontal: 5,
-      paddingTop: (orientation === 'portrait') ? 20 : 0,
+      paddingTop: (orientation === 'portrait') ? 5 : 0,
       flex: 1
     },
     gameWrapper: {
