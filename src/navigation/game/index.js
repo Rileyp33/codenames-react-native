@@ -1,6 +1,6 @@
 import React from 'react'
 import ActionCable from 'react-native-actioncable'
-import { View, SafeAreaView, Image, StyleSheet, Dimensions, ImageBackground } from 'react-native'
+import { View, SafeAreaView, Image, StyleSheet, Dimensions, ImageBackground, Alert } from 'react-native'
 import { Card } from '../../components/game/card'
 import { Result } from '../../components/game/result'
 import { GameData } from '../../components/game/gameData'
@@ -126,7 +126,18 @@ export default class GameScreen extends React.Component {
     if (this.state.role === "spymaster") {
       this.setState({ role: "operative" })
     } else {
-      this.setState({ role: "spymaster" })
+        Alert.alert(
+          'Are you sure you want to view the Spymaster key?',
+          null,
+          [
+            { text: 'Show key', onPress: () => this.setState({ role: "spymaster" }) },
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            }
+          ],
+          { cancelable: false },
+        );  
     }
   }
 
@@ -248,7 +259,7 @@ export default class GameScreen extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={{flex: 1, backgroundColor: 'black'}}>
+      <SafeAreaView style={style().safeArea}>
         <ImageBackground
           source={require('codenamesReactNative/src/assets/images/BlackTexturedBackground.jpg')}
           style={style().imageBackgroundFull}
@@ -280,6 +291,10 @@ const style = (orientation = null, role = null) => {
       paddingHorizontal: 5,
       paddingTop: (orientation === 'portrait') ? 5 : 0,
       flex: 1
+    },
+    safeArea: {
+      flex: 1, 
+      backgroundColor: 'black'
     },
     gameWrapper: {
       flexDirection: (orientation === 'portrait') ? 'column' : 'row',
@@ -346,11 +361,12 @@ const style = (orientation = null, role = null) => {
       resizeMode: 'contain' 
     },
     cardImage: {
-      width: '175%',
+      width: '200%',
       resizeMode: 'contain',
       position: 'absolute',
       justifyContent: 'center',
-      alignItems: 'center' 
+      alignItems: 'center',
+      backgroundColor: 'black'
     },
     scoreboard: {
       marginHorizontal: 2,
