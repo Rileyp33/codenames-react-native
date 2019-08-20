@@ -1,6 +1,6 @@
 import React from 'react'
-import { View, StyleSheet, ImageBackground, Image, Dimensions } from 'react-native'
-import { Button } from 'react-native-elements'
+import { View, StyleSheet, TouchableOpacity, Image, Dimensions, SafeAreaView, Animated } from 'react-native'
+import { Button, Icon } from 'react-native-elements'
 import { fonts } from '../../utils/styles'
 import { Input } from 'react-native-elements'
 import { apiCall } from '../../utils/requests'
@@ -13,7 +13,8 @@ export default class NewGameScreen extends React.Component {
     super(props)
     this.state = {
       codename: '', 
-      orientation: 'portrait'
+      orientation: 'portrait',
+      headerPosition: new Animated.Value(150)
     }
   }
 
@@ -28,12 +29,50 @@ export default class NewGameScreen extends React.Component {
         orientation: this.isPortrait() ? 'portrait' : 'landscape'
       })
     })
+
+    this.slideText()
+  }
+
+  slideText = () => {
+    Animated.timing(this.state.headerPosition, {
+      toValue: 0,
+      duration: 500
+    }).start()
   }
 
   isPortrait = () => {
     const dim = Dimensions.get('screen');
     return dim.height >= dim.width;
-  };
+  }
+
+  renderHeader = () => {
+    return (
+      <View>
+        <TouchableOpacity 
+          style={style(this.state.orientation).headerBack}
+          onPress={() => this.props.navigation.goBack()}>
+          <Icon
+            type={'ionicon'}
+            name={'ios-arrow-back'}
+            size={36}
+          />
+        </TouchableOpacity>
+        <View style={style(this.state.orientation).headerWrapper}>
+          <View style={style(this.state.orientation).headerTextWrapper}>
+            <Animated.Text
+              style={{
+                fontSize: 22,
+                color: 'black',
+                fontFamily: fonts.headers,
+                left: this.state.headerPosition,
+              }}>
+                NEW GAME
+              </Animated.Text>
+          </View>
+        </View>
+      </View>
+    )
+  }
 
   renderMaleAgent = () => {
     return (
@@ -65,10 +104,13 @@ export default class NewGameScreen extends React.Component {
 
   renderButtons = () => {
     return (
-      <View style={style(this.state.orientation).buttonsWrapper}>
+      <View>
         <Button
           title={'Create Game'}
           onPress={() => this.createGame()}
+          disabled={this.state.codename.length < 1}
+          disabledTitleStyle={{ color: 'white', opacity: 0.6 }}
+          disabledStyle={{ opacity: 0.6 }}
           type={'clear'}
           containerStyle={style(this.state.orientation).buttonContainer}
           buttonStyle={style(this.state.orientation).button}
@@ -114,10 +156,13 @@ export default class NewGameScreen extends React.Component {
 
   render() {
     return (
-      <ImageBackground
-        source={require('codenamesReactNative/src/assets/images/WhiteTexturedBackground.jpg')}
-        style={style(this.state.orientation).imageBackgroundFull}
-        imageStyle={style(this.state.orientation).imageStyleFull}>
+      <SafeAreaView style={style().backgroundWrappers}>
+        {this.renderHeader()}
+        <Image
+          source={require('codenamesReactNative/src/assets/images/WhiteTexturedBackground.jpg')}
+          style={style(this.state.orientation).imageBackground}
+        />  
+        <View style={style().backgroundWrappers}>
           <View style={style(this.state.orientation).screenWrapper}>
             <View style={style(this.state.orientation).elementsWrapper}>
               {this.renderForm()}
@@ -126,7 +171,8 @@ export default class NewGameScreen extends React.Component {
             {this.renderMaleAgent()}
             {this.renderFemaleAgent()}
           </View>
-      </ImageBackground>
+        </View>
+      </SafeAreaView>
     )
   }
 }
@@ -134,17 +180,39 @@ export default class NewGameScreen extends React.Component {
 const style = (orientation = null) => {
   return (
     StyleSheet.create({
-      imageBackgroundFull: {
+      imageBackground: {
         width: '100%',
         height: '100%',
-      },
-      imageStyleFull: {
-        resizeMode: 'cover',
+        position: 'absolute',
+        zIndex: -1
       },
       screenWrapper: {
+        flex: 1
+      },
+      headerWrapper: {
+        flexDirection: 'row',
+        marginHorizontal: 15,
+        alignSelf: 'flex-end'
+      },  
+      headerTextWrapper: {
+        width: (orientation === 'portrait') ? '62%' : '100%',
+        borderBottomWidth: 1,
+        padding: 5,
+        alignItems: 'flex-end'
+      },  
+      header: {
+        fontSize: 22,
+        color: 'black',
+        fontFamily: fonts.headers
+      },
+      headerBack: {
+        position: 'absolute',
+        width: 55,
+        justifyContent: 'center'
+      },
+      backgroundWrappers: {
         flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'flex-start'
+        backgroundColor: 'transparent'
       },
       elementsWrapper: {
         marginTop: (orientation === 'portrait') ? 140 : 15,
@@ -163,10 +231,7 @@ const style = (orientation = null) => {
       },
       instructionsText: {
         color: 'white',
-        fontSize: 10
-      },
-      buttonsWrapper: {
-        alignItems: 'center'
+        fontSize: 12
       },
       buttonContainer: {
         width: 300
@@ -182,20 +247,20 @@ const style = (orientation = null) => {
         fontSize: 16,
       },
       maleAgent: {
-        height: '98%',
+        height: '97%',
         resizeMode: 'contain',
         position: 'absolute',
         zIndex: -1,
-        bottom: 5,
-        left: -130,
+        bottom: 4,
+        left: -125,
         opacity: 0.75
       },
       femaleAgent: {
-        height: '95%',
+        height: '94%',
         resizeMode: 'contain',
         position: 'absolute',
         zIndex: -1,
-        bottom: 5,
+        bottom: 4,
         left: (orientation === 'portrait') ? 100 : null,
         right: (orientation === 'portrait') ? null : -120,
         opacity: 0.73

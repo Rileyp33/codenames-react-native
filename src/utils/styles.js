@@ -9,5 +9,6 @@ export const colors = {
 }
 
 export const fonts = {
-  homeButtons: 'AvenirNextCondensed-Medium'
+  homeButtons: 'AvenirNextCondensed-Medium',
+  headers: 'Menlo'
 }
