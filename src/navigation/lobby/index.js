@@ -1,11 +1,11 @@
 import React from 'react'
 import { View, StyleSheet, ImageBackground, Image, Dimensions, Alert } from 'react-native'
+import axios from 'axios'
 import { Button } from 'react-native-elements'
 import { fonts } from '../../utils/styles'
 import { Input } from 'react-native-elements'
-import axios from 'axios'
 import { BASE_URL } from '../../utils/requests'
-
+import BackButton from '../../components/backButton'
 
 export default class LobbyScreen extends React.Component {
   constructor(props) {
@@ -139,6 +139,15 @@ export default class LobbyScreen extends React.Component {
     )
   }
 
+  renderBack = () => {
+    return (
+      <BackButton
+        orientation={this.state.orientation}
+        navigation={this.props.navigation}
+      />
+    )
+  }
+
   render() {
     return (
       <ImageBackground
@@ -152,6 +161,7 @@ export default class LobbyScreen extends React.Component {
             </View>
             {this.renderMaleAgent()}
             {this.renderFemaleAgent()}
+            {this.renderBack()}
           </View>
       </ImageBackground>
     )

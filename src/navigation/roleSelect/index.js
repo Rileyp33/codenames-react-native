@@ -4,6 +4,7 @@ import { CheckBox, Button } from 'react-native-elements'
 import { colors, fonts } from '../../utils/styles'
 import axios from 'axios'
 import { BASE_URL } from '../../utils/requests'
+import BackButton from '../../components/backButton'
 
 export default class RoleSelect extends React.Component {
   constructor(props) {
@@ -239,23 +240,33 @@ export default class RoleSelect extends React.Component {
     )
   }
 
+  renderBack = () => {
+    return (
+      <BackButton
+        orientation={this.state.orientation}
+        navigation={this.props.navigation}
+      />
+    )
+  }
+
   render() {
     return (
       <ImageBackground
         source={require('codenamesReactNative/src/assets/images/BlackTexturedBackground.jpg')}
         style={style(this.state.orientation).imageBackgroundFull}
         imageStyle={style().imageStyleFull}>
-        <View style={style(this.state.orientation).screenContainer}>
-          {
-            (this.state.operative) ? this.renderAgents() 
-            : (this.state.spymaster) ? this.renderAssassin()
-            : null
-          }
-          <View style={style(this.state.orientation).elementsWrapper}>
-            {this.renderCheckboxes()}
-            {this.renderButton()}
+          {this.renderBack()}
+          <View style={style(this.state.orientation).screenContainer}>
+            {
+              (this.state.operative) ? this.renderAgents() 
+              : (this.state.spymaster) ? this.renderAssassin()
+              : null
+            }
+            <View style={style(this.state.orientation).elementsWrapper}>
+              {this.renderCheckboxes()}
+              {this.renderButton()}
+            </View>
           </View>
-        </View>
       </ImageBackground>
     )
   }

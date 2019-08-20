@@ -294,7 +294,7 @@ const style = (orientation = null, role = null) => {
     },
     safeArea: {
       flex: 1, 
-      backgroundColor: 'black'
+      backgroundColor: 'transparent'
     },
     gameWrapper: {
       flexDirection: (orientation === 'portrait') ? 'column' : 'row',
