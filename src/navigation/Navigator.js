@@ -22,7 +22,7 @@ export default createNavigator = () => {
       }
     },
     {
-      initialRouteName: 'NewGame',
+      initialRouteName: 'RoleSelect',
       headerMode: 'none'
     }
   ))
