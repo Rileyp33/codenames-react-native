@@ -14,6 +14,7 @@ export default class RoleSelect extends React.Component {
       spymasterPosition: new Animated.Value(-300),
       maleAgentPosition: new Animated.Value(200),
       femaleAgentPosition: new Animated.Value(200),
+      headerPosition: new Animated.Value(150),
       operative: false,
       spymaster: false,
       orientation: 'portrait',
@@ -33,11 +34,20 @@ export default class RoleSelect extends React.Component {
         femaleAgentPosition: new Animated.Value(this.isPortrait() ? -90 : 50),
       })
     })
+
+    this.slideText()
   }
 
   isPortrait = () => {
     const dim = Dimensions.get('screen');
     return dim.height >= dim.width;
+  }
+
+  slideText = () => {
+    Animated.timing(this.state.headerPosition, {
+      toValue: 0,
+      duration: 550
+    }).start()
   }
 
   fadeOperatives = () => {
@@ -95,7 +105,7 @@ export default class RoleSelect extends React.Component {
         <Animated.Image
           source={require('codenamesReactNative/src/assets/images/FemaleAgentSilhouetteWhite.png')}
           style={{
-            height: Dimensions.get("window").height * .95,
+            height: Dimensions.get("window").height * .88,
             resizeMode: 'contain',
             position: 'absolute',
             zIndex: -1,
@@ -107,7 +117,7 @@ export default class RoleSelect extends React.Component {
         <Animated.Image
           source={require('codenamesReactNative/src/assets/images/MaleAgentSilhouetteWhite.png')}
           style={{
-            height: Dimensions.get("window").height * .95,
+            height: Dimensions.get("window").height * .88,
             resizeMode: 'contain',
             position: 'absolute',
             zIndex: -1,
@@ -238,10 +248,30 @@ export default class RoleSelect extends React.Component {
     )
   }
 
-  renderBack = () => {
+  renderHeaderText = () => {
+    return (
+      <View style={{alignSelf: 'flex-end'}}>
+        <View style={style(this.state.orientation).headerWrapper}>
+          <View style={style(this.state.orientation).headerTextWrapper}>
+            <Animated.Text
+              style={{
+                fontSize: 22,
+                color: 'white',
+                fontFamily: fonts.headers,
+                left: this.state.headerPosition,
+              }}>
+              SELECT ROLE
+            </Animated.Text>
+          </View>
+        </View>
+      </View>
+    )
+  }
+
+  renderBackButton = () => {
     return (
       <TouchableOpacity
-        style={style(this.state.orientation).backButton}
+        style={style(this.state.orientation).headerBack}
         onPress={() => this.props.navigation.goBack()}>
         <Icon
           type={'ionicon'}
@@ -253,10 +283,19 @@ export default class RoleSelect extends React.Component {
     )
   }
 
+  renderHeader = () => {
+    return (
+      <View style={style().topWrapper}>
+        {this.renderHeaderText()}
+        {this.renderBackButton()}
+      </View>
+    )
+  }
+
   render() {
     return (
       <SafeAreaView style={style(this.state.orientation).safeArea}>
-        {this.renderBack()}
+        {this.renderHeader()}
         <Image
           source={require('codenamesReactNative/src/assets/images/BlackTexturedBackground.jpg')}
           style={style(this.state.orientation).imageBackgroundFull}>
@@ -283,13 +322,18 @@ const style = (orientation) => {
       flex: 1,
       backgroundColor: 'transparent',
       alignItems: 'center',
+      overflow: 'hidden'
     },  
+    topWrapper: { 
+      width: '100%' 
+    },
     imageBackgroundFull: {
       height: Dimensions.get("window").height,
+      minWidth: Dimensions.get("window").width,
       resizeMode: orientation === 'portrait' ? 'contain' : 'cover',
       alignSelf: 'center',
       position: 'absolute',
-      zIndex: -1
+      zIndex: -10
     },
     screenContainer: {
       flex: 1,
@@ -346,6 +390,27 @@ const style = (orientation) => {
       borderRadius: 6,
       opacity: 0.7,
       alignSelf: 'flex-start'
-    }
+    },
+    headerWrapper: {
+      flexDirection: 'row',
+      marginHorizontal: 15,
+      alignSelf: 'flex-end'
+    },
+    headerTextWrapper: {
+      width: '62%',
+      borderBottomWidth: 1,
+      borderBottomColor: 'white',
+      padding: 5,
+      alignItems: 'flex-end'
+    },
+    headerBack: {
+      position: 'absolute',
+      width: 55,
+      justifyContent: 'center',
+      marginLeft: 15,
+      marginTop: 2,
+      borderRadius: 6,
+      opacity: 0.7
+    },
   })
 }
