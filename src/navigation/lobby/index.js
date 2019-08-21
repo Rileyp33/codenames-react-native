@@ -133,8 +133,8 @@ export default class NewGameScreen extends React.Component {
         if (response.data && response.data.error) {
           console.log({ errors: response.data.error })
           Alert.alert(
-            'Codename denied',
-            'You killed a civilian',
+            'Codename incorrect',
+            'You missed your target',
             [{ text: 'Try again', onPress: () => console.log('OK Pressed') }]
           )
         } else if (response.data && !response.data.error) {
@@ -144,6 +144,7 @@ export default class NewGameScreen extends React.Component {
           })
           this.gameInput.clear()
           this.codeInput.clear()
+          Keyboard.dismiss()
         } else {
           this.setState({ errors: 'Error: please check your network connection and try again.' })
         }
