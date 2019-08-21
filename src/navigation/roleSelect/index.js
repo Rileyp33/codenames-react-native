@@ -1,10 +1,9 @@
 import React from 'react';
-import { Animated, View, ImageBackground, Image, StyleSheet, Dimensions } from 'react-native';
-import { CheckBox, Button } from 'react-native-elements'
+import { Animated, View, Image, StyleSheet, Dimensions, TouchableOpacity, SafeAreaView } from 'react-native';
+import { CheckBox, Button, Icon } from 'react-native-elements'
 import { colors, fonts } from '../../utils/styles'
 import axios from 'axios'
 import { BASE_URL } from '../../utils/requests'
-import BackButton from '../../components/backButton'
 
 export default class RoleSelect extends React.Component {
   constructor(props) {
@@ -15,6 +14,7 @@ export default class RoleSelect extends React.Component {
       spymasterPosition: new Animated.Value(-300),
       maleAgentPosition: new Animated.Value(200),
       femaleAgentPosition: new Animated.Value(200),
+      headerPosition: new Animated.Value(150),
       operative: false,
       spymaster: false,
       orientation: 'portrait',
@@ -34,11 +34,20 @@ export default class RoleSelect extends React.Component {
         femaleAgentPosition: new Animated.Value(this.isPortrait() ? -90 : 50),
       })
     })
+
+    this.slideText()
   }
 
   isPortrait = () => {
     const dim = Dimensions.get('screen');
     return dim.height >= dim.width;
+  }
+
+  slideText = () => {
+    Animated.timing(this.state.headerPosition, {
+      toValue: 0,
+      duration: 550
+    }).start()
   }
 
   fadeOperatives = () => {
@@ -96,11 +105,11 @@ export default class RoleSelect extends React.Component {
         <Animated.Image
           source={require('codenamesReactNative/src/assets/images/FemaleAgentSilhouetteWhite.png')}
           style={{
-            height: Dimensions.get("window").height * .95,
+            height: Dimensions.get("window").height * .88,
             resizeMode: 'contain',
             position: 'absolute',
             zIndex: -1,
-            top: 10,
+            bottom: 0,
             left: this.state.femaleAgentPosition,
             opacity: this.state.operativeOpacity
           }}>
@@ -108,11 +117,11 @@ export default class RoleSelect extends React.Component {
         <Animated.Image
           source={require('codenamesReactNative/src/assets/images/MaleAgentSilhouetteWhite.png')}
           style={{
-            height: Dimensions.get("window").height * .95,
+            height: Dimensions.get("window").height * .88,
             resizeMode: 'contain',
             position: 'absolute',
             zIndex: -1,
-            top: 10,
+            bottom: 0,
             right: this.state.maleAgentPosition,
             opacity: this.state.operativeOpacity
           }}>
@@ -131,7 +140,6 @@ export default class RoleSelect extends React.Component {
           zIndex: -1,
           bottom: this.state.spymasterPosition,
           opacity: this.state.spymasterOpacity,
-          maxHeight: '75%'
         }}>
       </Animated.Image>
     )
@@ -240,84 +248,101 @@ export default class RoleSelect extends React.Component {
     )
   }
 
-  renderBack = () => {
+  renderHeaderText = () => {
     return (
-      <BackButton
-        orientation={this.state.orientation}
-        navigation={this.props.navigation}
-      />
+      <View style={{alignSelf: 'flex-end'}}>
+        <View style={style(this.state.orientation).headerWrapper}>
+          <View style={style(this.state.orientation).headerTextWrapper}>
+            <Animated.Text
+              style={{
+                fontSize: 22,
+                color: 'white',
+                fontFamily: fonts.headers,
+                left: this.state.headerPosition,
+              }}>
+              SELECT ROLE
+            </Animated.Text>
+          </View>
+        </View>
+      </View>
+    )
+  }
+
+  renderBackButton = () => {
+    return (
+      <TouchableOpacity
+        style={style(this.state.orientation).headerBack}
+        onPress={() => this.props.navigation.goBack()}>
+        <Icon
+          type={'ionicon'}
+          name={'ios-arrow-back'}
+          size={36}
+          color={'white'}
+        />
+      </TouchableOpacity>
+    )
+  }
+
+  renderHeader = () => {
+    return (
+      <View style={style().topWrapper}>
+        {this.renderHeaderText()}
+        {this.renderBackButton()}
+      </View>
     )
   }
 
   render() {
     return (
-      <ImageBackground
-        source={require('codenamesReactNative/src/assets/images/BlackTexturedBackground.jpg')}
-        style={style(this.state.orientation).imageBackgroundFull}
-        imageStyle={style().imageStyleFull}>
-          {this.renderBack()}
-          <View style={style(this.state.orientation).screenContainer}>
-            {
-              (this.state.operative) ? this.renderAgents() 
-              : (this.state.spymaster) ? this.renderAssassin()
-              : null
-            }
-            <View style={style(this.state.orientation).elementsWrapper}>
-              {this.renderCheckboxes()}
-              {this.renderButton()}
-            </View>
+      <SafeAreaView style={style(this.state.orientation).safeArea}>
+        {this.renderHeader()}
+        <Image
+          source={require('codenamesReactNative/src/assets/images/BlackTexturedBackground.jpg')}
+          style={style(this.state.orientation).imageBackgroundFull}>
+        </Image>
+        <View style={style(this.state.orientation).screenContainer}>
+          <View style={style(this.state.orientation).elementsWrapper}>
+            {this.renderCheckboxes()}
+            {this.renderButton()}
           </View>
-      </ImageBackground>
+        </View>
+        {
+          (this.state.operative) ? this.renderAgents()
+          : (this.state.spymaster) ? this.renderAssassin()
+          : null
+        }
+      </SafeAreaView>
     )
   }
 }
 
 const style = (orientation) => {
   return StyleSheet.create({
-    imageBackgroundFull: {
-      width: '100%',
-      height: '100%',
-      alignSelf: 'center'
+    safeArea: {
+      flex: 1,
+      backgroundColor: 'transparent',
+      alignItems: 'center',
+      overflow: 'hidden'
+    },  
+    topWrapper: { 
+      width: '100%' 
     },
-    imageStyleFull: {
-      resizeMode: 'cover'
+    imageBackgroundFull: {
+      height: Dimensions.get("window").height,
+      minWidth: Dimensions.get("window").width,
+      resizeMode: orientation === 'portrait' ? 'contain' : 'cover',
+      alignSelf: 'center',
+      position: 'absolute',
+      zIndex: -10
     },
     screenContainer: {
       flex: 1,
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'flex-start'
+      justifyContent: 'center'
     },
-    elementsWrapper: {
-      top: (orientation === 'portrait') ? 140 : 20
-    },  
     characters: {
       zIndex: -1
-    },
-    maleAgent: {
-      height: Dimensions.get("window").height * .95,
-      resizeMode: 'contain',
-      position: 'absolute',
-      zIndex: -1,
-      top: 10,
-      right: (orientation === 'portrait') ? -90 : 50,
-      opacity: 0.35
-    },
-    femaleAgent: {
-      height: Dimensions.get("window").height * .95,
-      resizeMode: 'contain',
-      position: 'absolute',
-      zIndex: -1,
-      top: 10,
-      left: (orientation === 'portrait') ? -90 : 50,
-      opacity: 0.35
-    },
-    assassin: {
-      resizeMode: 'contain',
-      position: 'absolute',
-      zIndex: -1,
-      bottom: -20,
-      opacity: 0.3
     },
     buttonsWrapper: {
       alignItems: 'center',
@@ -356,6 +381,36 @@ const style = (orientation) => {
       borderBottomWidth: 1,
       width: 300,
       alignItems: 'center'
-    }
+    },
+    backButton: {
+      width: 55,
+      justifyContent: 'center',
+      marginLeft: 15,
+      marginTop: 5,
+      borderRadius: 6,
+      opacity: 0.7,
+      alignSelf: 'flex-start'
+    },
+    headerWrapper: {
+      flexDirection: 'row',
+      marginHorizontal: 15,
+      alignSelf: 'flex-end'
+    },
+    headerTextWrapper: {
+      width: '62%',
+      borderBottomWidth: 1,
+      borderBottomColor: 'white',
+      padding: 5,
+      alignItems: 'flex-end'
+    },
+    headerBack: {
+      position: 'absolute',
+      width: 55,
+      justifyContent: 'center',
+      marginLeft: 15,
+      marginTop: 2,
+      borderRadius: 6,
+      opacity: 0.7
+    },
   })
 }
