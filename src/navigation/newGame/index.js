@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet, TouchableOpacity, Image, Dimensions, SafeAreaView, Animated } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Image, Dimensions, SafeAreaView, Animated, KeyboardAvoidingView, Keyboard } from 'react-native'
 import { Button, Icon } from 'react-native-elements'
 import { fonts } from '../../utils/styles'
 import { Input } from 'react-native-elements'
@@ -14,7 +14,8 @@ export default class NewGameScreen extends React.Component {
     this.state = {
       codename: '', 
       orientation: 'portrait',
-      headerPosition: new Animated.Value(150)
+      headerPosition: new Animated.Value(150),
+      keyboardVisible: false
     }
   }
 
@@ -31,12 +32,35 @@ export default class NewGameScreen extends React.Component {
     })
 
     this.slideText()
+
+    this.keyboardDidShowListener = Keyboard.addListener(
+      'keyboardWillShow',
+      this.showKeyboard
+    )
+
+    this.keyboardDidHideListener = Keyboard.addListener(
+      'keyboardWillHide',
+      this.hideKeyboard
+    )
+  }
+
+  showKeyboard = () => {
+    this.setState({ keyboardVisible: true })
+  }
+
+  hideKeyboard = () => {
+    this.setState({ keyboardVisible: false })
+  }
+
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove()
+    this.keyboardDidHideListener.remove()
   }
 
   slideText = () => {
     Animated.timing(this.state.headerPosition, {
       toValue: 0,
-      duration: 500
+      duration: 550
     }).start()
   }
 
@@ -55,6 +79,7 @@ export default class NewGameScreen extends React.Component {
             type={'ionicon'}
             name={'ios-arrow-back'}
             size={36}
+            color={'black'}
           />
         </TouchableOpacity>
         <View style={style(this.state.orientation).headerWrapper}>
@@ -139,12 +164,13 @@ export default class NewGameScreen extends React.Component {
           ref={input => (this.codename = input)}
           placeholder='Codename'
           leftIcon={{ type: 'ionicon', name: 'md-key' }}
-          inputContainerStyle={style(this.state.orientation).inputContainer}
+          inputContainerStyle={[style(this.state.orientation).inputContainer, { borderRadius: this.state.keyboardVisible && this.state.orientation === 'landscape' ? 8 : null }]}
           inputStyle={style(this.state.orientation).input}
           onChangeText={(i) => { this.setCodename(i) }}
           maxLength={10}
         />
-        <View style={style(this.state.orientation).instructions}>
+        <View style={
+          [style(this.state.orientation).instructions, { display: this.state.keyboardVisible && this.state.orientation === 'landscape' ?  'none' : null }]}>
           <GlobalText
             value={'Create a unique codename for your game. Your party will enter this to join.'}
             style={style(this.state.orientation).instructionsText}
@@ -156,23 +182,25 @@ export default class NewGameScreen extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={style().backgroundWrappers}>
-        {this.renderHeader()}
-        <Image
-          source={require('codenamesReactNative/src/assets/images/WhiteTexturedBackground.jpg')}
-          style={style(this.state.orientation).imageBackground}
-        />  
-        <View style={style().backgroundWrappers}>
-          <View style={style(this.state.orientation).screenWrapper}>
-            <View style={style(this.state.orientation).elementsWrapper}>
-              {this.renderForm()}
-              {this.renderButtons()}
+      <KeyboardAvoidingView behavior={'padding'} style={{flex: 1}}>
+        <SafeAreaView style={style().backgroundWrappers}>
+          {this.renderHeader()}
+            <Image
+              source={require('codenamesReactNative/src/assets/images/WhiteTexturedBackground.jpg')}
+              style={style(this.state.orientation).imageBackground}
+            />  
+            <View style={style().backgroundWrappers}>
+              <View style={style(this.state.orientation).screenWrapper}>
+                <View style={style(this.state.orientation).elementsWrapper}>
+                  {this.renderForm()}
+                  {this.renderButtons()}
+                </View>
+                {this.renderMaleAgent()}
+                {this.renderFemaleAgent()}
+              </View>
             </View>
-            {this.renderMaleAgent()}
-            {this.renderFemaleAgent()}
-          </View>
-        </View>
-      </SafeAreaView>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
     )
   }
 }
@@ -187,7 +215,8 @@ const style = (orientation = null) => {
         zIndex: -1
       },
       screenWrapper: {
-        flex: 1
+        flex: 1,
+        justifyContent:'center'
       },
       headerWrapper: {
         flexDirection: 'row',
@@ -195,32 +224,30 @@ const style = (orientation = null) => {
         alignSelf: 'flex-end'
       },  
       headerTextWrapper: {
-        width: (orientation === 'portrait') ? '62%' : '100%',
+        width: (orientation === 'portrait') ? '62%' : '38%',
         borderBottomWidth: 1,
         padding: 5,
         alignItems: 'flex-end'
-      },  
-      header: {
-        fontSize: 22,
-        color: 'black',
-        fontFamily: fonts.headers
       },
       headerBack: {
         position: 'absolute',
         width: 55,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginLeft: 15,
+        marginTop: 2,
+        borderRadius: 6,
+        opacity: 0.7
       },
       backgroundWrappers: {
         flex: 1,
         backgroundColor: 'transparent'
       },
       elementsWrapper: {
-        marginTop: (orientation === 'portrait') ? 140 : 15,
-        alignItems: 'center'
+        alignItems: 'center',
+        alignSelf: 'center'
       },
       instructions: {
         paddingHorizontal: 12,
-        marginBottom: (orientation === 'portrait') ? 12 : 6,
         padding: 12,
         backgroundColor: colors.darkGray,
         width: 300,
@@ -234,7 +261,8 @@ const style = (orientation = null) => {
         fontSize: 12
       },
       buttonContainer: {
-        width: 300
+        width: 300,
+        marginTop: (orientation === 'portrait') ? 12 : 6,
       },
       button: {
         borderRadius: 8,
