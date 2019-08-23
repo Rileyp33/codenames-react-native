@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet, TouchableOpacity, Image, Dimensions, SafeAreaView, Animated, KeyboardAvoidingView, Keyboard } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Image, Dimensions, SafeAreaView, Animated, KeyboardAvoidingView, Keyboard, ActivityIndicator } from 'react-native'
 import { Button, Icon } from 'react-native-elements'
 import { fonts } from '../../utils/styles'
 import { Input } from 'react-native-elements'
@@ -15,7 +15,8 @@ export default class NewGameScreen extends React.Component {
       codename: '', 
       orientation: 'portrait',
       headerPosition: new Animated.Value(150),
-      keyboardVisible: false
+      keyboardVisible: false,
+      loading: false
     }
   }
 
@@ -83,7 +84,7 @@ export default class NewGameScreen extends React.Component {
           />
         </TouchableOpacity>
         <View style={style(this.state.orientation).headerWrapper}>
-          <View style={style(this.state.orientation).headerTextWrapper}>
+          <View style={[style(this.state.orientation).headerTextWrapper, { width: this.state.orientation === 'landscape' && this.state.keyboardVisible ? null : '62%' }]}>
             <Animated.Text
               style={{
                 fontSize: 22,
@@ -118,12 +119,14 @@ export default class NewGameScreen extends React.Component {
   }
 
   createGame = async () => {
+    await this.setState({ loading: true })
     let body = JSON.stringify({
       role: 'operative',
       codename: this.state.codename
     })
     let creationResponse = await apiCall(body, 'post', 'local_games')
     let navigate = await this.props.navigation.navigate('RoleSelect', { gameId: creationResponse.data.game_id, codename: creationResponse.data.codename })
+    this.setState({ loading: false })
     this.codename.clear()
   }
 
@@ -180,6 +183,18 @@ export default class NewGameScreen extends React.Component {
     )
   }
 
+  renderLoader = () => {
+    return (
+      <View style={style().loader}>
+        <ActivityIndicator
+          size="large"
+          color={colors["blue-agent"]}
+          animating={this.state.loading}
+        />
+      </View>
+    )
+  }
+
   render() {
     return (
       <KeyboardAvoidingView behavior={'padding'} style={{flex: 1}}>
@@ -194,6 +209,7 @@ export default class NewGameScreen extends React.Component {
                 <View style={style(this.state.orientation).elementsWrapper}>
                   {this.renderForm()}
                   {this.renderButtons()}
+                  {this.renderLoader()}
                 </View>
                 {this.renderMaleAgent()}
                 {this.renderFemaleAgent()}
@@ -309,6 +325,10 @@ const style = (orientation = null) => {
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 2
+      },
+      loader: {
+        margin: 20,
+        position: 'absolute'
       }
     })
   )

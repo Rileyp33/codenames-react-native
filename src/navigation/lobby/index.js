@@ -121,7 +121,7 @@ export default class NewGameScreen extends React.Component {
     )
   }
 
-  selectRole = async () => {
+  joinGame = async () => {
     await this.setState({ loading: true })
     await axios.get(BASE_URL + `local_games/${this.state.gameId}`, {
       params: {
@@ -133,6 +133,7 @@ export default class NewGameScreen extends React.Component {
     })
       .then((response) => {
         if (response.data && response.data.error) {
+          this.setState({ loading: false })
           console.log({ errors: response.data.error })
           Alert.alert(
             'Codename incorrect',
@@ -144,11 +145,16 @@ export default class NewGameScreen extends React.Component {
             gameId: response.data.game_id,
             codename: response.data.codename
           })
-          this.setState({ loading: false })
+          this.setState({ 
+            loading: false,
+            gameId: '',
+            codename: ''
+          })
           this.gameInput.clear()
           this.codeInput.clear()
           Keyboard.dismiss()
         } else {
+          this.setState({ loading: false })
           this.setState({ errors: 'Error: please check your network connection and try again.' })
         }
       })
@@ -159,7 +165,7 @@ export default class NewGameScreen extends React.Component {
       <View>
         <Button
           title={'Select Role'}
-          onPress={() => this.selectRole()}
+          onPress={() => this.joinGame()}
           disabled={this.state.codename.length < 1}
           disabledTitleStyle={{ color: 'white', opacity: 0.6 }}
           disabledStyle={{ opacity: 0.6 }}
@@ -347,7 +353,8 @@ const style = (orientation = null) => {
         marginTop: 2
       },
       loader: { 
-        margin: 20 
+        margin: 20,
+        position: 'absolute'
       }
     })
   )

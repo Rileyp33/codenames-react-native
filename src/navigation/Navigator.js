@@ -22,7 +22,7 @@ export default createNavigator = () => {
       }
     },
     {
-      initialRouteName: 'Lobby',
+      initialRouteName: 'NewGame',
       headerMode: 'none'
     }
   ))
