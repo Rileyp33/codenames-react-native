@@ -210,7 +210,7 @@ const style = (orientation = null) => {
     StyleSheet.create({
       imageBackground: {
         width: '100%',
-        height: '100%',
+        height: '110%',
         position: 'absolute',
         zIndex: -1
       },

@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet, TouchableOpacity, Image, Dimensions, SafeAreaView, Animated, KeyboardAvoidingView, Keyboard, Alert } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Image, Dimensions, SafeAreaView, Animated, KeyboardAvoidingView, Keyboard, Alert, ActivityIndicator } from 'react-native'
 import axios from 'axios'
 import { Button, Icon } from 'react-native-elements'
 import { fonts } from '../../utils/styles'
@@ -18,7 +18,8 @@ export default class NewGameScreen extends React.Component {
       keyboardVisible: false,
       gameId: '',
       codename: '', 
-      errors: null
+      errors: null,
+      loading: false
     }
   }
 
@@ -121,6 +122,7 @@ export default class NewGameScreen extends React.Component {
   }
 
   selectRole = async () => {
+    await this.setState({ loading: true })
     await axios.get(BASE_URL + `local_games/${this.state.gameId}`, {
       params: {
         codename: this.state.codename
@@ -142,6 +144,7 @@ export default class NewGameScreen extends React.Component {
             gameId: response.data.game_id,
             codename: response.data.codename
           })
+          this.setState({ loading: false })
           this.gameInput.clear()
           this.codeInput.clear()
           Keyboard.dismiss()
@@ -211,6 +214,18 @@ export default class NewGameScreen extends React.Component {
     )
   }
 
+  renderLoader = () => {
+    return (
+      <View style={style().loader}>
+        <ActivityIndicator 
+          size="large" 
+          color={colors["blue-agent"]} 
+          animating={this.state.loading} 
+        />
+      </View>
+    )
+  }
+
   render() {
     return (
       <KeyboardAvoidingView behavior={'padding'} style={{ flex: 1 }}>
@@ -225,6 +240,7 @@ export default class NewGameScreen extends React.Component {
               <View style={style(this.state.orientation).elementsWrapper}>
                 {this.renderForm()}
                 {this.renderButtons()}
+                {this.renderLoader()}
               </View>
               {this.renderMaleAgent()}
               {this.renderFemaleAgent()}
@@ -241,7 +257,7 @@ const style = (orientation = null) => {
     StyleSheet.create({
       imageBackground: {
         width: '100%',
-        height: '100%',
+        height: '110%',
         position: 'absolute',
         zIndex: -1
       },
@@ -329,6 +345,9 @@ const style = (orientation = null) => {
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 2
+      },
+      loader: { 
+        margin: 20 
       }
     })
   )

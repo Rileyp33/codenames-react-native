@@ -22,7 +22,7 @@ export default createNavigator = () => {
       }
     },
     {
-      initialRouteName: 'Home',
+      initialRouteName: 'Lobby',
       headerMode: 'none'
     }
   ))
