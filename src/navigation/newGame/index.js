@@ -126,7 +126,10 @@ export default class NewGameScreen extends React.Component {
     })
     let creationResponse = await apiCall(body, 'post', 'local_games')
     let navigate = await this.props.navigation.navigate('RoleSelect', { gameId: creationResponse.data.game_id, codename: creationResponse.data.codename })
-    this.setState({ loading: false })
+    this.setState({ 
+      loading: false,
+      codename: ''
+    })
     this.codename.clear()
   }
 
@@ -185,7 +188,7 @@ export default class NewGameScreen extends React.Component {
 
   renderLoader = () => {
     return (
-      <View style={style().loader}>
+      <View style={style(this.state.orientation).loader}>
         <ActivityIndicator
           size="large"
           color={colors["blue-agent"]}
@@ -328,7 +331,7 @@ const style = (orientation = null) => {
       },
       loader: {
         margin: 20,
-        position: 'absolute'
+        position: (orientation === 'portrait') ? null : 'absolute'
       }
     })
   )

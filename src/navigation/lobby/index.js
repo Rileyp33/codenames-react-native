@@ -17,8 +17,7 @@ export default class NewGameScreen extends React.Component {
       headerPosition: new Animated.Value(150),
       keyboardVisible: false,
       gameId: '',
-      codename: '', 
-      errors: null,
+      codename: '',
       loading: false
     }
   }
@@ -155,7 +154,11 @@ export default class NewGameScreen extends React.Component {
           Keyboard.dismiss()
         } else {
           this.setState({ loading: false })
-          this.setState({ errors: 'Error: please check your network connection and try again.' })
+          Alert.alert(
+            'Network Error',
+            'please check your connection and try again',
+            [{ text: 'OK', onPress: () => console.log('OK Pressed') }]
+          )
         }
       })
   }
@@ -222,7 +225,7 @@ export default class NewGameScreen extends React.Component {
 
   renderLoader = () => {
     return (
-      <View style={style().loader}>
+      <View style={style(this.state.orientation).loader}>
         <ActivityIndicator 
           size="large" 
           color={colors["blue-agent"]} 
@@ -305,7 +308,7 @@ const style = (orientation = null) => {
       },
       buttonContainer: {
         width: 300,
-        marginVertical: (orientation === 'portrait') ? 10 : 6,
+        marginVertical: (orientation === 'portrait') ? 10 : 6
       },
       button: {
         borderRadius: 8,
@@ -354,7 +357,7 @@ const style = (orientation = null) => {
       },
       loader: { 
         margin: 20,
-        position: 'absolute'
+        position: (orientation === 'portrait') ? null : 'absolute'
       }
     })
   )
