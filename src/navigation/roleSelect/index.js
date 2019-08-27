@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, View, Image, StyleSheet, Dimensions, TouchableOpacity, SafeAreaView } from 'react-native';
+import { Animated, View, Image, StyleSheet, Dimensions, TouchableOpacity, SafeAreaView, ActivityIndicator } from 'react-native';
 import { CheckBox, Button, Icon } from 'react-native-elements'
 import { colors, fonts } from '../../utils/styles'
 import axios from 'axios'
@@ -18,6 +18,7 @@ export default class RoleSelect extends React.Component {
       operative: false,
       spymaster: false,
       orientation: 'portrait',
+      loading: false
     }
   }
 
@@ -146,6 +147,7 @@ export default class RoleSelect extends React.Component {
   }
 
   joinGame = async () => {
+    await this.setState({ loading: true })
     await axios.get(BASE_URL + `local_games/${this.props.navigation.getParam('gameId')}`, {
       params: {
         codename: this.props.navigation.getParam('codename')
@@ -156,14 +158,17 @@ export default class RoleSelect extends React.Component {
     })
       .then((response) => {
         if (response.data && response.data.error) {
+          this.setState({ loading: false })
           this.setState({ errors: response.data.error })
         } else if (response.data && !response.data.error) {
+          this.setState({ loading: false })
           this.props.navigation.navigate('Game', {
             gameId: response.data.game_id,
             codename: response.data.codename,
             role: (this.state.operative) ? "operative" : "spymaster"
           })
         } else {
+          this.setState({ loading: false })
           this.setState({ errors: 'Error: please check your network connection and try again.' })
         }
       })
@@ -292,6 +297,18 @@ export default class RoleSelect extends React.Component {
     )
   }
 
+  renderLoader = () => {
+    return (
+      <View style={style().loader}>
+        <ActivityIndicator
+          size="large"
+          color={'white'}
+          animating={this.state.loading}
+        />
+      </View>
+    )
+  }
+
   render() {
     return (
       <SafeAreaView style={style(this.state.orientation).safeArea}>
@@ -304,6 +321,7 @@ export default class RoleSelect extends React.Component {
           <View style={style(this.state.orientation).elementsWrapper}>
             {this.renderCheckboxes()}
             {this.renderButton()}
+            {this.renderLoader()}
           </View>
         </View>
         {
@@ -412,5 +430,8 @@ const style = (orientation) => {
       borderRadius: 6,
       opacity: 0.7
     },
+    loader: {
+      margin: 20
+    }
   })
 }

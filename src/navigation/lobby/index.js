@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet, TouchableOpacity, Image, Dimensions, SafeAreaView, Animated, KeyboardAvoidingView, Keyboard, Alert } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Image, Dimensions, SafeAreaView, Animated, KeyboardAvoidingView, Keyboard, Alert, ActivityIndicator } from 'react-native'
 import axios from 'axios'
 import { Button, Icon } from 'react-native-elements'
 import { fonts } from '../../utils/styles'
@@ -17,8 +17,8 @@ export default class NewGameScreen extends React.Component {
       headerPosition: new Animated.Value(150),
       keyboardVisible: false,
       gameId: '',
-      codename: '', 
-      errors: null
+      codename: '',
+      loading: false
     }
   }
 
@@ -120,7 +120,8 @@ export default class NewGameScreen extends React.Component {
     )
   }
 
-  selectRole = async () => {
+  joinGame = async () => {
+    await this.setState({ loading: true })
     await axios.get(BASE_URL + `local_games/${this.state.gameId}`, {
       params: {
         codename: this.state.codename
@@ -131,6 +132,7 @@ export default class NewGameScreen extends React.Component {
     })
       .then((response) => {
         if (response.data && response.data.error) {
+          this.setState({ loading: false })
           console.log({ errors: response.data.error })
           Alert.alert(
             'Codename incorrect',
@@ -142,11 +144,21 @@ export default class NewGameScreen extends React.Component {
             gameId: response.data.game_id,
             codename: response.data.codename
           })
+          this.setState({ 
+            loading: false,
+            gameId: '',
+            codename: ''
+          })
           this.gameInput.clear()
           this.codeInput.clear()
           Keyboard.dismiss()
         } else {
-          this.setState({ errors: 'Error: please check your network connection and try again.' })
+          this.setState({ loading: false })
+          Alert.alert(
+            'Network Error',
+            'please check your connection and try again',
+            [{ text: 'OK', onPress: () => console.log('OK Pressed') }]
+          )
         }
       })
   }
@@ -156,7 +168,7 @@ export default class NewGameScreen extends React.Component {
       <View>
         <Button
           title={'Select Role'}
-          onPress={() => this.selectRole()}
+          onPress={() => this.joinGame()}
           disabled={this.state.codename.length < 1}
           disabledTitleStyle={{ color: 'white', opacity: 0.6 }}
           disabledStyle={{ opacity: 0.6 }}
@@ -211,6 +223,18 @@ export default class NewGameScreen extends React.Component {
     )
   }
 
+  renderLoader = () => {
+    return (
+      <View style={style(this.state.orientation).loader}>
+        <ActivityIndicator 
+          size="large" 
+          color={colors["blue-agent"]} 
+          animating={this.state.loading} 
+        />
+      </View>
+    )
+  }
+
   render() {
     return (
       <KeyboardAvoidingView behavior={'padding'} style={{ flex: 1 }}>
@@ -225,6 +249,7 @@ export default class NewGameScreen extends React.Component {
               <View style={style(this.state.orientation).elementsWrapper}>
                 {this.renderForm()}
                 {this.renderButtons()}
+                {this.renderLoader()}
               </View>
               {this.renderMaleAgent()}
               {this.renderFemaleAgent()}
@@ -241,7 +266,7 @@ const style = (orientation = null) => {
     StyleSheet.create({
       imageBackground: {
         width: '100%',
-        height: '100%',
+        height: '110%',
         position: 'absolute',
         zIndex: -1
       },
@@ -283,7 +308,7 @@ const style = (orientation = null) => {
       },
       buttonContainer: {
         width: 300,
-        marginVertical: (orientation === 'portrait') ? 10 : 6,
+        marginVertical: (orientation === 'portrait') ? 10 : 6
       },
       button: {
         borderRadius: 8,
@@ -329,6 +354,10 @@ const style = (orientation = null) => {
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 2
+      },
+      loader: { 
+        margin: 20,
+        position: (orientation === 'portrait') ? null : 'absolute'
       }
     })
   )
