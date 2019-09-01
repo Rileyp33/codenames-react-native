@@ -377,8 +377,8 @@ const style = (orientation) => {
     buttonTitle: {
       color: 'white',
       fontWeight: 'bold',
-      fontFamily: fonts.homeButtons,
-      fontSize: 16,
+      fontFamily: fonts.headers,
+      fontSize: 15,
     },
     checkboxContainer: {
       width: 300,
@@ -389,7 +389,7 @@ const style = (orientation) => {
     },
     checkboxText: {
       fontSize: 18,
-      fontFamily: fonts.homeButtons,
+      fontFamily: fonts.main,
       color: 'black',
       marginLeft: 25
     },

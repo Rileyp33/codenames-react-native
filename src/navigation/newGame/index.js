@@ -290,8 +290,9 @@ const style = (orientation = null) => {
       },
       buttonTitle: {
         color: 'white',
-        fontFamily: fonts.homeButtons,
-        fontSize: 16,
+        fontFamily: fonts.headers,
+        fontSize: 15,
+        fontWeight: 'bold'
       },
       maleAgent: {
         height: '97%',

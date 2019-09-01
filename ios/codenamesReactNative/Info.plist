@@ -38,7 +38,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
@@ -56,6 +56,20 @@
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
+		<string>ProzaLibre-Bold.ttf</string>
+		<string>ProzaLibre-BoldItalic.ttf</string>
+		<string>ProzaLibre-ExtraBold.ttf</string>
+		<string>ProzaLibre-ExtraBoldItalic.ttf</string>
+		<string>ProzaLibre-Italic.ttf</string>
+		<string>ProzaLibre-Medium.ttf</string>
+		<string>ProzaLibre-MediumItalic.ttf</string>
+		<string>ProzaLibre-Regular.ttf</string>
+		<string>ProzaLibre-SemiBold.ttf</string>
+		<string>ProzaLibre-SemiBoldItalic.ttf</string>
+		<string>Karla-Bold.ttf</string>
+		<string>Karla-BoldItalic.ttf</string>
+		<string>Karla-Regular.ttf</string>
+		<string>Karla-RegularItalic.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

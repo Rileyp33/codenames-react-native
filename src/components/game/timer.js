@@ -121,7 +121,8 @@ const style = StyleSheet.create({
     borderRadius: 5
   },
   timerText: {
-    fontFamily: fonts.homeButtons,
-    fontWeight: 'bold'
+    fontFamily: fonts.main,
+    fontWeight: 'bold',
+    fontSize: 16
   }
 }) 

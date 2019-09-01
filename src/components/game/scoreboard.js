@@ -8,13 +8,13 @@ export const Scoreboard = (props) => {
     <View style={props.scoreboardStyle}>
       <View style={props.blueStyle}>
         <GlobalText
-          value={`${props.blueScore}   /   ${props.blueTotal}`}
+          value={`${props.blueScore}   |   ${props.blueTotal}`}
           style={props.textStyle}
         />
       </View>
       <View style={props.redStyle}>
         <GlobalText
-          value={`${props.redScore}   /   ${props.redTotal}`}
+          value={`${props.redScore}   |   ${props.redTotal}`}
           style={props.textStyle}
         />
       </View>

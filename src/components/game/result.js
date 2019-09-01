@@ -120,7 +120,7 @@ const style = (orientation, result = null) => {
       alignSelf: (orientation === 'portrait') ? null : 'flex-start',
       paddingLeft: (orientation === 'portrait') ? null : 20,
       fontSize: 20,
-      fontFamily: fonts.homeButtons,
+      fontFamily: fonts.main,
       fontWeight: 'bold', 
       maxWidth: (orientation === 'portrait') ? null : 140,
       color: 'white'
