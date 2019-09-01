@@ -38,7 +38,7 @@ export const Card = (props) => {
     }
   }
 
-  renderSpymasterImage = (props) => {
+  renderUnflippedSpymasterImage = (props) => {
     switch (props.color) {
       case 'red-agent':
         return (
@@ -71,6 +71,39 @@ export const Card = (props) => {
     }
   }
 
+  renderFlippedSpymasterImage = (props) => {
+    switch (props.color) {
+      case 'red-agent':
+        return (
+          <Image
+            source={require('../../assets/images/redSpymasterCard.jpg')}
+            style={props.flippedSpymasterImageStyle}
+          />
+        )
+      case 'blue-agent':
+        return (
+          <Image
+            source={require('../../assets/images/blueSpymasterCard.jpg')}
+            style={props.flippedSpymasterImageStyle}
+          />
+        )
+      case 'civilian':
+        return (
+          <Image
+            source={require('../../assets/images/tanSpymasterCard.jpg')}
+            style={props.flippedSpymasterImageStyle}
+          />
+        )
+      case 'assassin':
+        return (
+          <Image
+            source={require('../../assets/images/BlackTexturedBackground.jpg')}
+            style={props.flippedSpymasterImageStyle}
+          />
+        )
+    }
+  }
+
   renderUnflippedImage = () => {
     return (
       <Image
@@ -82,7 +115,7 @@ export const Card = (props) => {
 
   renderRoleBasedImage = () => {
     if (props.role === "spymaster") {
-      return this.renderSpymasterImage(props)
+      return (props.flippedStatus === 'up') ? renderFlippedSpymasterImage(props) : renderUnflippedSpymasterImage(props)
     } else {
       return (props.flippedStatus === 'up') ? renderFlippedImage(props) : renderUnflippedImage()
     }

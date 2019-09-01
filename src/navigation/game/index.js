@@ -14,7 +14,8 @@ export default class GameScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      role: this.props.navigation.getParam('role'),
+      // role: this.props.navigation.getParam('role'),
+      role: 'spymaster',
       cells: null,
       red_score: 0,
       red_total: 0,
@@ -26,8 +27,10 @@ export default class GameScreen extends React.Component {
       orientation: 'portrait'
     }
 
-    this.gameId = this.props.navigation.getParam('gameId')
-    this.codename = this.props.navigation.getParam('codename')
+    this.gameId = 22
+    // this.gameId = this.props.navigation.getParam('gameId')
+    this.codename = 'Test'
+    // this.codename = this.props.navigation.getParam('codename')
 
     this.positions = [
       [0, 1, 2, 3, 4],
@@ -37,8 +40,8 @@ export default class GameScreen extends React.Component {
       [20, 21, 22, 23, 24]
     ]
 
-    // this.cable = ActionCable.createConsumer('wss://codenames-api-rp.herokuapp.com/cable')
-    this.cable = ActionCable.createConsumer('ws://localhost:3001/cable')
+    this.cable = ActionCable.createConsumer('wss://codenames-api-rp.herokuapp.com/cable')
+    // this.cable = ActionCable.createConsumer('ws://localhost:3001/cable')
   }
 
   componentDidMount() {
@@ -156,6 +159,7 @@ export default class GameScreen extends React.Component {
           onPress={() => { this.handleFlip(card.cell_id) }}
           cardStyle={style(this.state.orientation).card}
           imageStyle={style(this.state.orientation).cardImage}
+          flippedSpymasterImageStyle={style(this.state.orientation).flippedSpymasterImage}
           textStyle={
             (card.flipped_status === "up") ?
               style(this.state.orientation, this.state.role).flippedText 
@@ -319,7 +323,8 @@ const style = (orientation = null, role = null) => {
       textTransform: 'uppercase',
       color: 'white',
       textDecorationLine: (role === 'spymaster') ? 'line-through' : null,
-      textDecorationStyle: 'double'
+      textDecorationStyle: 'solid',
+      fontWeight: 'bold'
     },
     card: {
       flex: 1,
@@ -368,6 +373,15 @@ const style = (orientation = null, role = null) => {
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: 'black'
+    },
+    flippedSpymasterImage: {
+      width: '200%',
+      resizeMode: 'contain',
+      position: 'absolute',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'black',
+      opacity: 0.6
     },
     scoreboard: {
       marginHorizontal: 2,
