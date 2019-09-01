@@ -2,7 +2,7 @@ import React from 'react'
 import { View, StyleSheet, ImageBackground, Image } from 'react-native'
 import { Button } from 'react-native-elements'
 import { apiCall } from '../../utils/requests'
-import { fonts } from '../../utils/styles'
+import { fonts, colors } from '../../utils/styles'
 
 import GoogleCast, { CastButton } from 'react-native-google-cast'
 
@@ -38,7 +38,7 @@ export default class HomeScreen extends React.Component{
             type: 'material-community',
             name: 'cards-playing-outline',
             size: 30,
-            color: 'gray',
+            color: colors["red-agent"],
             paddingRight: 20
           }}
         />
@@ -54,7 +54,7 @@ export default class HomeScreen extends React.Component{
             type: 'antdesign',
             name: 'addusergroup',
             size: 30,
-            color: 'gray',
+            color: colors["blue-agent"],
             paddingRight: 20
           }}
         />
@@ -70,7 +70,7 @@ export default class HomeScreen extends React.Component{
             type: 'material-community',
             name: 'sign-text',
             size: 30,
-            color: 'gray',
+            color: colors.darkGray,
             paddingRight: 20
           }}
         />
@@ -151,8 +151,9 @@ const style = StyleSheet.create({
   },  
   buttonTitle: {
     color: 'black',
-    fontFamily: fonts.homeButtons,
-    fontSize: 16,
+    fontFamily: fonts.headers,
+    fontSize: 15,
+    fontWeight: 'bold'
   },
   logoWrapper: {
     flex: 1,

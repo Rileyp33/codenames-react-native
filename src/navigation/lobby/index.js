@@ -8,7 +8,7 @@ import { colors } from '../../utils/styles'
 import { BASE_URL } from '../../utils/requests'
 
 
-export default class NewGameScreen extends React.Component {
+export default class LobbyScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -282,7 +282,7 @@ const style = (orientation = null) => {
       headerTextWrapper: {
         width: (orientation === 'portrait') ? '62%' : '38%',
         borderBottomWidth: 1,
-        padding: 5,
+        padding: 4,
         alignItems: 'flex-end'
       },
       headerBack: {
@@ -317,8 +317,9 @@ const style = (orientation = null) => {
       },
       buttonTitle: {
         color: 'white',
-        fontFamily: fonts.homeButtons,
-        fontSize: 16,
+        fontFamily: fonts.headers,
+        fontSize: 15,
+        fontWeight: 'bold'
       },
       maleAgent: {
         height: '97%',

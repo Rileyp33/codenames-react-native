@@ -315,7 +315,7 @@ const style = (orientation = null, role = null) => {
     },
     cardText: {
       fontSize: (orientation === 'portrait') ? 12 : 14,
-      fontFamily: fonts.homeButtons,
+      fontFamily: fonts.condensedMain,
       fontWeight: 'bold', 
       textTransform: 'uppercase',
       color: (role === 'spymaster') ? 'white' : 'black',
@@ -323,7 +323,7 @@ const style = (orientation = null, role = null) => {
     },
     flippedText: {
       fontSize: (orientation === 'portrait') ? 12 : 14,
-      fontFamily: fonts.homeButtons,
+      fontFamily: fonts.condensedMain,
       fontWeight: (role === 'operative') ? 'bold' : null,
       textTransform: 'uppercase',
       color: 'white',
@@ -416,7 +416,7 @@ const style = (orientation = null, role = null) => {
     scoreboardText: {
       color: 'white',
       fontWeight: 'bold',
-      fontFamily: fonts.homeButtons,
+      fontFamily: fonts.main,
       fontSize: 18
     },
     timerWrapper: {
@@ -446,9 +446,9 @@ const style = (orientation = null, role = null) => {
     },
     buttonTitle: {
       color: colors.darkGray,
-      fontFamily: fonts.homeButtons,
+      fontFamily: fonts.main,
       fontSize: 12,
-      fontFamily: fonts.homeButtons,
+      fontFamily: fonts.main,
       fontWeight: 'bold',
       marginLeft: (orientation === 'portrait') ? -6 : 0
     },
@@ -473,7 +473,7 @@ const style = (orientation = null, role = null) => {
       paddingLeft: (orientation === "portrait") ? 2.5 : 8
     },
     gameDataText: {
-      fontFamily: fonts.homeButtons,
+      fontFamily: fonts.main,
       fontSize: 14,
       fontWeight: 'bold',
       color: 'white'
