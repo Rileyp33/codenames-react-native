@@ -114,7 +114,7 @@ export default class Timer extends React.Component {
 
 const style = StyleSheet.create({
   timerWrapper: {
-    flex: 0.5,
+    flex: 0.6,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.lightGray,

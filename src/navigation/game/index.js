@@ -14,8 +14,7 @@ export default class GameScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      // role: this.props.navigation.getParam('role'),
-      role: 'spymaster',
+      role: this.props.navigation.getParam('role'),
       cells: null,
       red_score: 0,
       red_total: 0,
@@ -27,10 +26,8 @@ export default class GameScreen extends React.Component {
       orientation: 'portrait'
     }
 
-    this.gameId = 22
-    // this.gameId = this.props.navigation.getParam('gameId')
-    this.codename = 'Test'
-    // this.codename = this.props.navigation.getParam('codename')
+    this.gameId = this.props.navigation.getParam('gameId')
+    this.codename = this.props.navigation.getParam('codename')
 
     this.positions = [
       [0, 1, 2, 3, 4],
@@ -264,28 +261,31 @@ export default class GameScreen extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={style().safeArea}>
-        <ImageBackground
-          source={require('codenamesReactNative/src/assets/images/BlackTexturedBackground.jpg')}
-          style={style().imageBackgroundFull}
-          imageStyle={style().imageStyleFull}>
-          <View style={style(this.state.orientation).screen}>
-            {this.renderLogo()}
-            <View style={style(this.state.orientation).gameWrapper}>
-              <View style={style(this.state.orientation).board}>
-                {(this.state.cells) ? this.renderDeck(this.positions) : null}
-              </View>
-              <View style={style(this.state.orientation).infoWrapper}>
-                {this.renderScoreboard()}
-                {this.renderButtons()}
-                {(this.state.cells) ? this.renderResult() : null}
-                {this.renderGameData()}
-                {this.renderAssassin()}
+      <>
+        <SafeAreaView style={style().safeAreaTop}></SafeAreaView>
+        <SafeAreaView style={style().safeAreaBottom}>
+          <ImageBackground
+            source={require('codenamesReactNative/src/assets/images/BlackTexturedBackground.jpg')}
+            style={style().imageBackgroundFull}
+            imageStyle={style().imageStyleFull}>
+            <View style={style(this.state.orientation).screen}>
+              {this.renderLogo()}
+              <View style={style(this.state.orientation).gameWrapper}>
+                <View style={style(this.state.orientation).board}>
+                  {(this.state.cells) ? this.renderDeck(this.positions) : null}
+                </View>
+                <View style={style(this.state.orientation).infoWrapper}>
+                  {this.renderScoreboard()}
+                  {this.renderButtons()}
+                  {(this.state.cells) ? this.renderResult() : null}
+                  {this.renderGameData()}
+                  {this.renderAssassin()}
+                </View>
               </View>
             </View>
-          </View>
-        </ImageBackground>
-      </SafeAreaView>
+          </ImageBackground>
+        </SafeAreaView>
+      </>
     )
   }
 }
@@ -297,9 +297,13 @@ const style = (orientation = null, role = null) => {
       paddingTop: (orientation === 'portrait') ? 5 : 0,
       flex: 1
     },
-    safeArea: {
+    safeAreaTop: { 
+      flex: 0, 
+      backgroundColor: 'transparent' 
+    },
+    safeAreaBottom: {
       flex: 1, 
-      backgroundColor: 'transparent'
+      backgroundColor: 'black'
     },
     gameWrapper: {
       flexDirection: (orientation === 'portrait') ? 'column' : 'row',
@@ -314,7 +318,8 @@ const style = (orientation = null, role = null) => {
       fontFamily: fonts.homeButtons,
       fontWeight: 'bold', 
       textTransform: 'uppercase',
-      color: (role === 'spymaster') ? 'white' : 'black'
+      color: (role === 'spymaster') ? 'white' : 'black',
+      paddingHorizontal: 3
     },
     flippedText: {
       fontSize: (orientation === 'portrait') ? 12 : 14,
@@ -324,15 +329,14 @@ const style = (orientation = null, role = null) => {
       color: 'white',
       textDecorationLine: (role === 'spymaster') ? 'line-through' : null,
       textDecorationStyle: 'solid',
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+      paddingHorizontal: 3
     },
     card: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: colors.lightGray,
-      paddingVertical: 3,
-      paddingHorizontal: 3,
       marginHorizontal: 2,
       marginVertical: 3,
       borderRadius: 5,
@@ -399,15 +403,15 @@ const style = (orientation = null, role = null) => {
       justifyContent: 'center',
       marginRight: 5,
       borderRadius: 5,
-      backgroundColor: colors["red-agent-light"]
+      backgroundColor: colors["red-agent"]
     },
     blueBoard: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
       marginRight: 5,
-      borderRadius: 5,
-      backgroundColor: colors["blue-agent-light"]
+      borderRadius: 5, 
+      backgroundColor: colors["blue-agent"]
     },
     scoreboardText: {
       color: 'white',
