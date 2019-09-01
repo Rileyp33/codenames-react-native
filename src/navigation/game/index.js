@@ -37,8 +37,8 @@ export default class GameScreen extends React.Component {
       [20, 21, 22, 23, 24]
     ]
 
-    // this.cable = ActionCable.createConsumer('wss://codenames-api-rp.herokuapp.com/cable')
-    this.cable = ActionCable.createConsumer('ws://localhost:3001/cable')
+    this.cable = ActionCable.createConsumer('wss://codenames-api-rp.herokuapp.com/cable')
+    // this.cable = ActionCable.createConsumer('ws://localhost:3001/cable')
   }
 
   componentDidMount() {
@@ -156,6 +156,7 @@ export default class GameScreen extends React.Component {
           onPress={() => { this.handleFlip(card.cell_id) }}
           cardStyle={style(this.state.orientation).card}
           imageStyle={style(this.state.orientation).cardImage}
+          flippedSpymasterImageStyle={style(this.state.orientation).flippedSpymasterImage}
           textStyle={
             (card.flipped_status === "up") ?
               style(this.state.orientation, this.state.role).flippedText 
@@ -260,28 +261,31 @@ export default class GameScreen extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={style().safeArea}>
-        <ImageBackground
-          source={require('codenamesReactNative/src/assets/images/BlackTexturedBackground.jpg')}
-          style={style().imageBackgroundFull}
-          imageStyle={style().imageStyleFull}>
-          <View style={style(this.state.orientation).screen}>
-            {this.renderLogo()}
-            <View style={style(this.state.orientation).gameWrapper}>
-              <View style={style(this.state.orientation).board}>
-                {(this.state.cells) ? this.renderDeck(this.positions) : null}
-              </View>
-              <View style={style(this.state.orientation).infoWrapper}>
-                {this.renderScoreboard()}
-                {this.renderButtons()}
-                {(this.state.cells) ? this.renderResult() : null}
-                {this.renderGameData()}
-                {this.renderAssassin()}
+      <>
+        <SafeAreaView style={style().safeAreaTop}></SafeAreaView>
+        <SafeAreaView style={style().safeAreaBottom}>
+          <ImageBackground
+            source={require('codenamesReactNative/src/assets/images/BlackTexturedBackground.jpg')}
+            style={style().imageBackgroundFull}
+            imageStyle={style().imageStyleFull}>
+            <View style={style(this.state.orientation).screen}>
+              {this.renderLogo()}
+              <View style={style(this.state.orientation).gameWrapper}>
+                <View style={style(this.state.orientation).board}>
+                  {(this.state.cells) ? this.renderDeck(this.positions) : null}
+                </View>
+                <View style={style(this.state.orientation).infoWrapper}>
+                  {this.renderScoreboard()}
+                  {this.renderButtons()}
+                  {(this.state.cells) ? this.renderResult() : null}
+                  {this.renderGameData()}
+                  {this.renderAssassin()}
+                </View>
               </View>
             </View>
-          </View>
-        </ImageBackground>
-      </SafeAreaView>
+          </ImageBackground>
+        </SafeAreaView>
+      </>
     )
   }
 }
@@ -293,9 +297,13 @@ const style = (orientation = null, role = null) => {
       paddingTop: (orientation === 'portrait') ? 5 : 0,
       flex: 1
     },
-    safeArea: {
+    safeAreaTop: { 
+      flex: 0, 
+      backgroundColor: 'transparent' 
+    },
+    safeAreaBottom: {
       flex: 1, 
-      backgroundColor: 'transparent'
+      backgroundColor: 'black'
     },
     gameWrapper: {
       flexDirection: (orientation === 'portrait') ? 'column' : 'row',
@@ -310,7 +318,8 @@ const style = (orientation = null, role = null) => {
       fontFamily: fonts.homeButtons,
       fontWeight: 'bold', 
       textTransform: 'uppercase',
-      color: (role === 'spymaster') ? 'white' : 'black'
+      color: (role === 'spymaster') ? 'white' : 'black',
+      paddingHorizontal: 3
     },
     flippedText: {
       fontSize: (orientation === 'portrait') ? 12 : 14,
@@ -319,15 +328,15 @@ const style = (orientation = null, role = null) => {
       textTransform: 'uppercase',
       color: 'white',
       textDecorationLine: (role === 'spymaster') ? 'line-through' : null,
-      textDecorationStyle: 'double'
+      textDecorationStyle: 'solid',
+      fontWeight: 'bold',
+      paddingHorizontal: 3
     },
     card: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: colors.lightGray,
-      paddingVertical: 3,
-      paddingHorizontal: 3,
       marginHorizontal: 2,
       marginVertical: 3,
       borderRadius: 5,
@@ -369,6 +378,15 @@ const style = (orientation = null, role = null) => {
       alignItems: 'center',
       backgroundColor: 'black'
     },
+    flippedSpymasterImage: {
+      width: '200%',
+      resizeMode: 'contain',
+      position: 'absolute',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'black',
+      opacity: 0.6
+    },
     scoreboard: {
       marginHorizontal: 2,
       flexDirection: 'row',
@@ -385,15 +403,15 @@ const style = (orientation = null, role = null) => {
       justifyContent: 'center',
       marginRight: 5,
       borderRadius: 5,
-      backgroundColor: colors["red-agent-light"]
+      backgroundColor: colors["red-agent"]
     },
     blueBoard: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
       marginRight: 5,
-      borderRadius: 5,
-      backgroundColor: colors["blue-agent-light"]
+      borderRadius: 5, 
+      backgroundColor: colors["blue-agent"]
     },
     scoreboardText: {
       color: 'white',

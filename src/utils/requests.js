@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-// export const BASE_URL = 'https://codenames-api-rp.herokuapp.com/api/v1/'
-export const BASE_URL = 'http://localhost:3001/api/v1/'
+export const BASE_URL = 'https://codenames-api-rp.herokuapp.com/api/v1/'
+// export const BASE_URL = 'http://localhost:3001/api/v1/'
 
 export async function apiCall(body, method, urlSuffix, contentType = 'application/JSON') {
   console.log(`Hitting endpoint: ${BASE_URL + urlSuffix}`)

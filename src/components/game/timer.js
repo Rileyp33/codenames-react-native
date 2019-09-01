@@ -12,8 +12,8 @@ export default class Timer extends React.Component {
       timer: 90
     }
 
-    // this.cable = ActionCable.createConsumer('wss://codenames-api-rp.herokuapp.com/cable')
-    this.cable = ActionCable.createConsumer('ws://localhost:3001/cable')
+    this.cable = ActionCable.createConsumer('wss://codenames-api-rp.herokuapp.com/cable')
+    // this.cable = ActionCable.createConsumer('ws://localhost:3001/cable')
   }
 
   componentDidMount() {
@@ -114,7 +114,7 @@ export default class Timer extends React.Component {
 
 const style = StyleSheet.create({
   timerWrapper: {
-    flex: 0.5,
+    flex: 0.6,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.lightGray,
