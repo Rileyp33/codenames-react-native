@@ -11,7 +11,8 @@ export default class RoleSelect extends React.Component {
     this.state = {
       spymasterOpacity: new Animated.Value(0),
       operativeOpacity: new Animated.Value(0),
-      spymasterPosition: new Animated.Value(-300),
+      spymasterBottom: new Animated.Value(-300),
+      spymasterLeft: new Animated.Value(-125),
       maleAgentPosition: new Animated.Value(200),
       femaleAgentPosition: new Animated.Value(200),
       headerPosition: new Animated.Value(150),
@@ -54,7 +55,8 @@ export default class RoleSelect extends React.Component {
   fadeOperatives = () => {
     this.setState({
       spymasterOpacity: new Animated.Value(0),
-      spymasterPosition: new Animated.Value(-300)
+      spymasterBottom: new Animated.Value(-300),
+      spymasterLeft: new Animated.Value(-125)
     })
     Animated.timing(this.state.operativeOpacity, {
       toValue: 0.3,
@@ -93,9 +95,13 @@ export default class RoleSelect extends React.Component {
         toValue: 0.3,
         duration: 600
       }),
-      Animated.timing(this.state.spymasterPosition, {
+      Animated.timing(this.state.spymasterBottom, {
         toValue: -20,
-        duration: 200
+        duration: 250
+      }),
+      Animated.timing(this.state.spymasterLeft, {
+        toValue: -260,
+        duration: 250
       })
     ]).start()
   }
@@ -137,9 +143,11 @@ export default class RoleSelect extends React.Component {
         source={require('codenamesReactNative/src/assets/images/AssassinWhite.png')}
         style={{
           resizeMode: 'contain',
+          maxHeight: (this.state.orientation === 'portrait') ? '57%' : '72%',
+          left: (this.state.orientation === 'portrait') ? null : this.state.spymasterLeft,
           position: 'absolute',
           zIndex: -1,
-          bottom: this.state.spymasterPosition,
+          bottom: this.state.spymasterBottom,
           opacity: this.state.spymasterOpacity,
         }}>
       </Animated.Image>
@@ -213,7 +221,7 @@ export default class RoleSelect extends React.Component {
           onPress={() => this.setOperative()}
         />
         <CheckBox
-          title='Sypmaster'
+          title='Spymaster'
           checkedIcon='target'
           iconType='material-community'
           textStyle={style(this.state.orientation).checkboxText}
