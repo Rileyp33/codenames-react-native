@@ -207,6 +207,7 @@ export default class GameScreen extends React.Component {
           timerWrapper={style(this.state.orientation).timerWrapper}
           iconSize={26}
           gameId={this.gameId}
+          orientation={this.state.orientation}
         />
       )
     }

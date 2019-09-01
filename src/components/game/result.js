@@ -18,7 +18,7 @@ export const Result = (props) => {
       )
   }
 
-  renderFieldAgents = () => {
+  renderFieldAgents = (props) => {
     switch (props.result) {
       case 'Red team wins!':
         return (
@@ -44,15 +44,15 @@ export const Result = (props) => {
     }
   }
 
-  renderRoleBasedIcon = () => {
-    if (props.role === "sypmaster") { 
-      return this.renderSpymasterIcon()
+  renderRoleBasedIcon = (props) => {
+    if (props.role === "spymaster") { 
+      return renderSpymasterIcon(props)
     } else {
-      return this.renderFieldAgents()
+      return renderFieldAgents(props)
     }
   }
 
-  renderResultBackground = () => {
+  renderResultBackground = (props) => {
     return (
       <Image
         source={resultBackground}
@@ -75,7 +75,7 @@ export const Result = (props) => {
           <View style={style(props.orientation, props.result).card}>
             {renderResultBackground(props)}
             {renderRoleBasedIcon(props)}
-            <Text style={style(props.orientation).resultText}>
+            <Text style={style(props.orientation, props.result).resultText}>
               {props.result}
             </Text>
           </View>
@@ -114,11 +114,15 @@ const style = (orientation, result = null) => {
       width: 50,
       resizeMode: 'contain',
       position: 'absolute',
+      right: (orientation === 'portrait') ? null : -25,
       opacity: 0.7
     },
     resultText: {
-      alignSelf: (orientation === 'portrait') ? null : 'flex-start',
+      alignSelf: (orientation === "portrait" && result === "Assassin contacted. Game over."
+      ) ? 'flex-end' : (orientation === 'portrait') ? null : 'flex-start',
       paddingLeft: (orientation === 'portrait') ? null : 20,
+      paddingRight: (orientation === "portrait" && result === "Assassin contacted. Game over."
+      ) ? 10 : null,
       fontSize: 20,
       fontFamily: fonts.main,
       fontWeight: 'bold', 
