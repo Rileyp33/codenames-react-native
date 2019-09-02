@@ -6,6 +6,7 @@ import { Result } from '../../components/game/result'
 import { GameData } from '../../components/game/gameData'
 import { GameboardButtons } from '../../components/game/gameboardButtons'
 import { Scoreboard } from '../../components/game/scoreboard'
+import NextGame from '../../components/game/nextGame'
 import { BASE_URL } from '../../utils/requests'
 import { colors, fonts } from '../../utils/styles'
 import axios from 'axios'
@@ -241,6 +242,15 @@ export default class GameScreen extends React.Component {
     )
   }
 
+  renderNextGame = () => {
+    return (
+      <NextGame
+        orientation={this.state.orientation}
+        navigation={this.props.navigation}
+      />
+    )
+  }
+
   renderResult = () => {
     return (
       <Result 
@@ -279,7 +289,7 @@ export default class GameScreen extends React.Component {
                   {this.renderScoreboard()}
                   {this.renderButtons()}
                   {(this.state.cells) ? this.renderResult() : null}
-                  {this.renderGameData()}
+                  {(this.state.result) ? this.renderNextGame() : this.renderGameData()}
                   {this.renderAssassin()}
                 </View>
               </View>

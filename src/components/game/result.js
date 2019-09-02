@@ -94,8 +94,8 @@ const style = (orientation, result = null) => {
     resultWrapper: {
       flex: 1,
       marginTop: 10,
-      marginBottom: (orientation === 'portrait') ? 50 : 68,
-      marginLeft: (orientation === 'portrait') ? 0 : 12
+      marginLeft: (orientation === 'portrait') ? 3 : 12,
+      marginRight: 3
     },
     card: {
       flex: 1,

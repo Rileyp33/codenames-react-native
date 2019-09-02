@@ -1,7 +1,7 @@
 
 export const colors = {
   "lightGray": '#d9d9d9',
-  "darkGray": '#595959',
+  "darkGray": '#545454',
   "red-agent": '#a31600',
   "red-agent-light": '#bd3200',
   "blue-agent": '#0a1b67',
