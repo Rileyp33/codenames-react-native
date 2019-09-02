@@ -13,7 +13,7 @@ export const Result = (props) => {
       return (
         <Image
           source={spymaster}
-          style={style(props.orientation).icon}
+          style={style(props.orientation, null, props.role).icon}
         />
       )
   }
@@ -24,21 +24,21 @@ export const Result = (props) => {
         return (
           <Image
             source={agents}
-            style={style(props.orientation).icon}
+            style={style(props.orientation, null, props.role).icon}
           />
         )
       case 'Blue team wins!':
         return (
           <Image
             source={agents}
-            style={style(props.orientation).icon}
+            style={style(props.orientation, null, props.role).icon}
           />
         )
       case 'Assassin contacted. Game over.':
         return (
           <Image
             source={spymaster}
-            style={style(props.orientation).icon}
+            style={style(props.orientation, null, props.role).icon}
           />
         )
     }
@@ -84,7 +84,7 @@ export const Result = (props) => {
   )
 }
 
-const style = (orientation, result = null) => {
+const style = (orientation, result = null, role = null) => {
   let winnerBackground
   (result === 'Red team wins!') ? winnerBackground = colors["red-agent"]
     : (result === 'Blue team wins!') ? winnerBackground = colors["blue-agent"]
@@ -109,18 +109,17 @@ const style = (orientation, result = null) => {
     },
     icon: {
       alignSelf: (orientation === 'portrait') ? 'flex-start' : 'flex-end',
-      marginRight: (orientation === 'portrait') ? 0 : 30,
       height: (orientation === 'portrait') ? '85%' : '60%',
-      width: 50,
+      width: (role === 'spymaster') ? 50 : 25,
       resizeMode: 'contain',
       position: 'absolute',
-      right: (orientation === 'portrait') ? null : -25,
+      right: (orientation === 'portrait') ? null : (role === 'spymaster') ? 3 : 8,
       opacity: 0.7
     },
     resultText: {
       alignSelf: (orientation === "portrait" && result === "Assassin contacted. Game over."
       ) ? 'flex-end' : (orientation === 'portrait') ? null : 'flex-start',
-      paddingLeft: (orientation === 'portrait') ? null : 20,
+      paddingLeft: (orientation === 'portrait') ? null : 14,
       paddingRight: (orientation === "portrait" && result === "Assassin contacted. Game over."
       ) ? 10 : null,
       fontSize: 20,
