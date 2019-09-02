@@ -13,7 +13,7 @@ export const Result = (props) => {
       return (
         <Image
           source={spymaster}
-          style={style(props.orientation, null, props.role).icon}
+          style={style(props.orientation, props.result, props.role).icon}
         />
       )
   }
@@ -24,21 +24,21 @@ export const Result = (props) => {
         return (
           <Image
             source={agents}
-            style={style(props.orientation, null, props.role).icon}
+            style={style(props.orientation, props.result, props.role).icon}
           />
         )
       case 'Blue team wins!':
         return (
           <Image
             source={agents}
-            style={style(props.orientation, null, props.role).icon}
+            style={style(props.orientation, props.result, props.role).icon}
           />
         )
       case 'Assassin contacted. Game over.':
         return (
           <Image
             source={spymaster}
-            style={style(props.orientation, null, props.role).icon}
+            style={style(props.orientation, props.result, props.role).icon}
           />
         )
     }
@@ -109,11 +109,11 @@ const style = (orientation, result = null, role = null) => {
     },
     icon: {
       alignSelf: (orientation === 'portrait') ? 'flex-start' : 'flex-end',
-      height: (orientation === 'portrait') ? '85%' : '60%',
-      width: (role === 'spymaster') ? 50 : 25,
+      height: (orientation === 'portrait') ? '85%' : '85%',
+      width: (role === 'spymaster') ? 50 : (result === "Assassin contacted. Game over.") ? 50 : 25,
       resizeMode: 'contain',
       position: 'absolute',
-      right: (orientation === 'portrait') ? null : (role === 'spymaster') ? 3 : 8,
+      right: (orientation === 'portrait') ? null : (role === 'spymaster') ? 3 : (result === "Assassin contacted. Game over.") ? 3 : 8,
       opacity: 0.7
     },
     resultText: {

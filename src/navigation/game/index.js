@@ -388,7 +388,7 @@ const style = (orientation = null, role = null) => {
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: 'black',
-      opacity: 0.9
+      opacity: 0.92
     },
     flippedSpymasterImage: {
       width: '200%',
