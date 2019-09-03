@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet, TouchableOpacity, Image, Dimensions, SafeAreaView, Animated, KeyboardAvoidingView, Keyboard, Alert, ActivityIndicator } from 'react-native'
+import { View, StyleSheet, TouchableWithoutFeedback, TouchableOpacity, Image, Dimensions, SafeAreaView, Animated, KeyboardAvoidingView, Keyboard, Alert, ActivityIndicator } from 'react-native'
 import axios from 'axios'
 import { Button, Icon } from 'react-native-elements'
 import { fonts } from '../../utils/styles'
@@ -36,28 +36,6 @@ export default class LobbyScreen extends React.Component {
 
     this.slideText()
 
-    this.keyboardDidShowListener = Keyboard.addListener(
-      'keyboardWillShow',
-      this.showKeyboard
-    )
-
-    this.keyboardDidHideListener = Keyboard.addListener(
-      'keyboardWillHide',
-      this.hideKeyboard
-    )
-  }
-
-  showKeyboard = () => {
-    this.setState({ keyboardVisible: true })
-  }
-
-  hideKeyboard = () => {
-    this.setState({ keyboardVisible: false })
-  }
-
-  componentWillUnmount() {
-    this.keyboardDidShowListener.remove()
-    this.keyboardDidHideListener.remove()
   }
 
   slideText = () => {
@@ -122,6 +100,7 @@ export default class LobbyScreen extends React.Component {
 
   joinGame = async () => {
     await this.setState({ loading: true })
+    await Keyboard.dismiss()
     await axios.get(BASE_URL + `local_games/${this.state.gameId}`, {
       params: {
         codename: this.state.codename
@@ -133,11 +112,10 @@ export default class LobbyScreen extends React.Component {
       .then((response) => {
         if (response.data && response.data.error) {
           this.setState({ loading: false })
-          console.log({ errors: response.data.error })
           Alert.alert(
             'Codename incorrect',
             'You missed your target',
-            [{ text: 'Try again', onPress: () => console.log('OK Pressed') }]
+            [{ text: 'Try again', onPress: () => this.codeInput.focus() }]
           )
         } else if (response.data && !response.data.error) {
           this.props.navigation.navigate('RoleSelect', {
@@ -151,13 +129,26 @@ export default class LobbyScreen extends React.Component {
           })
           this.gameInput.clear()
           this.codeInput.clear()
-          Keyboard.dismiss()
+        }
+      })
+      .catch((error) => {
+        if (error.response.status === 404) {
+          Alert.alert(
+            `No game exists with an ID of ${this.state.gameId}`,
+            'Please enter another Game ID',
+            [{ text: 'Try again', onPress: () => this.gameInput.focus() }]
+          )
+          this.setState({
+            loading: false,
+            gameId: ''
+          })
+          this.gameInput.clear()
         } else {
           this.setState({ loading: false })
           Alert.alert(
             'Network Error',
             'please check your connection and try again',
-            [{ text: 'OK', onPress: () => console.log('OK Pressed') }]
+            [{ text: 'OK', onPress: () => this.gameInput.focus() }]
           )
         }
       })
@@ -213,6 +204,7 @@ export default class LobbyScreen extends React.Component {
         <Input
           ref={input => (this.codeInput = input)}
           placeholder='Codename'
+          onSubmitEditing={() => {this.hideKeyboard()}}
           leftIcon={{ type: 'ionicon', name: 'md-key' }}
           inputContainerStyle={[style(this.state.orientation).inputContainer, { marginTop: this.state.orientation === 'portrait' ? 10 : 6 }]}
           inputStyle={style(this.state.orientation).input}
@@ -237,26 +229,28 @@ export default class LobbyScreen extends React.Component {
 
   render() {
     return (
-      <KeyboardAvoidingView behavior={'padding'} style={{ flex: 1 }}>
-        <SafeAreaView style={style().backgroundWrappers}>
-          {this.renderHeader()}
-          <Image
-            source={require('codenamesReactNative/src/assets/images/WhiteTexturedBackground.jpg')}
-            style={style(this.state.orientation).imageBackground}
-          />
-          <View style={style().backgroundWrappers}>
-            <View style={style(this.state.orientation).screenWrapper}>
-              <View style={style(this.state.orientation).elementsWrapper}>
-                {this.renderForm()}
-                {this.renderButtons()}
-                {this.renderLoader()}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <KeyboardAvoidingView behavior={'padding'} style={{ flex: 1 }}>
+          <SafeAreaView style={style().backgroundWrappers}>
+            {this.renderHeader()}
+            <Image
+              source={require('codenamesReactNative/src/assets/images/WhiteTexturedBackground.jpg')}
+              style={style(this.state.orientation).imageBackground}
+            />
+            <View style={style().backgroundWrappers}>
+              <View style={style(this.state.orientation).screenWrapper}>
+                <View style={style(this.state.orientation).elementsWrapper}>
+                  {this.renderForm()}
+                  {this.renderButtons()}
+                  {this.renderLoader()}
+                </View>
+                {this.renderMaleAgent()}
+                {this.renderFemaleAgent()}
               </View>
-              {this.renderMaleAgent()}
-              {this.renderFemaleAgent()}
             </View>
-          </View>
-        </SafeAreaView>
-      </KeyboardAvoidingView>
+          </SafeAreaView>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     )
   }
 }

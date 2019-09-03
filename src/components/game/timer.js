@@ -1,7 +1,6 @@
 import React from 'react'
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { Icon } from 'react-native-elements'
-import { apiCall } from '../../utils/requests'
 import { fonts, colors } from '../../utils/styles'
 
 export default class Timer extends React.Component {

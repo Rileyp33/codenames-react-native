@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet, TouchableOpacity, Image, Dimensions, SafeAreaView, Animated, KeyboardAvoidingView, Keyboard, ActivityIndicator } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Image, Dimensions, SafeAreaView, Animated, KeyboardAvoidingView, Keyboard, ActivityIndicator, TouchableWithoutFeedback } from 'react-native'
 import { Button, Icon } from 'react-native-elements'
 import { fonts } from '../../utils/styles'
 import { Input } from 'react-native-elements'
@@ -33,29 +33,6 @@ export default class NewGameScreen extends React.Component {
     })
 
     this.slideText()
-
-    this.keyboardDidShowListener = Keyboard.addListener(
-      'keyboardWillShow',
-      this.showKeyboard
-    )
-
-    this.keyboardDidHideListener = Keyboard.addListener(
-      'keyboardWillHide',
-      this.hideKeyboard
-    )
-  }
-
-  showKeyboard = () => {
-    this.setState({ keyboardVisible: true })
-  }
-
-  hideKeyboard = () => {
-    this.setState({ keyboardVisible: false })
-  }
-
-  componentWillUnmount() {
-    this.keyboardDidShowListener.remove()
-    this.keyboardDidHideListener.remove()
   }
 
   slideText = () => {
@@ -120,6 +97,7 @@ export default class NewGameScreen extends React.Component {
 
   createGame = async () => {
     await this.setState({ loading: true })
+    await Keyboard.dismiss()
     let body = JSON.stringify({
       role: 'operative',
       codename: this.state.codename
@@ -200,26 +178,28 @@ export default class NewGameScreen extends React.Component {
 
   render() {
     return (
-      <KeyboardAvoidingView behavior={'padding'} style={{flex: 1}}>
-        <SafeAreaView style={style().backgroundWrappers}>
-          {this.renderHeader()}
-            <Image
-              source={require('codenamesReactNative/src/assets/images/WhiteTexturedBackground.jpg')}
-              style={style(this.state.orientation).imageBackground}
-            />  
-            <View style={style().backgroundWrappers}>
-              <View style={style(this.state.orientation).screenWrapper}>
-                <View style={style(this.state.orientation).elementsWrapper}>
-                  {this.renderForm()}
-                  {this.renderButtons()}
-                  {this.renderLoader()}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <KeyboardAvoidingView behavior={'padding'} style={{flex: 1}}>
+          <SafeAreaView style={style().backgroundWrappers}>
+            {this.renderHeader()}
+              <Image
+                source={require('codenamesReactNative/src/assets/images/WhiteTexturedBackground.jpg')}
+                style={style(this.state.orientation).imageBackground}
+              />  
+              <View style={style().backgroundWrappers}>
+                <View style={style(this.state.orientation).screenWrapper}>
+                  <View style={style(this.state.orientation).elementsWrapper}>
+                    {this.renderForm()}
+                    {this.renderButtons()}
+                    {this.renderLoader()}
+                  </View>
+                  {this.renderMaleAgent()}
+                  {this.renderFemaleAgent()}
                 </View>
-                {this.renderMaleAgent()}
-                {this.renderFemaleAgent()}
               </View>
-            </View>
-        </SafeAreaView>
-      </KeyboardAvoidingView>
+          </SafeAreaView>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     )
   }
 }
