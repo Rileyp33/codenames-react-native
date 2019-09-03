@@ -1,7 +1,6 @@
 import React from 'react'
 import { View, StyleSheet, ImageBackground, Image } from 'react-native'
 import { Button } from 'react-native-elements'
-import { apiCall } from '../../utils/requests'
 import { fonts, colors } from '../../utils/styles'
 
 import GoogleCast, { CastButton } from 'react-native-google-cast'
