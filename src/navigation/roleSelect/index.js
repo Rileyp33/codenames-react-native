@@ -169,7 +169,11 @@ export default class RoleSelect extends React.Component {
           this.setState({ loading: false })
           this.setState({ errors: response.data.error })
         } else if (response.data && !response.data.error) {
-          this.setState({ loading: false })
+          this.setState({ 
+            loading: false,
+            operative: false,
+            spymaster: false
+         })
           this.props.navigation.navigate('Game', {
             gameId: response.data.game_id,
             codename: response.data.codename,

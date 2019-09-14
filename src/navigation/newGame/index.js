@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet, TouchableOpacity, Image, Dimensions, SafeAreaView, Animated, KeyboardAvoidingView, Keyboard, ActivityIndicator, TouchableWithoutFeedback } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Image, Dimensions, SafeAreaView, Animated, KeyboardAvoidingView, Keyboard, ActivityIndicator, TouchableWithoutFeedback, Platform } from 'react-native'
 import { Button, Icon } from 'react-native-elements'
 import { fonts } from '../../utils/styles'
 import { Input } from 'react-native-elements'
@@ -176,31 +176,62 @@ export default class NewGameScreen extends React.Component {
     )
   }
 
-  render() {
+  renderAndroid = () => {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <KeyboardAvoidingView behavior={'padding'} style={{flex: 1}}>
-          <SafeAreaView style={style().backgroundWrappers}>
-            {this.renderHeader()}
-              <Image
-                source={require('codenamesReactNative/src/assets/images/WhiteTexturedBackground.jpg')}
-                style={style(this.state.orientation).imageBackground}
-              />  
-              <View style={style().backgroundWrappers}>
-                <View style={style(this.state.orientation).screenWrapper}>
-                  <View style={style(this.state.orientation).elementsWrapper}>
-                    {this.renderForm()}
-                    {this.renderButtons()}
-                    {this.renderLoader()}
-                  </View>
-                  {this.renderMaleAgent()}
-                  {this.renderFemaleAgent()}
+        <SafeAreaView style={style().backgroundWrappers}>
+          {this.renderHeader()}
+          <Image
+            source={require('codenamesReactNative/src/assets/images/WhiteTexturedBackground.jpg')}
+            style={style(this.state.orientation).imageBackground}
+          />
+          <KeyboardAvoidingView behavior={'height'} style={{ flex: 1 }}>
+            <View style={style().backgroundWrappers}>
+              <View style={style(this.state.orientation).screenWrapper}>
+                <View style={style(this.state.orientation).elementsWrapper}>
+                  {this.renderForm()}
+                  {this.renderButtons()}
+                  {this.renderLoader()}
                 </View>
               </View>
+            </View>
+          </KeyboardAvoidingView>
+          {this.renderMaleAgent()}
+          {this.renderFemaleAgent()}
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    )
+  }
+
+  renderIOS = () => {
+    return (
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <KeyboardAvoidingView behavior={'padding'} style={{ flex: 1 }}>
+          <SafeAreaView style={style().backgroundWrappers}>
+            {this.renderHeader()}
+            <Image
+              source={require('codenamesReactNative/src/assets/images/WhiteTexturedBackground.jpg')}
+              style={style(this.state.orientation).imageBackground}
+            />
+            <View style={style().backgroundWrappers}>
+              <View style={style(this.state.orientation).screenWrapper}>
+                <View style={style(this.state.orientation).elementsWrapper}>
+                  {this.renderForm()}
+                  {this.renderButtons()}
+                  {this.renderLoader()}
+                </View>
+                {this.renderMaleAgent()}
+                {this.renderFemaleAgent()}
+              </View>
+            </View>
           </SafeAreaView>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
     )
+  }
+
+  render() {
+    return Platform.OS === 'ios' ? this.renderIOS() : this.renderAndroid()
   }
 }
 
@@ -275,7 +306,7 @@ const style = (orientation = null) => {
         fontWeight: 'bold'
       },
       maleAgent: {
-        height: '97%',
+        height: Platform.OS === 'ios'? '97%' : '93%',
         resizeMode: 'contain',
         position: 'absolute',
         zIndex: -1,
@@ -284,7 +315,7 @@ const style = (orientation = null) => {
         opacity: 0.75
       },
       femaleAgent: {
-        height: '94%',
+        height: Platform.OS === 'ios' ? '94%' : '90%',
         resizeMode: 'contain',
         position: 'absolute',
         zIndex: -1,

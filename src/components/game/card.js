@@ -104,7 +104,7 @@ export const Card = (props) => {
     }
   }
 
-  renderUnflippedImage = () => {
+  renderUnflippedImage = (props) => {
     return (
       <Image
         source={require('../../assets/images/grayCard.jpg')}
@@ -117,7 +117,7 @@ export const Card = (props) => {
     if (props.role === "spymaster") {
       return (props.flippedStatus === 'up') ? renderFlippedSpymasterImage(props) : renderUnflippedSpymasterImage(props)
     } else {
-      return (props.flippedStatus === 'up') ? renderFlippedImage(props) : renderUnflippedImage()
+      return (props.flippedStatus === 'up') ? renderFlippedImage(props) : renderUnflippedImage(props)
     }
   }
 
@@ -147,27 +147,29 @@ export const Card = (props) => {
       perspective={120}
       flipVertical={true}
       useNativeDriver={true}
-      flip={props.flippedStatus === "up"}>
-        <TouchableOpacity
-          key={props.key}
-          onPress={props.onPress}
-          style={props.cardStyle}>
-          {renderRoleBasedImage()}
-          <GlobalText
-            value={formatText(props.value)}
-            style={props.textStyle}>
-          </GlobalText>
-        </TouchableOpacity>
-        <TouchableOpacity
-          key={props.key}
-          onPress={props.onPress}
-          style={props.cardStyle}>
-          {renderRoleBasedImage()}
-          <GlobalText
-            value={formatText(props.value)}
-            style={props.textStyle}>
-          </GlobalText>
-        </TouchableOpacity>
+      flip={props.flippedStatus === "up"}
+      useNativeDriver={true}
+    >
+      <TouchableOpacity
+        key={props.key}
+        onPress={props.onPress}
+        style={props.cardStyle}>
+        {renderRoleBasedImage()}
+        <GlobalText
+          value={formatText(props.value)}
+          style={props.textStyle}>
+        </GlobalText>
+      </TouchableOpacity>
+      <TouchableOpacity
+        key={props.key}
+        onPress={props.onPress}
+        style={props.cardStyle}>
+        {renderRoleBasedImage()}
+        <GlobalText
+          value={formatText(props.value)}
+          style={props.textStyle}>
+        </GlobalText>
+      </TouchableOpacity>
     </FlipCard>
   )
 }
