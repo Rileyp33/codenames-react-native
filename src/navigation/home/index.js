@@ -3,8 +3,6 @@ import { View, StyleSheet, ImageBackground, Image } from 'react-native'
 import { Button } from 'react-native-elements'
 import { fonts, colors } from '../../utils/styles'
 
-import GoogleCast, { CastButton } from 'react-native-google-cast'
-
 export default class HomeScreen extends React.Component{
   constructor(props) {
     super(props)
