@@ -1,9 +1,7 @@
 import React from 'react'
-import { View, StyleSheet, ImageBackground, Image } from 'react-native'
+import { View, StyleSheet, ImageBackground, Image, Platform } from 'react-native'
 import { Button } from 'react-native-elements'
 import { fonts, colors } from '../../utils/styles'
-
-import GoogleCast, { CastButton } from 'react-native-google-cast'
 
 export default class HomeScreen extends React.Component{
   constructor(props) {
@@ -106,8 +104,8 @@ export default class HomeScreen extends React.Component{
         imageStyle={style.imageStyleFull}>
           <View style={style.screenContainer}>
             {this.renderLogo()}
-            {this.renderButtons()}
             {this.renderAssassin()}
+            {this.renderButtons()}
           </View>
       </ImageBackground>
     )
@@ -131,12 +129,13 @@ const style = StyleSheet.create({
   assassin: {
     resizeMode: 'contain',
     position: 'absolute',
-    zIndex: -1,
+    zIndex: Platform.OS === 'ios' ? -1 : null,
     bottom: -20,
     left: -320,
     opacity: 0.78
   },
   buttonsWrapper: {
+    backgroundColor: 'transparent',
     flex: 1,
     justifyContent: 'center'
   },

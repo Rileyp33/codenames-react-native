@@ -45,7 +45,7 @@ export default class GameScreen extends React.Component {
   componentDidMount() {
     this.getGame()
 
-    const dim = Dimensions.get('screen');
+    const dim = Dimensions.get('screen')
     this.setState({ 
       orientation: (dim.height >= dim.width) ? 'portrait' : 'landscape' 
     })
@@ -364,7 +364,7 @@ const style = (orientation = null, role = null) => {
       paddingVertical: (orientation === 'portrait') ? 10 : 0,
       paddingRight: (orientation === 'portrait') ? 0 : 10,
       borderRightWidth: (orientation === 'portrait') ? 0 : 1,
-      borderRightColor: (orientation === 'portrait') ? null : 'white',
+      borderColor: (orientation === 'portrait') ? null : 'white',
     },
     logoWrapper: { 
       height: (orientation === 'portrait') ? 50 : 40, 
@@ -481,7 +481,7 @@ const style = (orientation = null, role = null) => {
     idWrapper: {
       flex: 1,
       borderRightWidth: (orientation === "portrait") ? 1 : 0,
-      borderRightColor: 'white',
+      borderColor: 'white',
       paddingLeft: (orientation === "portrait") ? 2.5 : 8
     },
     gameDataText: {
