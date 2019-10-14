@@ -1,6 +1,6 @@
 import React from 'react'
 import { TouchableOpacity, Image, Animated, Platform, View } from 'react-native'
-import { GlobalText } from '../globalText'
+import { GlobalText } from '../global/globalText'
 import { colors } from '../../utils/styles'
 import FlipCard from 'react-native-flip-card'
 

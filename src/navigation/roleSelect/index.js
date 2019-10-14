@@ -9,13 +9,6 @@ export default class RoleSelect extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      // spymasterOpacity: new Animated.Value(1),
-      // operativeOpacity: new Animated.Value(1),
-      // spymasterBottom: new Animated.Value(-300),
-      // spymasterLeft: new Animated.Value(-125),
-      // maleAgentPosition: new Animated.Value(200),
-      // femaleAgentPosition: new Animated.Value(200),
-      // headerPosition: new Animated.Value(150),
       operative: false,
       spymaster: false,
       orientation: 'portrait',
@@ -40,8 +33,6 @@ export default class RoleSelect extends React.Component {
     Dimensions.addEventListener('change', () => {
       this.setState({
         orientation: this.isPortrait() ? 'portrait' : 'landscape',
-        // maleAgentPosition: new Animated.Value(this.isPortrait() ? -90 : 50),
-        // femaleAgentPosition: new Animated.Value(this.isPortrait() ? -90 : 50),
       })
       this.maleAgentPosition = new Animated.Value(this.isPortrait() ? -90 : 50)
       this.femaleAgentPosition = new Animated.Value(this.isPortrait() ? -90 : 50)
@@ -56,7 +47,6 @@ export default class RoleSelect extends React.Component {
   }
 
   slideText = () => {
-    // Animated.timing(this.state.headerPosition, {
     Animated.timing(this.headerPosition, {
       toValue: 1,
       duration: 550
@@ -64,11 +54,6 @@ export default class RoleSelect extends React.Component {
   }
 
   fadeOperatives = () => {
-    // this.setState({
-    //   spymasterOpacity: new Animated.Value(1),
-    //   spymasterBottom: new Animated.Value(-300),
-    //   spymasterLeft: new Animated.Value(-125)
-    // })
     this.spymasterOpacity = new Animated.Value(0.01)
     this.spymasterBottom = new Animated.Value(-300)
     this.spymasterLeft = new Animated.Value(-125)
@@ -79,7 +64,6 @@ export default class RoleSelect extends React.Component {
   }
 
   slideMaleAgent = () => {
-    // Animated.timing(this.state.maleAgentPosition, {
     Animated.timing(this.maleAgentPosition, {
       toValue: (this.state.orientation === 'portrait') ? -90 : 50,
       duration: 250,
@@ -87,7 +71,6 @@ export default class RoleSelect extends React.Component {
   }
 
   slideFemaleAgent = () => {
-    // Animated.timing(this.state.femaleAgentPosition, {
     Animated.timing(this.femaleAgentPosition, {
       toValue: (this.state.orientation === 'portrait') ? -90 : 50,
       duration: 250
@@ -101,26 +84,18 @@ export default class RoleSelect extends React.Component {
   }
 
   fadeSpymaster = () => {
-    // this.setState({ 
-    //   operativeOpacity: new Animated.Value(1),
-    //   maleAgentPosition: new Animated.Value(200),
-    //   femaleAgentPosition: new Animated.Value(200)
-    // })
     this.operativeOpacity = new Animated.Value(0.01)
     this.maleAgentPosition = new Animated.Value(200)
     this.femaleAgentPosition = new Animated.Value(200)
     Animated.parallel([
-      // Animated.timing(this.state.spymasterOpacity, {
       Animated.timing(this.spymasterOpacity, {
         toValue: 0.3,
         duration: 600
       }),
-      // Animated.timing(this.state.spymasterBottom, {
       Animated.timing(this.spymasterBottom, {
         toValue: -20,
         duration: 250
       }),
-      // Animated.timing(this.state.spymasterLeft, {
       Animated.timing(this.spymasterLeft, {
         toValue: -260,
         duration: 250
@@ -139,8 +114,6 @@ export default class RoleSelect extends React.Component {
             position: 'absolute',
             zIndex: -1,
             bottom: 1,
-            // left: this.state.femaleAgentPosition,
-            // opacity: this.state.operativeOpacity
             left: this.femaleAgentPosition,
             opacity: this.operativeOpacity
           }}>
@@ -153,8 +126,6 @@ export default class RoleSelect extends React.Component {
             position: 'absolute',
             zIndex: -1,
             bottom: 1,
-            // right: this.state.maleAgentPosition,
-            // opacity: this.state.operativeOpacity
             right: this.maleAgentPosition,
             opacity: this.operativeOpacity
           }}>
@@ -170,12 +141,9 @@ export default class RoleSelect extends React.Component {
         style={{
           resizeMode: 'contain',
           maxHeight: (this.state.orientation === 'portrait') ? '57%' : '72%',
-          // left: (this.state.orientation === 'portrait') ? null : this.state.spymasterLeft,
           left: (this.state.orientation === 'portrait') ? null : this.spymasterLeft,
           position: 'absolute',
           zIndex: -1,
-          // bottom: this.state.spymasterBottom,
-          // opacity: this.state.spymasterOpacity,
           bottom: this.spymasterBottom,
           opacity: this.spymasterOpacity,
         }}>
@@ -306,7 +274,6 @@ export default class RoleSelect extends React.Component {
                 fontSize: 22,
                 color: 'white',
                 fontFamily: fonts.headers,
-                // left: this.state.headerPosition,
                 left: this.headerPosition,
               }}>
               SELECT ROLE

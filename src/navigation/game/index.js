@@ -1,6 +1,6 @@
 import React from 'react'
 import ActionCable from 'react-native-actioncable'
-import { View, SafeAreaView, Image, StyleSheet, Dimensions, ImageBackground, Alert } from 'react-native'
+import { View, SafeAreaView, Image, StyleSheet, Dimensions, ImageBackground, Alert, StatusBar } from 'react-native'
 import Card from '../../components/game/card'
 import { Result } from '../../components/game/result'
 import { GameData } from '../../components/game/gameData'
@@ -273,8 +273,8 @@ export default class GameScreen extends React.Component {
   render() {
     return (
       <>
-        <SafeAreaView style={style().safeAreaTop}></SafeAreaView>
-        <SafeAreaView style={style().safeAreaBottom}>
+        <SafeAreaView style={style().safeArea}>
+          <StatusBar barStyle="light-content" />
           <ImageBackground
             source={{ uri: 'black_textured_background' }}
             style={style().imageBackgroundFull}
@@ -308,11 +308,7 @@ const style = (orientation = null, role = null) => {
       paddingTop: (orientation === 'portrait') ? 5 : 0,
       flex: 1
     },
-    safeAreaTop: { 
-      flex: 0, 
-      backgroundColor: 'transparent' 
-    },
-    safeAreaBottom: {
+    safeArea: {
       flex: 1, 
       backgroundColor: 'black'
     },
