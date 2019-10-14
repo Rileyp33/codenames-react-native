@@ -1,6 +1,6 @@
 import React from 'react'
 import { View } from 'react-native'
-import { GlobalText } from '../../components/globalText'
+import { GlobalText } from '../global/globalText'
 import Timer from './timer'
 
 export const Scoreboard = (props) => {

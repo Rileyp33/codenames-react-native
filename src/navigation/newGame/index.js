@@ -5,7 +5,7 @@ import { fonts } from '../../utils/styles'
 import { Input } from 'react-native-elements'
 import { apiCall } from '../../utils/requests'
 import { colors } from '../../utils/styles'
-import { GlobalText } from '../../components/globalText'
+import { GlobalText } from '../../components/global/globalText'
 
 
 export default class NewGameScreen extends React.Component {
@@ -141,14 +141,22 @@ export default class NewGameScreen extends React.Component {
     this.setState({ codename: input })
   }
 
+  renderColorForTheme = () => {
+    return (this.props.screenProps.isDarkMode) ? colors.darkGray : null
+  }
+
   renderForm = () => {
     return (
       <View>
         <Input
           ref={input => (this.codename = input)}
           placeholder='Codename'
-          leftIcon={{ type: 'ionicon', name: 'md-key' }}
-          inputContainerStyle={[style(this.state.orientation).inputContainer, { borderRadius: this.state.keyboardVisible && this.state.orientation === 'landscape' ? 8 : null }]}
+          placeholderTextColor={this.renderColorForTheme()}
+          leftIcon={{ 
+            type: 'ionicon', 
+            name: 'md-key', 
+            color: (this.props.screenProps.isDarkMode) ? 'white' : null }}
+          inputContainerStyle={[style(this.state.orientation, this.props).inputContainer, { borderRadius: this.state.keyboardVisible && this.state.orientation === 'landscape' ? 8 : null }]}
           inputStyle={style(this.state.orientation).input}
           onChangeText={(i) => { this.setCodename(i) }}
           maxLength={10}
@@ -235,7 +243,7 @@ export default class NewGameScreen extends React.Component {
   }
 }
 
-const style = (orientation = null) => {
+const style = (orientation = null, props = null) => {
   return (
     StyleSheet.create({
       imageBackground: {
@@ -325,8 +333,8 @@ const style = (orientation = null) => {
         opacity: 0.73
       },
       inputContainer: {
-        backgroundColor: 'white',
-        opacity: 0.93,
+        backgroundColor: (props && props.screenProps.isDarkMode) ? 'black' : 'white',
+        opacity: (props && props.screenProps.isDarkMode) ? 0.88 : 0.93,
         width: 300,
         alignSelf: 'center',
         borderColor: 'transparent',
@@ -334,6 +342,7 @@ const style = (orientation = null) => {
         borderTopRightRadius: 8
       },
       input: {
+        color: (props && props.screenProps.isDarkMode) ? 'white' : null,
         marginLeft: 20
       },
       formIconContainer: {

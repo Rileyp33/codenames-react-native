@@ -6,7 +6,7 @@ import NewGameScreen from './newGame'
 import RulesScreen from './rules'
 import RoleSelectScreen from './roleSelect'
 
-export default createNavigator = () => { 
+export default createNavigator = (props) => { 
   return createAppContainer(createStackNavigator(
     { 
       Home: HomeScreen,

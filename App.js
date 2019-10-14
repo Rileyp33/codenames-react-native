@@ -1,22 +1,22 @@
 import React from 'react'
 import createNavigator from './src/navigation/Navigator'
+import { useDarkMode } from 'react-native-dark-mode'
 
-export default class App extends React.Component {
-  constructor(props) {
-    super(props)
-    this.Navigator = createNavigator()
-  }
 
-  render() {
-    const Navigator = this.Navigator
+const App = () => {
+  const isDarkMode = { isDarkMode: useDarkMode() }
+  const Navigator = createNavigator(isDarkMode)
 
-    return (
-      <React.Fragment>
-        <Navigator/>
-      </React.Fragment>
-    )
-  }
+  return (
+    <React.Fragment>
+      <Navigator screenProps={isDarkMode}/>
+    </React.Fragment>
+  )
 }
+
+export default App
 
 // Disables yellow box debug tools
 console.disableYellowBox = true
+
+

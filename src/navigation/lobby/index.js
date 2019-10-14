@@ -35,7 +35,6 @@ export default class LobbyScreen extends React.Component {
     })
 
     this.slideText()
-
   }
 
   slideText = () => {
@@ -188,14 +187,22 @@ export default class LobbyScreen extends React.Component {
     this.setState({ codename: input })
   }
 
+  renderColorForTheme = () => {
+    return (this.props.screenProps.isDarkMode) ? colors.darkGray : null
+  }
+
   renderForm = () => {
     return (
       <View>
         <Input
           ref={input => (this.gameInput = input)}
           placeholder='Game ID'
-          leftIcon={{ type: 'material-community', name: 'sort-numeric' }}
-          inputContainerStyle={style(this.state.orientation).inputContainer}
+          placeholderTextColor={this.renderColorForTheme()}
+          leftIcon={{ 
+            type: 'material-community', 
+            name: 'sort-numeric', 
+            color: (this.props.screenProps.isDarkMode) ? 'white' : null }}
+          inputContainerStyle={style(this.state.orientation, this.props).inputContainer}
           inputStyle={style(this.state.orientation).input}
           leftIconContainerStyle={style(this.state.orientation).formIconContainer}
           onChangeText={(i) => {this.setGameId(i)}}
@@ -204,8 +211,12 @@ export default class LobbyScreen extends React.Component {
         <Input
           ref={input => (this.codeInput = input)}
           placeholder='Codename'
-          leftIcon={{ type: 'ionicon', name: 'md-key' }}
-          inputContainerStyle={[style(this.state.orientation).inputContainer, { marginTop: this.state.orientation === 'portrait' ? 10 : 6 }]}
+          placeholderTextColor={this.renderColorForTheme()}
+          leftIcon={{ 
+            type: 'ionicon', 
+            name: 'md-key', 
+            color: (this.props.screenProps.isDarkMode) ? 'white' : null }}
+          inputContainerStyle={[style(this.state.orientation, this.props).inputContainer, { marginTop: this.state.orientation === 'portrait' ? 10 : 6 }]}
           inputStyle={style(this.state.orientation).input}
           onChangeText={(i) => { this.setCodename(i) }}
           maxLength={10}
@@ -285,7 +296,8 @@ export default class LobbyScreen extends React.Component {
   }
 }
 
-const style = (orientation = null) => {
+const style = (orientation = null, props = null) => {
+  // debugger
   return (
     StyleSheet.create({
       imageBackground: {
@@ -365,14 +377,15 @@ const style = (orientation = null) => {
         opacity: 0.73
       },
       inputContainer: {
-        backgroundColor: 'white',
-        opacity: 0.93,
+        backgroundColor: (props && props.screenProps.isDarkMode) ? 'black' : 'white',
+        opacity: (props && props.screenProps.isDarkMode) ? 0.88 : 0.93,
         width: 300,
         alignSelf: 'center',
         borderColor: 'transparent',
         borderRadius: 8
       },
       input: {
+        color: (props && props.screenProps.isDarkMode) ? 'white' : null,
         marginLeft: 20
       },
       formIconContainer: {
