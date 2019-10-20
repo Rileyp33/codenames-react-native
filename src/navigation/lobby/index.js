@@ -297,7 +297,6 @@ export default class LobbyScreen extends React.Component {
 }
 
 const style = (orientation = null, props = null) => {
-  // debugger
   return (
     StyleSheet.create({
       imageBackground: {
