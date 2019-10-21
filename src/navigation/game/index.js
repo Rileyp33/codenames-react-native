@@ -378,8 +378,8 @@ const style = (orientation = null, role = null) => {
       resizeMode: 'contain' 
     },
     cardImage: {
-      width: '180%',
-      height: '180%',
+      width: (orientation === "portrait") ? '180%' : '200%',
+      height: (orientation === "portrait") ? '180%' : '200%',
       resizeMode: 'contain',
       position: 'absolute',
       justifyContent: 'center',
