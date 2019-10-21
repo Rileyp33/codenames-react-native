@@ -1,5 +1,5 @@
 import React from 'react'
-import { Animated, View, Image, StyleSheet, Dimensions, TouchableOpacity, SafeAreaView, ActivityIndicator } from 'react-native'
+import { Animated, View, Image, StyleSheet, Dimensions, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator } from 'react-native'
 import { CheckBox, Button, Icon } from 'react-native-elements'
 import { colors, fonts } from '../../utils/styles'
 import axios from 'axios'
@@ -323,6 +323,7 @@ export default class RoleSelect extends React.Component {
   render() {
     return (
       <SafeAreaView style={style(this.state.orientation).safeArea}>
+        <StatusBar barStyle="light-content" />
         {this.renderHeader()}
         <Image
           source={require('RNcodenames0605/src/assets/images/black_textured_background.jpg')}
@@ -349,7 +350,7 @@ const style = (orientation) => {
   return StyleSheet.create({
     safeArea: {
       flex: 1,
-      backgroundColor: 'transparent',
+      backgroundColor: 'black',
       alignItems: 'center',
       overflow: 'hidden'
     },  

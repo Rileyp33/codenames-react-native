@@ -246,7 +246,7 @@ export default class LobbyScreen extends React.Component {
             source={require('RNcodenames0605/src/assets/images/white_textured_background.jpg')}
             style={style(this.state.orientation).imageBackground}
           />
-          <KeyboardAvoidingView behavior={'height'} style={{ flex: 1 }}>
+          <KeyboardAvoidingView style={{ flex: 1 }}>
             <View style={style().backgroundWrappers}>
               <View style={style(this.state.orientation).screenWrapper}>
                 <View style={style(this.state.orientation).elementsWrapper}>
@@ -297,7 +297,6 @@ export default class LobbyScreen extends React.Component {
 }
 
 const style = (orientation = null, props = null) => {
-  // debugger
   return (
     StyleSheet.create({
       imageBackground: {
@@ -363,7 +362,7 @@ const style = (orientation = null, props = null) => {
         position: 'absolute',
         zIndex: -1,
         bottom: 4,
-        left: -125,
+        left: Platform.OS === 'ios' ? -120 : -105,
         opacity: 0.75
       },
       femaleAgent: {

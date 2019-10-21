@@ -17,10 +17,11 @@ export default class Card extends React.Component {
 
   animate = async () => {
     this.flippedOperativePosition.setValue(0)
-    Animated.spring(this.flippedOperativePosition, {
+    Animated.timing(this.flippedOperativePosition, {
       toValue: 1,
+      duration: 250,
       useNativeDriver: true,
-      perspective: 1000
+      perspective: 1000,
     }).start(() => { return true })
   }
 
@@ -198,7 +199,7 @@ export default class Card extends React.Component {
     })
     
     return (
-      <Animated.View style={{ transform: [{ rotateX }], flex: 1 }}>
+      <Animated.View style={{ transform: [{ rotateX }, {perspective: 1000}], flex: 1 }}>
         <TouchableOpacity onPress={() => this.flip()}
           style={{
             flex: 1,

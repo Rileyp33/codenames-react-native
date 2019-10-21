@@ -264,7 +264,7 @@ export default class GameScreen extends React.Component {
   renderAssassin = () => {
     return (
       <Image
-        source={{ uri: 'assassin' }}
+        source={require('RNcodenames0605/src/assets/images/Assassin.png')}
         style={style(this.state.orientation).assassin}>
       </Image>
     )
@@ -495,12 +495,12 @@ const style = (orientation = null, role = null) => {
     },
     assassin: {
       height: (orientation === 'portrait') ? '160%' : '110%',
-      opacity: 0.35,
+      opacity: 0.25,
       resizeMode: 'contain',
       position: 'absolute',
       zIndex: -1,
       bottom: -40,
-      left: (orientation === 'portrait') ? 0 : -85
+      left: (orientation === 'portrait') ? 15 : -100
     },
     imageBackgroundFull: {
       width: '100%',

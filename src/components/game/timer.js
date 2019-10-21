@@ -40,6 +40,10 @@ export default class Timer extends React.Component {
     )
   }
 
+  componentWillUnmount() {
+    clearInterval(this.state.timerActive)
+  }
+
   runTimer = () => {
     if (this.state.timer === "Time!") {
       this.setState({ timer: 90 })
