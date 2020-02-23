@@ -1,12 +1,13 @@
 import React from 'react'
-import { View, StyleSheet, TouchableWithoutFeedback, TouchableOpacity, Image, Dimensions, SafeAreaView, Animated, KeyboardAvoidingView, Keyboard, Alert, ActivityIndicator, Platform } from 'react-native'
+import { View, TouchableWithoutFeedback, TouchableOpacity, Image, Dimensions, SafeAreaView, Animated, KeyboardAvoidingView, Keyboard, Alert, ActivityIndicator, Platform } from 'react-native'
 import axios from 'axios'
-import { Button, Icon } from 'react-native-elements'
-import { fonts } from '../../utils/styles'
+import { Icon } from 'react-native-elements'
+import { fonts, globalStyles } from '../../utils/styles'
 import { Input } from 'react-native-elements'
 import { colors } from '../../utils/styles'
 import { BASE_URL } from '../../utils/requests'
-
+import { ScaledSheet } from 'react-native-size-matters'
+import { CodenamesButton } from '../../components/global/codenamesButton'
 
 export default class LobbyScreen extends React.Component {
   constructor(props) {
@@ -102,7 +103,7 @@ export default class LobbyScreen extends React.Component {
     await Keyboard.dismiss()
     await axios.get(BASE_URL + `local_games/${this.state.gameId}`, {
       params: {
-        codename: this.state.codename
+        codename: this.state.codename.trim()
       },
       headers: {
         'content-type': 'application/JSON'
@@ -154,26 +155,26 @@ export default class LobbyScreen extends React.Component {
   }
 
   renderButtons = () => {
+    const buttonProps = {
+      value: 'Select Role',
+        icon: {
+          type: 'ionicon',
+          name: 'ios-arrow-forward',
+          size: 30,
+          color: colors.white
+        },
+        onPress: this.joinGame,
+        gradient: [
+          colors['red-agent-light'],
+          colors['red-agent']
+        ],
+        textColor: colors.white,
+        disabled: this.state.codename.length === 0 || this.state.gameId.length === 0
+    }
     return (
-      <View>
-        <Button
-          title={'Select Role'}
-          onPress={() => this.joinGame()}
-          disabled={this.state.codename.length < 1}
-          disabledTitleStyle={{ color: 'white', opacity: 0.6 }}
-          disabledStyle={{ opacity: 0.6 }}
-          type={'clear'}
-          containerStyle={style(this.state.orientation).buttonContainer}
-          buttonStyle={style(this.state.orientation).button}
-          titleStyle={style(this.state.orientation).buttonTitle}
-          raised={true}
-          icon={{
-            type: 'ionicon',
-            name: 'ios-arrow-forward',
-            size: 30,
-            color: 'white',
-            paddingRight: 20
-          }}
+      <View style={{width: 300}}>
+        <CodenamesButton
+          {...buttonProps}
         />
       </View>
     )
@@ -193,7 +194,7 @@ export default class LobbyScreen extends React.Component {
 
   renderForm = () => {
     return (
-      <View>
+      <View style={globalStyles.shadow}>
         <Input
           ref={input => (this.gameInput = input)}
           placeholder='Game ID'
@@ -298,7 +299,7 @@ export default class LobbyScreen extends React.Component {
 
 const style = (orientation = null, props = null) => {
   return (
-    StyleSheet.create({
+    ScaledSheet.create({
       imageBackground: {
         width: '100%',
         height: '110%',
@@ -311,22 +312,22 @@ const style = (orientation = null, props = null) => {
       },
       headerWrapper: {
         flexDirection: 'row',
-        marginHorizontal: 15,
+        marginHorizontal: '15@s',
         alignSelf: 'flex-end'
       },
       headerTextWrapper: {
         width: (orientation === 'portrait') ? '62%' : '38%',
         borderBottomWidth: 1,
-        padding: 4,
+        padding: '4@s',
         alignItems: 'flex-end'
       },
       headerBack: {
         position: 'absolute',
-        width: 55,
+        width: '40@s',
         justifyContent: 'center',
-        marginLeft: 15,
-        marginTop: 2,
-        borderRadius: 6,
+        marginLeft: '15@s',
+        marginTop: '2@s',
+        borderRadius: '6@s',
         opacity: 0.7
       },
       backgroundWrappers: {
@@ -337,23 +338,19 @@ const style = (orientation = null, props = null) => {
         alignItems: 'center',
         alignSelf: 'center'
       },
-      instructionsText: {
-        color: 'white',
-        fontSize: 12
-      },
       buttonContainer: {
         width: 300,
-        marginVertical: (orientation === 'portrait') ? 10 : 6
+        marginVertical: (orientation === 'portrait') ? '10@s' : '6@s'
       },
       button: {
-        borderRadius: 8,
+        borderRadius: '8@s',
         backgroundColor: colors["red-agent-light"],
         opacity: 0.9
       },
       buttonTitle: {
         color: 'white',
         fontFamily: fonts.headers,
-        fontSize: 15,
+        fontSize: '15@s',
         fontWeight: 'bold'
       },
       maleAgent: {
@@ -377,23 +374,23 @@ const style = (orientation = null, props = null) => {
       },
       inputContainer: {
         backgroundColor: (props && props.screenProps.isDarkMode) ? 'black' : 'white',
-        opacity: (props && props.screenProps.isDarkMode) ? 0.88 : 0.93,
         width: 300,
+        height: '45@s',
         alignSelf: 'center',
         borderColor: 'transparent',
-        borderRadius: 8
+        borderRadius: '8@s'
       },
       input: {
         color: (props && props.screenProps.isDarkMode) ? 'white' : null,
-        marginLeft: 20
+        marginLeft: '20@s'
       },
       formIconContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 2
+        marginTop: '2@s'
       },
       loader: { 
-        margin: 20,
+        margin: '20@s',
         position: (orientation === 'portrait') ? null : 'absolute'
       }
     })

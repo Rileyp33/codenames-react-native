@@ -10,29 +10,30 @@ export const CodenamesButton = (props) => {
   const {
     value,
     icon,
-    onPress
+    onPress,
+    gradient
   } = props
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.9}
-      style={styles.buttonContainer}
+      style={styles(props).buttonContainer}
     >
       <LinearGradient
-        colors={[colors.white, colors.lightestGray]}
-        style={styles.gradientContainer}
+        colors={[gradient[0], gradient[1]]}
+        style={styles(props).gradientContainer}
       >
         <Icon
           type={icon.type}
           name={icon.name}
           size={icon.size}
           color={icon.color}
-          containerStyle={styles.iconContainer}
+          containerStyle={styles(props).iconContainer}
         />
-        <View style={styles.textContainer}>
+        <View style={styles(props).textContainer}>
           <GlobalText
             value={value}
-            style={styles.buttonText}
+            style={styles(props).buttonText}
           />
         </View>
       </LinearGradient>
@@ -40,40 +41,52 @@ export const CodenamesButton = (props) => {
   )
 }
 
-const styles = ScaledSheet.create({
-  buttonContainer: {
-    height: '50@vs',
-    marginTop: '10@vs',
-    width: '100%',
-    maxWidth: 350,
-    borderRadius: '8@vs',
-    elevation: 20,
-    shadowColor: colors.black,
-    shadowOpacity: 0.8,
-    shadowRadius: '6@vs',
-    shadowOffset: {
-      width: 0,
-      height: '3@s'
+const styles = (props) => (
+  ScaledSheet.create({
+    buttonContainer: {
+      height: '50@vs',
+      marginTop: '10@vs',
+      width: '100%',
+      maxWidth: 350,
+      borderRadius: '8@vs',
+      elevation: 20,
+      shadowColor: colors.black,
+      shadowOpacity: 0.8,
+      shadowRadius: '6@vs',
+      shadowOffset: {
+        width: 0,
+        height: '3@s'
+      }
+    },
+    gradientContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      height: '50@vs',
+      borderRadius: '8@vs',
+      opacity: props.disabled ? 0.8 : 1
+    },
+    textContainer: {
+      alignItems: 'flex-start',
+    },
+    buttonText: {
+      fontSize: '20@s',
+      fontFamily: fonts.main,
+      fontWeight: 'bold',
+      color: props.textColor || colors.darkGray,
+      opacity: props.disabled ? 0.3 : 1
+    },
+    buttonTextDisabled: {
+      fontSize: '20@s',
+      fontFamily: fonts.main,
+      fontWeight: 'bold',
+      color: props.textColor || colors.darkGray,
+      opacity: 0.3
+    },
+    iconContainer: {
+      alignItems: 'center',
+      paddingLeft: '22%',
+      paddingRight: '25@s',
+      opacity: props.disabled ? 0.3 : 1
     }
-  },
-  gradientContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: '50@vs',
-    borderRadius: '8@vs'
-  },
-  textContainer: {
-    alignItems: 'flex-start',
-  },
-  buttonText: {
-    fontSize: '20@s',
-    fontFamily: fonts.main,
-    fontWeight: 'bold',
-    color: colors.darkGray
-  },
-  iconContainer: {
-    alignItems: 'center',
-    paddingLeft: '26%',
-    paddingRight: '25@s'
-  }
-})
+  })
+)

@@ -1,11 +1,13 @@
 import React from 'react'
-import { View, StyleSheet, TouchableOpacity, Image, Dimensions, SafeAreaView, Animated, KeyboardAvoidingView, Keyboard, ActivityIndicator, TouchableWithoutFeedback, Platform } from 'react-native'
-import { Button, Icon } from 'react-native-elements'
+import { View, TouchableOpacity, Image, Dimensions, SafeAreaView, Animated, KeyboardAvoidingView, Keyboard, ActivityIndicator, TouchableWithoutFeedback, Platform } from 'react-native'
+import { Icon } from 'react-native-elements'
 import { fonts } from '../../utils/styles'
 import { Input } from 'react-native-elements'
 import { apiCall } from '../../utils/requests'
-import { colors } from '../../utils/styles'
+import { colors, globalStyles } from '../../utils/styles'
 import { GlobalText } from '../../components/global/globalText'
+import { ScaledSheet } from 'react-native-size-matters'
+import { CodenamesButton } from '../../components/global/codenamesButton'
 
 
 export default class NewGameScreen extends React.Component {
@@ -15,8 +17,8 @@ export default class NewGameScreen extends React.Component {
       codename: '', 
       orientation: 'portrait',
       headerPosition: new Animated.Value(150),
-      keyboardVisible: false,
-      loading: false
+      loading: false,
+      keyboardVisible: false
     }
   }
 
@@ -32,8 +34,32 @@ export default class NewGameScreen extends React.Component {
       })
     })
 
+    this.keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      this._keyboardDidShow,
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      this._keyboardDidHide,
+    );
+
     this.slideText()
   }
+
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove()
+    this.keyboardDidHideListener.remove()
+  }
+
+  _keyboardDidShow = () => (
+    this.state && this.setState({ keyboardVisible: true })
+  )
+
+  _keyboardDidHide = () => (
+    this.state && this.setState({ keyboardVisible: false })
+  )
+
+  componentDidUpdate() { console.log(this.state.keyboardVisible) }
 
   slideText = () => {
     Animated.timing(this.state.headerPosition, {
@@ -100,7 +126,7 @@ export default class NewGameScreen extends React.Component {
     await Keyboard.dismiss()
     let body = JSON.stringify({
       role: 'operative',
-      codename: this.state.codename
+      codename: this.state.codename.trim()
     })
     let creationResponse = await apiCall(body, 'post', 'local_games')
     let navigate = await this.props.navigation.navigate('RoleSelect', { gameId: creationResponse.data.game_id, codename: creationResponse.data.codename })
@@ -112,26 +138,26 @@ export default class NewGameScreen extends React.Component {
   }
 
   renderButtons = () => {
+    const buttonProps = {
+      value: 'Create Game',
+        icon: {
+          type: 'ionicon',
+          name: 'ios-arrow-forward',
+          size: 30,
+          color: colors.white
+        },
+        onPress: this.createGame,
+        gradient: [
+          colors['red-agent-light'],
+          colors['red-agent']
+        ],
+        textColor: colors.white,
+        disabled: this.state.codename.length === 0
+    }
     return (
-      <View>
-        <Button
-          title={'Create Game'}
-          onPress={() => this.createGame()}
-          disabled={this.state.codename.length < 1}
-          disabledTitleStyle={{ color: 'white', opacity: 0.6 }}
-          disabledStyle={{ opacity: 0.6 }}
-          type={'clear'}
-          containerStyle={style(this.state.orientation).buttonContainer}
-          buttonStyle={style(this.state.orientation).button}
-          titleStyle={style(this.state.orientation).buttonTitle}
-          raised={true}
-          icon={{
-            type: 'ionicon',
-            name: 'ios-arrow-forward',
-            size: 30,
-            color: 'white',
-            paddingRight: 20
-          }}
+      <View style={{width: 300}}>
+        <CodenamesButton
+          {...buttonProps}
         />
       </View>
     )
@@ -147,7 +173,7 @@ export default class NewGameScreen extends React.Component {
 
   renderForm = () => {
     return (
-      <View>
+      <View style={globalStyles.shadow}>
         <Input
           ref={input => (this.codename = input)}
           placeholder='Codename'
@@ -161,8 +187,12 @@ export default class NewGameScreen extends React.Component {
           onChangeText={(i) => { this.setCodename(i) }}
           maxLength={10}
         />
-        <View style={
-          [style(this.state.orientation).instructions, { display: this.state.keyboardVisible && this.state.orientation === 'landscape' ?  'none' : null }]}>
+        <View style={[
+            style(this.state.orientation).instructions,
+            {
+              display: this.state.keyboardVisible && this.state.orientation === 'landscape'
+                ? 'none'
+                : 'flex' }]}>
           <GlobalText
             value={'Create a unique codename for your game. Your party will enter this to join.'}
             style={style(this.state.orientation).instructionsText}
@@ -245,10 +275,10 @@ export default class NewGameScreen extends React.Component {
 
 const style = (orientation = null, props = null) => {
   return (
-    StyleSheet.create({
+    ScaledSheet.create({
       imageBackground: {
         width: '100%',
-        height: '110%',
+        height: '120%',
         position: 'absolute',
         zIndex: -1
       },
@@ -258,22 +288,22 @@ const style = (orientation = null, props = null) => {
       },
       headerWrapper: {
         flexDirection: 'row',
-        marginHorizontal: 15,
+        marginHorizontal: '15@s',
         alignSelf: 'flex-end'
       },  
       headerTextWrapper: {
         width: (orientation === 'portrait') ? '62%' : '38%',
         borderBottomWidth: 1,
-        padding: 5,
+        padding: '5@s',
         alignItems: 'flex-end'
       },
       headerBack: {
         position: 'absolute',
-        width: 55,
+        width: '40@s',
         justifyContent: 'center',
-        marginLeft: 15,
-        marginTop: 2,
-        borderRadius: 6,
+        marginLeft: '15@s',
+        marginTop: '2@s',
+        borderRadius: '6@s',
         opacity: 0.7
       },
       backgroundWrappers: {
@@ -285,32 +315,31 @@ const style = (orientation = null, props = null) => {
         alignSelf: 'center'
       },
       instructions: {
-        paddingHorizontal: 12,
-        padding: 12,
+        paddingHorizontal: '12@s',
+        padding: '12@s',
         backgroundColor: colors.darkGray,
         width: 300,
         alignSelf: 'center',
-        borderBottomLeftRadius: 8,
-        borderBottomRightRadius: 8,
-        opacity: 0.93,
+        borderBottomLeftRadius: '8@s',
+        borderBottomRightRadius: '8@s',
+        top: -2
       },
       instructionsText: {
         color: 'white',
-        fontSize: 12
+        fontSize: '14@s'
       },
       buttonContainer: {
         width: 300,
-        marginTop: (orientation === 'portrait') ? 12 : 6,
+        marginTop: (orientation === 'portrait') ? '12@s' : '6@s',
       },
       button: {
-        borderRadius: 8,
-        backgroundColor: colors["red-agent-light"],
-        opacity: 0.9
+        borderRadius: '8@s',
+        backgroundColor: colors["red-agent-light"]
       },
       buttonTitle: {
         color: 'white',
         fontFamily: fonts.headers,
-        fontSize: 15,
+        fontSize: '15@s',
         fontWeight: 'bold'
       },
       maleAgent: {
@@ -331,27 +360,28 @@ const style = (orientation = null, props = null) => {
         left: (orientation === 'portrait') ? 100 : null,
         right: (orientation === 'portrait') ? null : -120,
         opacity: 0.73
-      },
+      },  
       inputContainer: {
         backgroundColor: (props && props.screenProps.isDarkMode) ? 'black' : 'white',
-        opacity: (props && props.screenProps.isDarkMode) ? 0.88 : 0.93,
         width: 300,
+        height: '45@s',
         alignSelf: 'center',
         borderColor: 'transparent',
-        borderTopLeftRadius: 8,
-        borderTopRightRadius: 8
+        borderTopLeftRadius: '8@s',
+        borderTopRightRadius: '8@s'
       },
       input: {
         color: (props && props.screenProps.isDarkMode) ? 'white' : null,
-        marginLeft: 20
+        marginLeft: '20@s',
+        fontSize: '18@s'
       },
       formIconContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 2
+        marginTop: '2@s'
       },
       loader: {
-        margin: 20,
+        margin: '20@s',
         position: (orientation === 'portrait') ? null : 'absolute'
       }
     })

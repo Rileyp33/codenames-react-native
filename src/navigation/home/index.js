@@ -1,8 +1,8 @@
 import React from 'react'
-import { View, StyleSheet, ImageBackground, Image, Platform } from 'react-native'
-import { Button } from 'react-native-elements'
+import { View, ImageBackground, Image, Platform } from 'react-native'
 import { CodenamesButton } from '../../components/global/codenamesButton'
 import { fonts, colors } from '../../utils/styles'
+import { ScaledSheet } from 'react-native-size-matters'
 
 export default class HomeScreen extends React.Component{
   constructor(props) {
@@ -53,9 +53,18 @@ export default class HomeScreen extends React.Component{
   }
 
   renderButtons = () => {
-    return this.buttonData.map((b) => (
+    return this.buttonData.map((buttonProps) => (
       <CodenamesButton
-        {...b}
+        {...{
+          ...buttonProps,
+          ...{
+            gradient: [
+              colors.white,
+              colors.lightestGray
+            ],
+            textColor: colors.darkGray
+          }
+        }}
       />
     ))
   }
@@ -97,12 +106,12 @@ export default class HomeScreen extends React.Component{
   }
 }
 
-const style = StyleSheet.create({
+const style = ScaledSheet.create({
   screenContainer: {
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    padding: 25
+    padding: '25@s'
   },  
   imageBackgroundFull: {
     width: '100%',
@@ -127,16 +136,16 @@ const style = StyleSheet.create({
   },
   buttonContainer: {
     width: 300,
-    marginTop: 10
+    marginTop: '10@s'
   },
   button: {
-    borderRadius: 8,
+    borderRadius: '8@s',
     backgroundColor: 'white'
   },  
   buttonTitle: {
     color: 'black',
     fontFamily: fonts.headers,
-    fontSize: 15,
+    fontSize: '15@s',
     fontWeight: 'bold'
   },
   logoWrapper: {
