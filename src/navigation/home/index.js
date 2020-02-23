@@ -1,12 +1,44 @@
 import React from 'react'
 import { View, StyleSheet, ImageBackground, Image, Platform } from 'react-native'
 import { Button } from 'react-native-elements'
+import { CodenamesButton } from '../../components/global/codenamesButton'
 import { fonts, colors } from '../../utils/styles'
 
 export default class HomeScreen extends React.Component{
   constructor(props) {
     super(props)
-    this.state = {}
+    this.buttonData = [
+      {
+        value: 'New Game',
+        icon: {
+          type: 'material-community',
+          name: 'cards-playing-outline',
+          size: 30,
+          color: colors["red-agent"]
+        },
+        onPress: this.newGame
+      },
+      {
+        value: 'Join Game',
+        icon: {
+          type: 'antdesign',
+          name: 'addusergroup',
+          size: 30,
+          color: colors["blue-agent"]
+        },
+        onPress: this.joinGame
+      },
+      {
+        value: 'Rules',
+        icon: {
+          type: 'material-community',
+          name: 'sign-text',
+          size: 30,
+          color: colors.darkGray
+        },
+        onPress: this.showRules
+      },
+    ]
   }
 
   renderLogo = () => {
@@ -21,58 +53,11 @@ export default class HomeScreen extends React.Component{
   }
 
   renderButtons = () => {
-    return ( 
-      <View style={style.buttonsWrapper}>
-        <Button
-          title={'New Game'}
-          onPress={() => this.newGame()}
-          type={'solid'}
-          containerStyle={style.buttonContainer}
-          buttonStyle={style.button}
-          titleStyle={style.buttonTitle}
-          raised={true}
-          icon={{
-            type: 'material-community',
-            name: 'cards-playing-outline',
-            size: 30,
-            color: colors["red-agent"],
-            paddingRight: 20
-          }}
-        />
-        <Button
-          title={'Join Game'}
-          onPress={() => this.joinGame()}
-          type={'solid'}
-          containerStyle={style.buttonContainer}
-          buttonStyle={style.button}
-          titleStyle={style.buttonTitle}
-          raised={true}
-          icon={{
-            type: 'antdesign',
-            name: 'addusergroup',
-            size: 30,
-            color: colors["blue-agent"],
-            paddingRight: 20
-          }}
-        />
-        <Button
-          title={'Rules'}
-          onPress={() => this.showRules()}
-          type={'solid'}
-          containerStyle={style.buttonContainer}
-          buttonStyle={style.button}
-          titleStyle={style.buttonTitle}
-          raised={true}
-          icon={{
-            type: 'material-community',
-            name: 'sign-text',
-            size: 30,
-            color: colors.darkGray,
-            paddingRight: 20
-          }}
-        />
-      </View>
-    )
+    return this.buttonData.map((b) => (
+      <CodenamesButton
+        {...b}
+      />
+    ))
   }
 
   renderAssassin = () => {
