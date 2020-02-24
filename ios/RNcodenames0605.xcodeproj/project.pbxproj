@@ -431,6 +431,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.RP.Codenames;
 				PRODUCT_NAME = RNcodenames0605;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -454,6 +455,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.RP.Codenames;
 				PRODUCT_NAME = RNcodenames0605;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

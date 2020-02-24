@@ -25,6 +25,7 @@ export const Scoreboard = (props) => {
       </View>
       <Timer
         gameId={props.gameId}
+        isDarkMode={props.isDarkMode}
       />
     </View>
   )

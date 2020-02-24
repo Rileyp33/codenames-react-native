@@ -221,6 +221,7 @@ export default class LobbyScreen extends React.Component {
           inputStyle={style(this.state.orientation).input}
           onChangeText={(i) => { this.setCodename(i) }}
           maxLength={10}
+          autoCorrect={this.state.orientation === 'portrait'}
         />
       </View>
     )

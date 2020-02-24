@@ -1,5 +1,6 @@
 import React from 'react'
-import { TouchableOpacity, Image, Animated, Platform, View } from 'react-native'
+import { TouchableOpacity, Image, Animated, Platform } from 'react-native'
+import { ScaledSheet } from 'react-native-size-matters'
 import { GlobalText } from '../global/globalText'
 import { colors } from '../../utils/styles'
 import FlipCard from 'react-native-flip-card'
@@ -125,12 +126,14 @@ export default class Card extends React.Component {
   }
 
   renderUnflippedImage = (props) => {
-    return (
-      <Image
-        source={{ uri: 'gray_card' }}
-        style={props.imageStyle}
-      />
-    )
+    if (props.isDarkMode) {
+      return (
+        <Image
+          source={{ uri: 'gray_card' }}
+          style={props.imageStyle}
+        />
+      )
+    }
   }
 
   renderRoleBasedImage = () => {
@@ -164,6 +167,7 @@ export default class Card extends React.Component {
   renderIOS = () => {
     return (
       <FlipCard
+        style={styles(this.props).shadow}
         friction={3}
         perspective={120}
         flipVertical={true}
@@ -225,4 +229,23 @@ export default class Card extends React.Component {
     return (Platform.OS === 'ios') ? this.renderIOS() : this.renderAndroid()
   }
 }
+
+const styles = (props) => (
+  ScaledSheet.create({
+    shadow: {
+      elevation: 20,
+      shadowColor: props.isDarkMode
+        ? colors.white
+        : colors.black,
+      shadowOpacity: props.isDarkMode
+        ? 0.5
+        : 0.7,
+      shadowRadius: '3@vs',
+      shadowOffset: {
+        width: 0,
+        height: '1@s'
+      }
+    }
+  })
+)
 

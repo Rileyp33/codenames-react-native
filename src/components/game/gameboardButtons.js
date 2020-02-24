@@ -17,7 +17,7 @@ export const GameboardButtons = (props) => {
           type: 'entypo',
           name: 'home',
           size: (props.orientation === 'portrait') ? 20 : 24,
-          color: 'black',
+          color: props.iconColor,
           paddingRight: (props.orientation === 'portrait') ? 8 : 0,
           marginLeft: (props.orientation === 'portrait') ? -6 : 0
         }}
@@ -34,7 +34,7 @@ export const GameboardButtons = (props) => {
           type: 'material-community',
           name: 'sign-text',
           size: (props.orientation === 'portrait') ? 20 : 24,
-          color: 'black',
+          color: props.iconColor,
           paddingRight: (props.orientation === 'portrait') ? 8 : 0,
           marginLeft: (props.orientation === 'portrait') ? -6 : 0
         }}
@@ -52,7 +52,7 @@ export const GameboardButtons = (props) => {
           type: 'material-community',
           name: 'account-switch',
           size: (props.orientation === 'portrait') ? 20 : 24,
-          color: 'black',
+          color: props.iconColor,
           paddingRight: (props.orientation === 'portrait') ? 8 : 0,
           marginLeft: (props.orientation === 'portrait') ? -6 : 0
         }}

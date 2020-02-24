@@ -1,7 +1,8 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableOpacity } from 'react-native'
+import { Text, TouchableOpacity } from 'react-native'
 import { Icon } from 'react-native-elements'
 import { fonts, colors } from '../../utils/styles'
+import { ScaledSheet, scale } from 'react-native-size-matters'
 
 export default class Timer extends React.Component {
   constructor(props) {
@@ -89,43 +90,60 @@ export default class Timer extends React.Component {
 
   renderTimerText = () => {
     return (
-      <Text style={style.timerText}>
+      <Text style={[
+        style(this.props).timerText,
+        this.state.timer === 'Time!'
+          ? { fontSize: scale(12) }
+          : null
+      ]}>
         {this.formatTimerText(this.state.timer)}
       </Text>
     )
   }
 
   renderIcon = () => {
+    const { isDarkMode } = this.props
     return (
       <Icon
         type={'ionicon'}
         name={'ios-hourglass'}
         size={24}
-        color={'black'}
+        color={
+          isDarkMode
+            ? colors.black
+            : colors.white
+        }
       />
     )
   }
 
   render() {
     return (
-      <TouchableOpacity style={style.timerWrapper} onPress={() => { this.runTimer() }} disabled={this.state.timerActive}>
+      <TouchableOpacity style={style(this.props).timerWrapper} onPress={() => { this.runTimer() }} disabled={this.state.timerActive}>
         {(this.state.timerActive || this.state.timer === "Time!") ? this.renderTimerText() : this.renderIcon()}
       </TouchableOpacity>
     )
   }
 }
 
-const style = StyleSheet.create({
-  timerWrapper: {
-    flex: 0.6,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.lightGray,
-    borderRadius: 5
-  },
-  timerText: {
-    fontFamily: fonts.main,
-    fontWeight: 'bold',
-    fontSize: 16
-  }
-}) 
+const style = (props) => (
+  ScaledSheet.create({
+    timerWrapper: {
+      flex: 0.6,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: props.isDarkMode
+        ? colors.lightGray
+        : colors.darkGray,
+      borderRadius: 5
+    },
+    timerText: {
+      color: props.isDarkMode
+        ? colors.darkGray
+        : colors.white,
+      fontFamily: fonts.main,
+      fontWeight: 'bold',
+      fontSize: '14@s'
+    }
+  })
+) 
