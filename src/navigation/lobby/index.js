@@ -382,7 +382,9 @@ const style = (orientation = null, props = null) => {
       },
       input: {
         color: (props && props.screenProps.isDarkMode) ? 'white' : null,
-        marginLeft: '20@s'
+        marginLeft: '20@s',
+        fontSize: '21@s',
+        fontFamily: fonts.main
       },
       formIconContainer: {
         alignItems: 'center',

@@ -1,9 +1,12 @@
 import React from 'react'
-import { Animated, View, Image, StyleSheet, Dimensions, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator } from 'react-native'
-import { CheckBox, Button, Icon } from 'react-native-elements'
-import { colors, fonts } from '../../utils/styles'
+import { Animated, View, Image, Dimensions, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator } from 'react-native'
+import { CheckBox, Icon } from 'react-native-elements'
+import { colors, fonts, globalStyles } from '../../utils/styles'
 import axios from 'axios'
 import { BASE_URL } from '../../utils/requests'
+import { ScaledSheet, scale } from 'react-native-size-matters'
+import LinearGradient from 'react-native-linear-gradient'
+import { CodenamesButton } from '../../components/global/codenamesButton'
 
 export default class RoleSelect extends React.Component {
   constructor(props) {
@@ -58,7 +61,7 @@ export default class RoleSelect extends React.Component {
     this.spymasterBottom = new Animated.Value(-300)
     this.spymasterLeft = new Animated.Value(-125)
     Animated.timing(this.operativeOpacity, {
-      toValue: 0.3,
+      toValue: 0.45,
       duration: 600
     }).start()
   }
@@ -89,7 +92,7 @@ export default class RoleSelect extends React.Component {
     this.femaleAgentPosition = new Animated.Value(200)
     Animated.parallel([
       Animated.timing(this.spymasterOpacity, {
-        toValue: 0.3,
+        toValue: 0.5,
         duration: 600
       }),
       Animated.timing(this.spymasterBottom, {
@@ -211,54 +214,89 @@ export default class RoleSelect extends React.Component {
 
   renderCheckboxes = () => {
     return (
-      <View style={style(this.state.orientation).selectionContainer}>
-        <CheckBox
-          title='Field Operative'
-          checkedIcon='target'
-          iconType='material-community'
-          textStyle={style(this.state.orientation).checkboxText}
-          checkedColor={colors["red-agent"]}
-          uncheckedIcon='checkbox-blank-circle-outline'
-          checked={this.state.operative}
-          containerStyle={style(this.state.orientation).checkboxContainer}
-          onPress={() => this.setOperative()}
-        />
-        <CheckBox
-          title='Spymaster'
-          checkedIcon='target'
-          iconType='material-community'
-          textStyle={style(this.state.orientation).checkboxText}
-          checkedColor={colors["red-agent"]}
-          uncheckedIcon='checkbox-blank-circle-outline'
-          checked={this.state.spymaster}
-          containerStyle={style(this.state.orientation).checkboxContainer}
-          onPress={() => this.setSpymaster()}
-        />
+      <View style={[style(this.state.orientation).selectionContainer, globalStyles.shadow]}>
+        <LinearGradient
+          colors={[colors.white, colors.lightGray]}
+          style={style(this.state.orientation).checkboxContainer}
+        >
+          <CheckBox
+            title='Field Operative'
+            checkedIcon='target'
+            iconType='material-community'
+            size={scale(30)}
+            textStyle={style(this.state.orientation).checkboxText}
+            checkedColor={colors["red-agent"]}
+            uncheckedIcon='checkbox-blank-circle-outline'
+            checked={this.state.operative}
+            containerStyle={style(this.state.orientation).checkbox}
+            onPress={() => this.setOperative()}
+          />
+        </LinearGradient>
+        <LinearGradient
+          colors={[colors.white, colors.lightGray]}
+          style={[style(this.state.orientation).checkboxContainer, globalStyles.shadow]}
+        >
+          <CheckBox
+            title='Spymaster'
+            checkedIcon='target'
+            iconType='material-community'
+            size={scale(30)}
+            textStyle={style(this.state.orientation).checkboxText}
+            checkedColor={colors["red-agent"]}
+            uncheckedIcon='checkbox-blank-circle-outline'
+            checked={this.state.spymaster}
+            containerStyle={style(this.state.orientation).checkbox}
+            onPress={() => this.setSpymaster()}
+          />
+        </LinearGradient>
       </View>
     )
   }
 
   renderButton = () => {
+    // return (
+    //   <View style={style(this.state.orientation).buttonsWrapper}>
+    //     <Button
+    //       disabled={!this.roleSelected()}
+    //       disabledTitleStyle={{color: 'white', opacity: 0.6}}
+    //       disabledStyle={{opacity: 0.6}}
+    //       title={'Join Game'}
+    //       onPress={() => this.joinGame()}
+    //       type={'clear'}
+    //       containerStyle={style(this.state.orientation).buttonContainer}
+    //       buttonStyle={style(this.state.orientation).button}
+    //       titleStyle={style(this.state.orientation).buttonTitle}
+    //       raised={true}
+    //       icon={{
+    //         type: 'ionicon',
+    //         name: 'ios-arrow-forward',
+    //         size: 30,
+    //         color: 'white',
+    //         paddingRight: 20
+    //       }}
+    //     />
+    //   </View>
+    // )
+    const buttonProps = {
+      value: 'Join Game',
+        icon: {
+          type: 'ionicon',
+          name: 'ios-arrow-forward',
+          size: scale(30),
+          color: colors.white
+        },
+        onPress: this.joinGame,
+        gradient: [
+          colors['red-agent-light'],
+          colors['red-agent']
+        ],
+        textColor: colors.white,
+        disabled: !this.roleSelected()
+    }
     return (
-      <View style={style(this.state.orientation).buttonsWrapper}>
-        <Button
-          disabled={!this.roleSelected()}
-          disabledTitleStyle={{color: 'white', opacity: 0.6}}
-          disabledStyle={{opacity: 0.6}}
-          title={'Join Game'}
-          onPress={() => this.joinGame()}
-          type={'clear'}
-          containerStyle={style(this.state.orientation).buttonContainer}
-          buttonStyle={style(this.state.orientation).button}
-          titleStyle={style(this.state.orientation).buttonTitle}
-          raised={true}
-          icon={{
-            type: 'ionicon',
-            name: 'ios-arrow-forward',
-            size: 30,
-            color: 'white',
-            paddingRight: 20
-          }}
+      <View style={{width: 300}}>
+        <CodenamesButton
+          {...buttonProps}
         />
       </View>
     )
@@ -347,7 +385,7 @@ export default class RoleSelect extends React.Component {
 }
 
 const style = (orientation) => {
-  return StyleSheet.create({
+  return ScaledSheet.create({
     safeArea: {
       flex: 1,
       backgroundColor: 'black',
@@ -382,7 +420,7 @@ const style = (orientation) => {
       width: 300
     },
     button: {
-      borderRadius: 8,
+      borderRadius: '8@s',
       backgroundColor: colors["red-agent-light"],
       opacity: 0.9
     },
@@ -390,60 +428,57 @@ const style = (orientation) => {
       color: 'white',
       fontWeight: 'bold',
       fontFamily: fonts.headers,
-      fontSize: 15,
+      fontSize: '15@s',
     },
     checkboxContainer: {
       width: 300,
-      marginBottom: 12,
+      height: '50@s',
+      marginBottom: '12@s',
       marginTop: 0,
-      opacity: 0.88,
-      borderRadius: 6
+      borderRadius: '6@s',
+      justifyContent: 'center'
+    },
+    checkbox: {
+      backgroundColor: 'transparent',
+      borderWidth: 0,
+      padding: 0
     },
     checkboxText: {
-      fontSize: 18,
+      fontSize: '20@s',
       fontFamily: fonts.main,
       color: 'black',
-      marginLeft: 25
+      marginLeft: '25@s'
     },
     selectionContainer: {
-      marginBottom: 12,
+      marginBottom: '4@s',
       borderBottomColor: 'white',
       borderBottomWidth: 1,
       width: 300,
       alignItems: 'center'
     },
-    backButton: {
-      width: 55,
-      justifyContent: 'center',
-      marginLeft: 15,
-      marginTop: 5,
-      borderRadius: 6,
-      opacity: 0.7,
-      alignSelf: 'flex-start'
-    },
     headerWrapper: {
       flexDirection: 'row',
-      marginHorizontal: 15,
+      marginHorizontal: '15@s',
       alignSelf: 'flex-end'
     },
     headerTextWrapper: {
       width: '62%',
       borderBottomWidth: 1,
       borderBottomColor: 'white',
-      padding: 5,
+      padding: '5@s',
       alignItems: 'flex-end'
     },
     headerBack: {
       position: 'absolute',
-      width: 55,
+      width: '40@s',
       justifyContent: 'center',
-      marginLeft: 15,
-      marginTop: 2,
-      borderRadius: 6,
+      marginLeft: '15@s',
+      marginTop: '2@s',
+      borderRadius: '6@s',
       opacity: 0.7
     },
     loader: {
-      margin: 20
+      margin: '20@s'
     }
   })
 }
