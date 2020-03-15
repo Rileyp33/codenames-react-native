@@ -68,9 +68,8 @@ export default class RulesScren extends React.Component {
     return (
       <View style={{backgroundColor: 'black'}}>
         {this.renderBack()}
-        <ScrollView>
+        <ScrollView maximumZoomScale={2}>
           <Image
-            // source={require('../../assets/images/codenamesRules.jpg')}
             source={{ uri: 'codenames_rules' }}
             style={{
               width: this.state.width,

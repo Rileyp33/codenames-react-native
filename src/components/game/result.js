@@ -3,8 +3,6 @@ import { View, Image, StyleSheet, Text } from 'react-native'
 import { fonts, colors } from '../../utils/styles'
 import FlipCard from 'react-native-flip-card'
 
-// const agents = require('../../assets/images/fieldagentIconWhite.png')
-// const spymaster = require('../../assets/images/spymasterIconWhite.png')
 const resultBackground = require('../../assets/images/white_fog.png')
 
 export const Result = (props) => {
@@ -12,7 +10,6 @@ export const Result = (props) => {
   renderSpymasterIcon = (props) => {
       return (
         <Image
-          // source={spymaster}
           source={{ uri: 'spymaster_icon_white' }}
           style={style(props.orientation, props.result, props.role).icon}
         />
@@ -24,7 +21,6 @@ export const Result = (props) => {
       case 'Red team wins!':
         return (
           <Image
-            // source={agents}
             source={{ uri: 'field_agent_icon_white' }}
             style={style(props.orientation, props.result, props.role).icon}
           />
@@ -32,7 +28,6 @@ export const Result = (props) => {
       case 'Blue team wins!':
         return (
           <Image
-            // source={agents}
             source={{ uri: 'field_agent_icon_white' }}
             style={style(props.orientation, props.result, props.role).icon}
           />
@@ -40,7 +35,6 @@ export const Result = (props) => {
       case 'Assassin contacted. Game over.':
         return (
           <Image
-            // source={spymaster}
             source={{ uri: 'spymaster_icon_white' }}
             style={style(props.orientation, props.result, props.role).icon}
           />
@@ -60,7 +54,6 @@ export const Result = (props) => {
     return (
       <Image
         source={resultBackground}
-        // source={{ uri: 'white_fog' }}
         width={1000}
         height={1000}
         style={style(props.orientation).resultBackground}
@@ -112,7 +105,7 @@ const style = (orientation, result = null, role = null) => {
       borderRadius: 8,
       overflow: 'hidden',
       borderWidth: 1,
-      borderColor: 'white'
+      borderColor: colors.darkGray
     },
     icon: {
       alignSelf: (orientation === 'portrait') ? 'flex-start' : 'flex-end',

@@ -1,12 +1,44 @@
 import React from 'react'
-import { View, StyleSheet, ImageBackground, Image, Platform } from 'react-native'
-import { Button } from 'react-native-elements'
+import { View, ImageBackground, Image, Platform } from 'react-native'
+import { CodenamesButton } from '../../components/global/codenamesButton'
 import { fonts, colors } from '../../utils/styles'
+import { ScaledSheet } from 'react-native-size-matters'
 
 export default class HomeScreen extends React.Component{
   constructor(props) {
     super(props)
-    this.state = {}
+    this.buttonData = [
+      {
+        value: 'New Game',
+        icon: {
+          type: 'material-community',
+          name: 'cards-playing-outline',
+          size: 30,
+          color: colors["red-agent"]
+        },
+        onPress: this.newGame
+      },
+      {
+        value: 'Join Game',
+        icon: {
+          type: 'antdesign',
+          name: 'addusergroup',
+          size: 30,
+          color: colors["blue-agent"]
+        },
+        onPress: this.joinGame
+      },
+      {
+        value: 'Rules',
+        icon: {
+          type: 'material-community',
+          name: 'sign-text',
+          size: 30,
+          color: colors.darkGray
+        },
+        onPress: this.showRules
+      },
+    ]
   }
 
   renderLogo = () => {
@@ -21,58 +53,20 @@ export default class HomeScreen extends React.Component{
   }
 
   renderButtons = () => {
-    return ( 
-      <View style={style.buttonsWrapper}>
-        <Button
-          title={'New Game'}
-          onPress={() => this.newGame()}
-          type={'solid'}
-          containerStyle={style.buttonContainer}
-          buttonStyle={style.button}
-          titleStyle={style.buttonTitle}
-          raised={true}
-          icon={{
-            type: 'material-community',
-            name: 'cards-playing-outline',
-            size: 30,
-            color: colors["red-agent"],
-            paddingRight: 20
-          }}
-        />
-        <Button
-          title={'Join Game'}
-          onPress={() => this.joinGame()}
-          type={'solid'}
-          containerStyle={style.buttonContainer}
-          buttonStyle={style.button}
-          titleStyle={style.buttonTitle}
-          raised={true}
-          icon={{
-            type: 'antdesign',
-            name: 'addusergroup',
-            size: 30,
-            color: colors["blue-agent"],
-            paddingRight: 20
-          }}
-        />
-        <Button
-          title={'Rules'}
-          onPress={() => this.showRules()}
-          type={'solid'}
-          containerStyle={style.buttonContainer}
-          buttonStyle={style.button}
-          titleStyle={style.buttonTitle}
-          raised={true}
-          icon={{
-            type: 'material-community',
-            name: 'sign-text',
-            size: 30,
-            color: colors.darkGray,
-            paddingRight: 20
-          }}
-        />
-      </View>
-    )
+    return this.buttonData.map((buttonProps) => (
+      <CodenamesButton
+        {...{
+          ...buttonProps,
+          ...{
+            gradient: [
+              colors.white,
+              colors.lightestGray
+            ],
+            textColor: colors.darkGray
+          }
+        }}
+      />
+    ))
   }
 
   renderAssassin = () => {
@@ -112,12 +106,12 @@ export default class HomeScreen extends React.Component{
   }
 }
 
-const style = StyleSheet.create({
+const style = ScaledSheet.create({
   screenContainer: {
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    padding: 25
+    padding: '25@s'
   },  
   imageBackgroundFull: {
     width: '100%',
@@ -142,16 +136,16 @@ const style = StyleSheet.create({
   },
   buttonContainer: {
     width: 300,
-    marginTop: 10
+    marginTop: '10@s'
   },
   button: {
-    borderRadius: 8,
+    borderRadius: '8@s',
     backgroundColor: 'white'
   },  
   buttonTitle: {
     color: 'black',
     fontFamily: fonts.headers,
-    fontSize: 15,
+    fontSize: '15@s',
     fontWeight: 'bold'
   },
   logoWrapper: {

@@ -37,7 +37,7 @@ export default class NextGame extends React.Component {
 
   render() {
     return (
-      <View use style={style(this.props.orientation).buttonsWrapper}>
+      <View use style={style(this.props).buttonsWrapper}>
         <Animated.View use style={{
           bottom: this.state.newPosition,
           flex: 1
@@ -46,9 +46,9 @@ export default class NextGame extends React.Component {
             title={(this.props.orientation === 'portrait') ? 'New Game' : 'New'}
             onPress={() => this.navNewGame()}
             type={'solid'}
-            containerStyle={style().buttonContainer}
-            buttonStyle={style().button}
-            titleStyle={style(this.props.orientation).buttonTitle}
+            containerStyle={style(this.props).buttonContainer}
+            buttonStyle={style(this.props).button}
+            titleStyle={style(this.props).buttonTitle}
             raised={true}
             icon={{
               type: 'material-community',
@@ -69,9 +69,9 @@ export default class NextGame extends React.Component {
             title={(this.props.orientation === 'portrait') ? 'Join Game' : 'Join'}
             onPress={() => this.navLobby()}
             type={'solid'}
-            containerStyle={style().buttonContainer}
-            buttonStyle={style().button}
-            titleStyle={style(this.props.orientation).buttonTitle}
+            containerStyle={style(this.props).buttonContainer}
+            buttonStyle={style(this.props).button}
+            titleStyle={style(this.props).buttonTitle}
             raised={true}
             icon={{
               type: 'antdesign',
@@ -89,7 +89,13 @@ export default class NextGame extends React.Component {
   }
 }
 
-const style = (orientation = null) => {
+const style = (props = null) => {
+  let orientation, isDarkMode
+  if (props) {
+    orientation = props.orientation
+    isDarkMode = props.isDarkMode
+  }
+  console.log(isDarkMode)
   return StyleSheet.create({
     buttonsWrapper: {
       flexDirection: 'row',
@@ -104,10 +110,14 @@ const style = (orientation = null) => {
     },
     button: {
       borderRadius: 6,
-      backgroundColor: colors.lightGray
+      backgroundColor: isDarkMode
+        ? colors.lightGray
+        : colors.darkGray,
     },
     buttonTitle: {
-      color: colors.darkGray,
+      color: isDarkMode
+        ? colors.darkGray
+        : colors.white,
       fontFamily: fonts.main,
       fontSize: (orientation === 'portrait') ? 15 : 12,
       fontFamily: fonts.main,

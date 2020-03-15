@@ -14,6 +14,7 @@ const style = (props) => {
   return StyleSheet.create({
     text: (styleProps) ? {
       color: (styleProps.color) ? styleProps.color : 'black',
+      opacity: (styleProps.opacity) ? styleProps.opacity : 1,
       fontWeight: (styleProps.fontWeight) ? styleProps.fontWeight : null,
       fontFamily: (styleProps.fontFamily) ? styleProps.fontFamily : 'System',
       fontSize: (styleProps.fontSize) ? styleProps.fontSize : 12,
