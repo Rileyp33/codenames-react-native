@@ -186,7 +186,7 @@ export default class GameScreen extends React.Component {
   }
 
   renderLogo = () => {
-    const logoUri = this.state.isDarkMode ? 'codenames_logo_white' : 'codenames_logo_black'
+    const logoUri = this.state.isDarkMode ? 'codenames_logo_white' : 'codenames_logo_blue'
     return (
       <View style={style(this.state).logoWrapper}>
         <Image
